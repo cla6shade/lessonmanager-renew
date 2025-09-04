@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Lato, Roboto } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "@/components/ClientLayout";
+import { getSession } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 const latoSans = Lato({
   variable: "--font-lato",
@@ -20,17 +21,21 @@ export const metadata: Metadata = {
   description: "피아노투게더",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+  if (!session.isLoggedIn) {
+    return redirect("/login");
+  }
   return (
-    <html lang="en">
+    <html lang="ko">
       <body
         className={`${latoSans.variable} ${robotoSans.variable} antialiased`}
       >
-        <ClientLayout>{children}</ClientLayout>
+        {children}
       </body>
     </html>
   );
