@@ -25,7 +25,7 @@ model LessonBannedTimes {
   bannedid  Int       @id @default(autoincrement())
   teacherid Int?
   date      DateTime? @db.Date
-  hour      Boolean?
+  hour      Int?      @db.SmallInt
 
   @@map("lesson_banned_times")
 }
@@ -33,13 +33,13 @@ model LessonBannedTimes {
 model LessonModifyHistory {
   modifyid   Int       @id @default(autoincrement())
   time       DateTime  @default(now()) @db.Timestamp(0)
-  type       Boolean?
+  type       Int?      @db.SmallInt
   teacherid  Int?
   userid     Int?
   lessondue  DateTime? @db.Date
-  lessonhour Boolean?
+  lessonhour Int?      @db.SmallInt
   lessonid   Int?
-  created_by Boolean?
+  created_by Int?      @db.SmallInt
   created_id Int?
 
   @@map("lesson_modify_history")
@@ -48,13 +48,13 @@ model LessonModifyHistory {
 model Lesson {
   lessonid  Int       @id @default(autoincrement())
   due       DateTime? @db.Date
-  hour      Boolean?
+  hour      Int?      @db.SmallInt
   teacherid Int?
   is_done   Boolean?  @default(false)
   userid    Int?
   username  String?   @db.VarChar(20)
   is_grand  Boolean?
-  location  Boolean?
+  location  Int?      @db.SmallInt
   note      String?   @db.VarChar(810)
   contact   String?   @db.VarChar(20)
 
@@ -66,10 +66,10 @@ model Lesson {
 
 model Payment {
   userid              Int
-  months              Boolean?
+  months              Int?      @db.SmallInt
   lesson_count        Int?      @db.SmallInt
   is_reregister       Boolean?
-  method              Boolean?
+  method              Int?      @db.SmallInt
   start               DateTime? @db.Date
   end                 DateTime? @db.Date
   etc                 String?   @db.VarChar(180)
@@ -88,7 +88,7 @@ model Payment {
 
 model Teacher {
   teacherid              Int       @id @default(autoincrement())
-  location               Boolean?
+  location               Int?      @db.SmallInt
   gender                 Boolean?
   name                   String?   @db.VarChar(20)
   email                  String?   @db.VarChar(38)
@@ -96,10 +96,10 @@ model Teacher {
   contact                String?   @db.VarChar(12)
   loginid                String?   @db.VarChar(40)
   password               String?   @db.VarChar(88)
-  major                  Boolean?
+  major                  Int?      @db.SmallInt
   registration           DateTime? @db.Date
   address                String?   @db.VarChar(255)
-  working_days           Boolean?
+  working_days           Int?      @db.SmallInt
   leaved                 Boolean?  @default(false)
   lessons_reserved_count Int?      @default(0) @db.SmallInt
 
@@ -115,7 +115,7 @@ model UserHoldingRequest {
   is_resolved  Boolean  @default(false)
   created_at   DateTime @default(now()) @db.DateTime(0)
   updated_at   DateTime @default(now()) @db.DateTime(0)
-  users        User     @relation(fields: [userid], references: [userid], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
+  users        User     @relation(fields: [userid], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
   @@id([paymentid, start_date])
   @@index([userid], map: "idx_userid")
@@ -123,32 +123,32 @@ model UserHoldingRequest {
 }
 
 model User {
-  userid                Int                  @id @default(autoincrement())
-  location              Boolean?
-  name                  String?              @db.VarChar(20)
-  gender                Boolean?
-  birth                 DateTime?            @db.Date
-  contact               String?              @db.VarChar(20)
-  address               String?              @db.VarChar(255)
-  loginid               String?              @db.VarChar(40)
-  password              String?              @db.VarChar(88)
-  email                 String?              @db.VarChar(38)
-  ability               String?              @db.VarChar(60)
-  genre                 String?              @db.VarChar(60)
-  howto                 Boolean?
-  teacher_in_charge     Int?                 @default(0)
-  latest_lessonid       Int?                 @default(0)
-  lesson_count          Int?                 @default(0) @db.SmallInt
-  lesson_count_used     Int?                 @default(0) @db.SmallInt
-  payment_count         Int?                 @default(0) @db.SmallInt
-  streak_count          Int?                 @default(0) @db.SmallInt
-  registration          DateTime             @default(now()) @db.Timestamp(0)
-  leaved                Boolean?             @default(false)
-  subscribed            Boolean?             @default(true)
-  point                 Int?                 @default(0)
-  user_holding_requests UserHoldingRequest[]
+  id                Int                  @id @default(autoincrement()) @map("userid")
+  location          Int?                 @db.SmallInt
+  name              String?              @db.VarChar(20)
+  gender            Boolean?
+  birth             DateTime?            @db.Date
+  contact           String?              @db.VarChar(20)
+  address           String?              @db.VarChar(255)
+  loginid           String?              @db.VarChar(40)
+  password          String?              @db.VarChar(88)
+  email             String?              @db.VarChar(38)
+  ability           String?              @db.VarChar(60)
+  genre             String?              @db.VarChar(60)
+  howto             Int?                 @db.SmallInt
+  teacherInChargeId Int?                 @default(0) @map("teacher_in_charge")
+  latestLessonId    Int?                 @default(0) @map("latest_lessonid")
+  lessonCount       Int?                 @default(0) @map("lesson_count") @db.SmallInt
+  usedLessonCount   Int?                 @default(0) @map("lesson_count_used") @db.SmallInt
+  paymentCount      Int?                 @default(0) @map("payment_count") @db.SmallInt
+  streakCount       Int?                 @default(0) @map("streak_count") @db.SmallInt
+  registeredAt      DateTime             @default(now()) @map("registration") @db.Timestamp(0)
+  isLeaved          Boolean?             @default(false) @map("leaved")
+  isSubscribed      Boolean?             @default(true) @map("subscribed")
+  point             Int?                 @default(0)
+  holdingRequests   UserHoldingRequest[]
 
-  @@index([teacher_in_charge], map: "idx_users_teacherid")
+  @@index([teacherInChargeId], map: "idx_users_teacherid")
   @@map("users")
 }
 
