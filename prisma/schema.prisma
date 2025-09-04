@@ -22,10 +22,11 @@ model Holding {
   id         Int       @id @default(autoincrement()) @map("holdingid")
   paymentId  Int?      @map("paymentid")
   isResolved Boolean?  @default(false) @map("is_resolved")
+  payment    Payment?  @relation("PaymentToHolding", fields: [paymentId], references: [id])
+  user       Member?   @relation("UserToHolding", fields: [userId], references: [id])
 
-  user    User?    @relation("UserToHolding", fields: [userId], references: [id])
-  payment Payment? @relation("PaymentToHolding", fields: [paymentId], references: [id])
-
+  @@index([paymentId], map: "holdings_paymentid_fkey")
+  @@index([userId], map: "holdings_userid_fkey")
   @@map("holdings")
 }
 
@@ -34,9 +35,9 @@ model LessonBannedTimes {
   teacherId Int?      @map("teacherid")
   date      DateTime? @db.Date
   hour      Int?      @db.SmallInt
+  teacher   Teacher?  @relation("TeacherToBannedTimes", fields: [teacherId], references: [id])
 
-  teacher Teacher? @relation("TeacherToBannedTimes", fields: [teacherId], references: [id])
-
+  @@index([teacherId], map: "lesson_banned_times_teacherid_fkey")
   @@map("lesson_banned_times")
 }
 
@@ -51,10 +52,11 @@ model LessonModifyHistory {
   lessonId      Int?      @map("lessonid")
   createdByType Int?      @map("created_by") @db.SmallInt
   createdById   Int?      @map("created_id")
+  teacher       Teacher?  @relation("TeacherToModifyHistory", fields: [teacherId], references: [id])
+  user          Member?   @relation("UserToModifyHistory", fields: [userId], references: [id])
 
-  teacher Teacher? @relation("TeacherToModifyHistory", fields: [teacherId], references: [id])
-  user    User?    @relation("UserToModifyHistory", fields: [userId], references: [id])
-
+  @@index([teacherId], map: "lesson_modify_history_teacherid_fkey")
+  @@index([userId], map: "lesson_modify_history_userid_fkey")
   @@map("lesson_modify_history")
 }
 
@@ -70,14 +72,14 @@ model Lesson {
   location  Int?      @db.SmallInt
   note      String?   @db.VarChar(810)
   contact   String?   @db.VarChar(20)
-
-  teacher Teacher? @relation("TeacherToLesson", fields: [teacherId], references: [id])
-  user    User?    @relation("UserToLesson", fields: [userId], references: [id])
-  User    User[]   @relation("LatestLessonRelation")
+  teacher   Teacher?  @relation("TeacherToLesson", fields: [teacherId], references: [id])
+  user      Member?   @relation("UserToLesson", fields: [userId], references: [id])
+  User      Member[]  @relation("LatestLessonRelation")
 
   @@index([dueDate], map: "idx_due")
   @@index([teacherId], map: "idx_teacherid")
   @@index([teacherId, dueDate, dueHour], map: "idx_teacherid_due_hour")
+  @@index([userId], map: "lessons_userid_fkey")
   @@map("lessons")
 }
 
@@ -98,36 +100,34 @@ model Payment {
   id                Int       @id @default(autoincrement()) @map("paymentid")
   maxHoldingAmount  Int?      @default(0) @map("max_holding_amount")
   usedHoldingAmount Int?      @default(0) @map("used_holding_amount")
-
-  user     User      @relation("UserToPayment", fields: [userId], references: [id])
-  holdings Holding[] @relation("PaymentToHolding")
+  holdings          Holding[] @relation("PaymentToHolding")
+  user              Member    @relation("UserToPayment", fields: [userId], references: [id])
 
   @@index([userId, refunded, startDate, endDate], map: "idx_payments_userid_refunded_start_end")
   @@map("payments")
 }
 
 model Teacher {
-  id                  Int       @id @default(autoincrement()) @map("teacherid")
-  location            Int?      @db.SmallInt
+  id                  Int                   @id @default(autoincrement()) @map("teacherid")
+  location            Int?                  @db.SmallInt
   gender              Boolean?
-  name                String?   @db.VarChar(20)
-  email               String?   @db.VarChar(38)
-  birth               DateTime? @db.Date
-  contact             String?   @db.VarChar(12)
-  loginId             String?   @map("loginid") @db.VarChar(40)
-  password            String?   @db.VarChar(88)
-  major               Int?      @db.SmallInt
-  registeredAt        DateTime? @map("registration") @db.Date
-  address             String?   @db.VarChar(255)
-  workingDays         Int?      @map("working_days") @db.SmallInt
-  isLeaved            Boolean?  @default(false) @map("leaved")
-  lessonReservedCount Int?      @default(0) @map("lessons_reserved_count") @db.SmallInt
-
-  lessons       Lesson[]              @relation("TeacherToLesson")
-  bannedTimes   LessonBannedTimes[]   @relation("TeacherToBannedTimes")
-  modifyHistory LessonModifyHistory[] @relation("TeacherToModifyHistory")
-  users         User[]                @relation("TeacherInCharge")
-  WorkingTime   WorkingTime[]         @relation("TeacherToWorkingTime")
+  name                String?               @db.VarChar(20)
+  email               String?               @db.VarChar(38)
+  birth               DateTime?             @db.Date
+  contact             String?               @db.VarChar(12)
+  loginId             String?               @map("loginid") @db.VarChar(40)
+  password            String?               @db.VarChar(88)
+  major               Int?                  @db.SmallInt
+  registeredAt        DateTime?             @map("registration") @db.Date
+  address             String?               @db.VarChar(255)
+  workingDays         Int?                  @map("working_days") @db.SmallInt
+  isLeaved            Boolean?              @default(false) @map("leaved")
+  lessonReservedCount Int?                  @default(0) @map("lessons_reserved_count") @db.SmallInt
+  bannedTimes         LessonBannedTimes[]   @relation("TeacherToBannedTimes")
+  modifyHistory       LessonModifyHistory[] @relation("TeacherToModifyHistory")
+  lessons             Lesson[]              @relation("TeacherToLesson")
+  users               Member[]              @relation("TeacherInCharge")
+  WorkingTime         WorkingTime?          @relation("TeacherToWorkingTime")
 
   @@map("teachers")
 }
@@ -141,57 +141,55 @@ model UserHoldingRequest {
   isResolved  Boolean  @default(false) @map("is_resolved")
   createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime @default(now()) @map("updated_at") @db.DateTime(0)
-  user        User     @relation("UserToHoldingRequest", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
+  user        Member   @relation("UserToHoldingRequest", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
   @@id([paymentId, startDate])
   @@index([userId], map: "idx_userid")
   @@map("user_holding_requests")
 }
 
-model User {
-  id                Int                  @id @default(autoincrement()) @map("userid")
-  location          Int?                 @db.SmallInt
-  name              String?              @db.VarChar(20)
+model Member {
+  id                Int                   @id @default(autoincrement()) @map("userid")
+  location          Int?                  @db.SmallInt
+  name              String?               @db.VarChar(20)
   gender            Boolean?
-  birth             DateTime?            @db.Date
-  contact           String?              @db.VarChar(20)
-  address           String?              @db.VarChar(255)
-  loginId           String?              @map("loginid") @db.VarChar(40)
-  password          String?              @db.VarChar(88)
-  email             String?              @db.VarChar(38)
-  ability           String?              @db.VarChar(60)
-  genre             String?              @db.VarChar(60)
-  howto             Int?                 @db.SmallInt
-  teacherInChargeId Int?                 @map("teacher_in_charge")
-  latestLessonId    Int?                 @map("latest_lessonid")
-  lessonCount       Int?                 @default(0) @map("lesson_count") @db.SmallInt
-  usedLessonCount   Int?                 @default(0) @map("lesson_count_used") @db.SmallInt
-  paymentCount      Int?                 @default(0) @map("payment_count") @db.SmallInt
-  streakCount       Int?                 @default(0) @map("streak_count") @db.SmallInt
-  registeredAt      DateTime             @default(now()) @map("registration") @db.Timestamp(0)
-  isLeaved          Boolean?             @default(false) @map("leaved")
-  isSubscribed      Boolean?             @default(true) @map("subscribed")
-  point             Int?                 @default(0)
-  holdingRequests   UserHoldingRequest[] @relation("UserToHoldingRequest")
-
-  payments        Payment[]             @relation("UserToPayment")
-  lessons         Lesson[]              @relation("UserToLesson")
-  modifyHistory   LessonModifyHistory[] @relation("UserToModifyHistory")
-  holdings        Holding[]             @relation("UserToHolding")
-  teacherInCharge Teacher?              @relation("TeacherInCharge", fields: [teacherInChargeId], references: [id])
-  latestLesson    Lesson?               @relation("LatestLessonRelation", fields: [latestLessonId], references: [id])
+  birth             DateTime?             @db.Date
+  contact           String?               @db.VarChar(20)
+  address           String?               @db.VarChar(255)
+  loginId           String?               @map("loginid") @db.VarChar(40)
+  password          String?               @db.VarChar(88)
+  email             String?               @db.VarChar(38)
+  ability           String?               @db.VarChar(60)
+  genre             String?               @db.VarChar(60)
+  howto             Int?                  @db.SmallInt
+  teacherInChargeId Int?                  @map("teacher_in_charge")
+  latestLessonId    Int?                  @map("latest_lessonid")
+  lessonCount       Int?                  @default(0) @map("lesson_count") @db.SmallInt
+  usedLessonCount   Int?                  @default(0) @map("lesson_count_used") @db.SmallInt
+  paymentCount      Int?                  @default(0) @map("payment_count") @db.SmallInt
+  streakCount       Int?                  @default(0) @map("streak_count") @db.SmallInt
+  registeredAt      DateTime              @default(now()) @map("registration") @db.Timestamp(0)
+  isLeaved          Boolean?              @default(false) @map("leaved")
+  isSubscribed      Boolean?              @default(true) @map("subscribed")
+  point             Int?                  @default(0)
+  holdings          Holding[]             @relation("UserToHolding")
+  modifyHistory     LessonModifyHistory[] @relation("UserToModifyHistory")
+  lessons           Lesson[]              @relation("UserToLesson")
+  payments          Payment[]             @relation("UserToPayment")
+  holdingRequests   UserHoldingRequest[]  @relation("UserToHoldingRequest")
+  latestLesson      Lesson?               @relation("LatestLessonRelation", fields: [latestLessonId], references: [id])
+  teacherInCharge   Teacher?              @relation("TeacherInCharge", fields: [teacherInChargeId], references: [id])
 
   @@index([teacherInChargeId], map: "idx_users_teacherid")
+  @@index([latestLessonId], map: "users_latest_lessonid_fkey")
   @@map("users")
 }
 
 model WorkingTime {
-  teacherId Int     @map("teacherid")
+  teacherId Int     @id @map("teacherid")
   times     String? @db.LongText
+  teacher   Teacher @relation("TeacherToWorkingTime", fields: [teacherId], references: [id])
 
-  teacher Teacher? @relation("TeacherToWorkingTime", fields: [teacherId], references: [id])
-
-  @@id([teacherId])
   @@map("working_times")
 }
 
