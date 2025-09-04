@@ -182,11 +182,11 @@ model User {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model WorkingTime {
-  teacherid Int
+  teacherId Int     @map("teacherid")
   times     String? @db.LongText
 
-  teacher Teacher? @relation("TeacherToWorkingTime", fields: [teacherid], references: [id])
+  teacher Teacher? @relation("TeacherToWorkingTime", fields: [teacherId], references: [id])
 
-  @@id([teacherid])
+  @@id([teacherId])
   @@map("working_times")
 }
