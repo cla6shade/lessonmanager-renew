@@ -4,6 +4,6 @@ import { z } from "zod";
 // errorMessage는 zod safeParse가 아닌 다른 에러 발생 시 메시지 반환
 export type ActionState<T extends z.ZodType> = {
   success: boolean;
-  errors?: z.core.$ZodFlattenedError<T>;
+  errors?: z.core.$ZodFlattenedError<z.infer<T>, string>;
   errorMessage?: string;
 };
