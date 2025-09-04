@@ -31,16 +31,16 @@ model LessonBannedTimes {
 }
 
 model LessonModifyHistory {
-  id         Int       @id @default(autoincrement()) @map("modifyid")
-  modifiedAt DateTime  @default(now()) @map("time") @db.Timestamp(0)
-  type       Int?      @db.SmallInt
-  teacherid  Int?
-  userid     Int?
-  lessondue  DateTime? @db.Date
-  lessonhour Int?      @db.SmallInt
-  lessonid   Int?
-  created_by Int?      @db.SmallInt
-  created_id Int?
+  id            Int       @id @default(autoincrement()) @map("modifyid")
+  modifiedAt    DateTime  @default(now()) @map("time") @db.Timestamp(0)
+  type          Int?      @db.SmallInt
+  teacherId     Int?      @map("teacherid")
+  userId        Int?      @map("userid")
+  lessondue     DateTime? @db.Date
+  lessonhour    Int?      @db.SmallInt
+  lessonId      Int?      @map("lessonid")
+  createdByType Int?      @map("created_by") @db.SmallInt
+  createdById   Int?      @map("created_id")
 
   @@map("lesson_modify_history")
 }
