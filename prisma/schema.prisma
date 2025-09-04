@@ -180,7 +180,6 @@ model User {
   @@map("users")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model WorkingTime {
   teacherId Int     @map("teacherid")
   times     String? @db.LongText
@@ -189,4 +188,12 @@ model WorkingTime {
 
   @@id([teacherId])
   @@map("working_times")
+}
+
+model OpenHours {
+  id        Int @id @default(1)
+  startHour Int @db.SmallInt
+  endHour   Int @db.SmallInt
+
+  @@map("open_hours")
 }
