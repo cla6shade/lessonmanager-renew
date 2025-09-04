@@ -151,7 +151,7 @@ model UserHoldingRequest {
 model User {
   id                Int                   @id @default(autoincrement()) @map("userid")
   location          Int?                  @db.SmallInt
-  name              String?               @db.VarChar(20)
+  name              String                @db.VarChar(20)
   gender            Boolean?
   birth             DateTime?             @db.Date
   contact           String?               @db.VarChar(20)
