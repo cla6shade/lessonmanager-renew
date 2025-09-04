@@ -10,20 +10,20 @@ datasource db {
 }
 
 model Holding {
-  userid      Int?
-  start       DateTime? @db.Date
-  end         DateTime? @db.Date
-  holded_at   DateTime? @default(now()) @db.DateTime(0)
-  holdingid   Int       @id @default(autoincrement())
-  paymentid   Int?
-  is_resolved Boolean?  @default(false)
+  id         Int       @id @default(autoincrement()) @map("holdingid")
+  userId     Int?      @map("userid")
+  startDate  DateTime? @map("start") @db.Date
+  endDate    DateTime? @map("end") @db.Date
+  holdedAt   DateTime? @default(now()) @map("holded_at") @db.DateTime(0)
+  paymentId  Int?      @map("paymentid")
+  isResolved Boolean?  @default(false) @map("is_resolved")
 
   @@map("holdings")
 }
 
 model LessonBannedTimes {
-  bannedid  Int       @id @default(autoincrement())
-  teacherid Int?
+  id        Int       @id @default(autoincrement()) @map("bannedid")
+  teacherId Int?      @map("teacherid")
   date      DateTime? @db.Date
   hour      Int?      @db.SmallInt
 
@@ -31,8 +31,8 @@ model LessonBannedTimes {
 }
 
 model LessonModifyHistory {
-  modifyid   Int       @id @default(autoincrement())
-  time       DateTime  @default(now()) @db.Timestamp(0)
+  id         Int       @id @default(autoincrement()) @map("modifyid")
+  modifiedAt DateTime  @default(now()) @map("time") @db.Timestamp(0)
   type       Int?      @db.SmallInt
   teacherid  Int?
   userid     Int?
@@ -46,79 +46,79 @@ model LessonModifyHistory {
 }
 
 model Lesson {
-  lessonid  Int       @id @default(autoincrement())
-  due       DateTime? @db.Date
-  hour      Int?      @db.SmallInt
-  teacherid Int?
-  is_done   Boolean?  @default(false)
-  userid    Int?
+  id        Int       @id @default(autoincrement()) @map("lessonid")
+  dueDate   DateTime? @map("due") @db.Date
+  dueHour   Int?      @map("hour") @db.SmallInt
+  teacherId Int?      @map("teacherid")
+  isDone    Boolean?  @default(false) @map("is_done")
+  userId    Int?      @map("userid")
   username  String?   @db.VarChar(20)
-  is_grand  Boolean?
+  isGrand   Boolean?  @map("is_grand")
   location  Int?      @db.SmallInt
   note      String?   @db.VarChar(810)
   contact   String?   @db.VarChar(20)
 
-  @@index([due], map: "idx_due")
-  @@index([teacherid], map: "idx_teacherid")
-  @@index([teacherid, due, hour], map: "idx_teacherid_due_hour")
+  @@index([dueDate], map: "idx_due")
+  @@index([teacherId], map: "idx_teacherid")
+  @@index([teacherId, dueDate, dueHour], map: "idx_teacherid_due_hour")
   @@map("lessons")
 }
 
 model Payment {
-  userid              Int
-  months              Int?      @db.SmallInt
-  lesson_count        Int?      @db.SmallInt
-  is_reregister       Boolean?
-  method              Int?      @db.SmallInt
-  start               DateTime? @db.Date
-  end                 DateTime? @db.Date
-  etc                 String?   @db.VarChar(180)
-  payment_date        DateTime? @db.Date
-  payment_amount      Int?
-  refunded            Boolean?  @default(false)
-  refunded_amount     Int?      @default(0)
-  startdate_non_set   Boolean?  @default(false)
-  paymentid           Int       @id @default(autoincrement())
-  max_holding_amount  Int?      @default(0)
-  used_holding_amount Int?      @default(0)
+  id                Int       @id @default(autoincrement()) @map("paymentid")
+  userId            Int       @map("userid")
+  months            Int?      @db.SmallInt
+  lessonCount       Int?      @map("lesson_count") @db.SmallInt
+  isReregister      Boolean?  @map("is_reregister")
+  method            Int?      @db.SmallInt
+  startDate         DateTime? @map("start") @db.Date
+  endDate           DateTime? @map("end") @db.Date
+  memo              String?   @map("etc") @db.VarChar(180)
+  createdAt         DateTime? @map("payment_date") @db.Date
+  paymentAmount     Int?      @map("payment_amount")
+  refunded          Boolean?  @default(false)
+  refundedAmount    Int?      @default(0) @map("refunded_amount")
+  isStartDateNonSet Boolean?  @default(false) @map("startdate_non_set")
+  maxHoldingAmount  Int?      @default(0) @map("max_holding_amount")
+  usedHoldingAmount Int?      @default(0) @map("used_holding_amount")
 
-  @@index([userid, refunded, start, end], map: "idx_payments_userid_refunded_start_end")
+  @@index([userId, refunded, startDate, endDate], map: "idx_payments_userid_refunded_start_end")
   @@map("payments")
 }
 
 model Teacher {
-  teacherid              Int       @id @default(autoincrement())
-  location               Int?      @db.SmallInt
-  gender                 Boolean?
-  name                   String?   @db.VarChar(20)
-  email                  String?   @db.VarChar(38)
-  birth                  DateTime? @db.Date
-  contact                String?   @db.VarChar(12)
-  loginid                String?   @db.VarChar(40)
-  password               String?   @db.VarChar(88)
-  major                  Int?      @db.SmallInt
-  registration           DateTime? @db.Date
-  address                String?   @db.VarChar(255)
-  working_days           Int?      @db.SmallInt
-  leaved                 Boolean?  @default(false)
-  lessons_reserved_count Int?      @default(0) @db.SmallInt
+  id                  Int       @id @default(autoincrement()) @map("teacherid")
+  location            Int?      @db.SmallInt
+  gender              Boolean?
+  name                String?   @db.VarChar(20)
+  email               String?   @db.VarChar(38)
+  birth               DateTime? @db.Date
+  contact             String?   @db.VarChar(12)
+  loginId             String?   @map("loginid") @db.VarChar(40)
+  password            String?   @db.VarChar(88)
+  major               Int?      @db.SmallInt
+  registeredAt        DateTime? @map("registration") @db.Date
+  address             String?   @db.VarChar(255)
+  workingDays         Int?      @map("working_days") @db.SmallInt
+  isLeaved            Boolean?  @default(false) @map("leaved")
+  lessonReservedCount Int?      @default(0) @map("lessons_reserved_count") @db.SmallInt
 
   @@map("teachers")
 }
 
 model UserHoldingRequest {
-  paymentid    Int
-  start_date   DateTime @db.Date
-  end_date     DateTime @db.Date
-  userid       Int
-  holding_days Int
-  is_resolved  Boolean  @default(false)
-  created_at   DateTime @default(now()) @db.DateTime(0)
-  updated_at   DateTime @default(now()) @db.DateTime(0)
-  users        User     @relation(fields: [userid], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
+  id          Int      @map("paymentid")
+  startDate   DateTime @map("start_date") @db.Date
+  endDate     DateTime @map("end_date") @db.Date
+  userId      Int      @map("userid")
+  holdingDays Int      @map("holding_days")
+  isResolved  Boolean  @default(false) @map("is_resolved")
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.DateTime(0)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
-  @@id([paymentid, start_date])
-  @@index([userid], map: "idx_userid")
+  @@id([id, startDate])
+  @@index([userId], map: "idx_userid")
   @@map("user_holding_requests")
 }
 
