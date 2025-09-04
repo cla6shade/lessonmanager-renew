@@ -23,7 +23,7 @@ model Holding {
   paymentId  Int?      @map("paymentid")
   isResolved Boolean?  @default(false) @map("is_resolved")
   payment    Payment?  @relation("PaymentToHolding", fields: [paymentId], references: [id])
-  user       Member?   @relation("UserToHolding", fields: [userId], references: [id])
+  user       User?     @relation("UserToHolding", fields: [userId], references: [id])
 
   @@index([paymentId], map: "holdings_paymentid_fkey")
   @@index([userId], map: "holdings_userid_fkey")
@@ -53,7 +53,7 @@ model LessonModifyHistory {
   createdByType Int?      @map("created_by") @db.SmallInt
   createdById   Int?      @map("created_id")
   teacher       Teacher?  @relation("TeacherToModifyHistory", fields: [teacherId], references: [id])
-  user          Member?   @relation("UserToModifyHistory", fields: [userId], references: [id])
+  user          User?     @relation("UserToModifyHistory", fields: [userId], references: [id])
 
   @@index([teacherId], map: "lesson_modify_history_teacherid_fkey")
   @@index([userId], map: "lesson_modify_history_userid_fkey")
@@ -73,8 +73,8 @@ model Lesson {
   note      String?   @db.VarChar(810)
   contact   String?   @db.VarChar(20)
   teacher   Teacher?  @relation("TeacherToLesson", fields: [teacherId], references: [id])
-  user      Member?   @relation("UserToLesson", fields: [userId], references: [id])
-  User      Member[]  @relation("LatestLessonRelation")
+  user      User?     @relation("UserToLesson", fields: [userId], references: [id])
+  lastUsers User[]    @relation("LatestLessonRelation")
 
   @@index([dueDate], map: "idx_due")
   @@index([teacherId], map: "idx_teacherid")
@@ -101,7 +101,7 @@ model Payment {
   maxHoldingAmount  Int?      @default(0) @map("max_holding_amount")
   usedHoldingAmount Int?      @default(0) @map("used_holding_amount")
   holdings          Holding[] @relation("PaymentToHolding")
-  user              Member    @relation("UserToPayment", fields: [userId], references: [id])
+  user              User      @relation("UserToPayment", fields: [userId], references: [id])
 
   @@index([userId, refunded, startDate, endDate], map: "idx_payments_userid_refunded_start_end")
   @@map("payments")
@@ -126,7 +126,7 @@ model Teacher {
   bannedTimes         LessonBannedTimes[]   @relation("TeacherToBannedTimes")
   modifyHistory       LessonModifyHistory[] @relation("TeacherToModifyHistory")
   lessons             Lesson[]              @relation("TeacherToLesson")
-  users               Member[]              @relation("TeacherInCharge")
+  users               User[]                @relation("TeacherInCharge")
   WorkingTime         WorkingTime?          @relation("TeacherToWorkingTime")
 
   @@map("teachers")
@@ -141,14 +141,14 @@ model UserHoldingRequest {
   isResolved  Boolean  @default(false) @map("is_resolved")
   createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime @default(now()) @map("updated_at") @db.DateTime(0)
-  user        Member   @relation("UserToHoldingRequest", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
+  user        User     @relation("UserToHoldingRequest", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
   @@id([paymentId, startDate])
   @@index([userId], map: "idx_userid")
   @@map("user_holding_requests")
 }
 
-model Member {
+model User {
   id                Int                   @id @default(autoincrement()) @map("userid")
   location          Int?                  @db.SmallInt
   name              String?               @db.VarChar(20)
