@@ -122,6 +122,7 @@ model Teacher {
   bannedTimes   LessonBannedTimes[]   @relation("TeacherToBannedTimes")
   modifyHistory LessonModifyHistory[] @relation("TeacherToModifyHistory")
   users         User[]                @relation("TeacherInCharge")
+  WorkingTime   WorkingTime[]         @relation("TeacherToWorkingTime")
 
   @@map("teachers")
 }
@@ -184,6 +185,8 @@ model WorkingTime {
   teacherid Int
   times     String? @db.LongText
 
+  teacher Teacher? @relation("TeacherToWorkingTime", fields: [teacherid], references: [id])
+
+  @@id([teacherid])
   @@map("working_times")
-  @@ignore
 }
