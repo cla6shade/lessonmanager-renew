@@ -10,11 +10,11 @@ datasource db {
 }
 
 model Holding {
-  id         Int       @id @default(autoincrement()) @map("holdingid")
   userId     Int?      @map("userid")
   startDate  DateTime? @map("start") @db.Date
   endDate    DateTime? @map("end") @db.Date
   holdedAt   DateTime? @default(now()) @map("holded_at") @db.DateTime(0)
+  id         Int       @id @default(autoincrement()) @map("holdingid")
   paymentId  Int?      @map("paymentid")
   isResolved Boolean?  @default(false) @map("is_resolved")
 
@@ -65,7 +65,6 @@ model Lesson {
 }
 
 model Payment {
-  id                Int       @id @default(autoincrement()) @map("paymentid")
   userId            Int       @map("userid")
   months            Int?      @db.SmallInt
   lessonCount       Int?      @map("lesson_count") @db.SmallInt
@@ -79,6 +78,7 @@ model Payment {
   refunded          Boolean?  @default(false)
   refundedAmount    Int?      @default(0) @map("refunded_amount")
   isStartDateNonSet Boolean?  @default(false) @map("startdate_non_set")
+  id                Int       @id @default(autoincrement()) @map("paymentid")
   maxHoldingAmount  Int?      @default(0) @map("max_holding_amount")
   usedHoldingAmount Int?      @default(0) @map("used_holding_amount")
 
