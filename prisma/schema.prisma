@@ -9,7 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model holdings {
+model Holding {
   userid      Int?
   start       DateTime? @db.Date
   end         DateTime? @db.Date
@@ -17,16 +17,20 @@ model holdings {
   holdingid   Int       @id @default(autoincrement())
   paymentid   Int?
   is_resolved Boolean?  @default(false)
+
+  @@map("holdings")
 }
 
-model lesson_banned_times {
+model LessonBannedTimes {
   bannedid  Int       @id @default(autoincrement())
   teacherid Int?
   date      DateTime? @db.Date
   hour      Boolean?
+
+  @@map("lesson_banned_times")
 }
 
-model lesson_modify_history {
+model LessonModifyHistory {
   modifyid   Int       @id @default(autoincrement())
   time       DateTime  @default(now()) @db.Timestamp(0)
   type       Boolean?
@@ -37,9 +41,11 @@ model lesson_modify_history {
   lessonid   Int?
   created_by Boolean?
   created_id Int?
+
+  @@map("lesson_modify_history")
 }
 
-model lessons {
+model Lesson {
   lessonid  Int       @id @default(autoincrement())
   due       DateTime? @db.Date
   hour      Boolean?
@@ -55,9 +61,10 @@ model lessons {
   @@index([due], map: "idx_due")
   @@index([teacherid], map: "idx_teacherid")
   @@index([teacherid, due, hour], map: "idx_teacherid_due_hour")
+  @@map("lessons")
 }
 
-model payments {
+model Payment {
   userid              Int
   months              Boolean?
   lesson_count        Int?      @db.SmallInt
@@ -76,9 +83,10 @@ model payments {
   used_holding_amount Int?      @default(0)
 
   @@index([userid, refunded, start, end], map: "idx_payments_userid_refunded_start_end")
+  @@map("payments")
 }
 
-model teachers {
+model Teacher {
   teacherid              Int       @id @default(autoincrement())
   location               Boolean?
   gender                 Boolean?
@@ -94,9 +102,11 @@ model teachers {
   working_days           Boolean?
   leaved                 Boolean?  @default(false)
   lessons_reserved_count Int?      @default(0) @db.SmallInt
+
+  @@map("teachers")
 }
 
-model user_holding_requests {
+model UserHoldingRequest {
   paymentid    Int
   start_date   DateTime @db.Date
   end_date     DateTime @db.Date
@@ -105,45 +115,48 @@ model user_holding_requests {
   is_resolved  Boolean  @default(false)
   created_at   DateTime @default(now()) @db.DateTime(0)
   updated_at   DateTime @default(now()) @db.DateTime(0)
-  users        users    @relation(fields: [userid], references: [userid], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
+  users        User     @relation(fields: [userid], references: [userid], onDelete: Cascade, onUpdate: Restrict, map: "fk_user")
 
   @@id([paymentid, start_date])
   @@index([userid], map: "idx_userid")
+  @@map("user_holding_requests")
 }
 
-model users {
-  userid                Int                     @id @default(autoincrement())
+model User {
+  userid                Int                  @id @default(autoincrement())
   location              Boolean?
-  name                  String?                 @db.VarChar(20)
+  name                  String?              @db.VarChar(20)
   gender                Boolean?
-  birth                 DateTime?               @db.Date
-  contact               String?                 @db.VarChar(20)
-  address               String?                 @db.VarChar(255)
-  loginid               String?                 @db.VarChar(40)
-  password              String?                 @db.VarChar(88)
-  email                 String?                 @db.VarChar(38)
-  ability               String?                 @db.VarChar(60)
-  genre                 String?                 @db.VarChar(60)
+  birth                 DateTime?            @db.Date
+  contact               String?              @db.VarChar(20)
+  address               String?              @db.VarChar(255)
+  loginid               String?              @db.VarChar(40)
+  password              String?              @db.VarChar(88)
+  email                 String?              @db.VarChar(38)
+  ability               String?              @db.VarChar(60)
+  genre                 String?              @db.VarChar(60)
   howto                 Boolean?
-  teacher_in_charge     Int?                    @default(0)
-  latest_lessonid       Int?                    @default(0)
-  lesson_count          Int?                    @default(0) @db.SmallInt
-  lesson_count_used     Int?                    @default(0) @db.SmallInt
-  payment_count         Int?                    @default(0) @db.SmallInt
-  streak_count          Int?                    @default(0) @db.SmallInt
-  registration          DateTime                @default(now()) @db.Timestamp(0)
-  leaved                Boolean?                @default(false)
-  subscribed            Boolean?                @default(true)
-  point                 Int?                    @default(0)
-  user_holding_requests user_holding_requests[]
+  teacher_in_charge     Int?                 @default(0)
+  latest_lessonid       Int?                 @default(0)
+  lesson_count          Int?                 @default(0) @db.SmallInt
+  lesson_count_used     Int?                 @default(0) @db.SmallInt
+  payment_count         Int?                 @default(0) @db.SmallInt
+  streak_count          Int?                 @default(0) @db.SmallInt
+  registration          DateTime             @default(now()) @db.Timestamp(0)
+  leaved                Boolean?             @default(false)
+  subscribed            Boolean?             @default(true)
+  point                 Int?                 @default(0)
+  user_holding_requests UserHoldingRequest[]
 
   @@index([teacher_in_charge], map: "idx_users_teacherid")
+  @@map("users")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model working_times {
+model WorkingTime {
   teacherid Int
   times     String? @db.LongText
 
+  @@map("working_times")
   @@ignore
 }
