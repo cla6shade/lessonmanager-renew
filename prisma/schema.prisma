@@ -111,7 +111,7 @@ model Teacher {
   id                  Int                   @id @default(autoincrement()) @map("teacherid")
   location            Int?                  @db.SmallInt
   gender              Boolean?
-  name                String?               @db.VarChar(20)
+  name                String                @db.VarChar(20)
   email               String?               @db.VarChar(38)
   birth               DateTime?             @db.Date
   contact             String?               @db.VarChar(12)
