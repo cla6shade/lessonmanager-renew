@@ -1,8 +1,6 @@
+import ClientLayout from "@/components/ClientLayout";
 import type { Metadata } from "next";
 import { Lato, Roboto } from "next/font/google";
-import "./globals.css";
-import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 const latoSans = Lato({
   variable: "--font-lato",
@@ -26,16 +24,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return redirect("/login");
-  }
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body
         className={`${latoSans.variable} ${robotoSans.variable} antialiased`}
       >
-        {children}
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
