@@ -37,8 +37,8 @@ export const loginAction = async (
   }
   await createSession({
     isAdmin,
-    teacherId: account.id,
-    userId: account.id,
+    ...(isAdmin && { teacherId: account.id }),
+    ...(!isAdmin && { userId: account.id }),
     name: account.name,
   });
   return {
