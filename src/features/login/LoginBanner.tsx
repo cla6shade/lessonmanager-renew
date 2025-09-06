@@ -15,14 +15,14 @@ export default function LoginBanner() {
       py={10}
       backgroundColor={colors.brandPanel}
       borderLeftRadius="xl"
-      display={{ base: "none", md: "flex" }}
+      display={{ base: "none", lg: "flex" }}
       flexDirection="column"
     >
       <Flex
         grow={1}
         flexDirection="column"
         justifyContent="center"
-        display={{ base: "none", md: "flex" }}
+        display={{ base: "none", lg: "flex" }}
         color="white"
         alignItems="center"
         gap={16}

@@ -9,15 +9,15 @@ interface LoginFormCardProps {
 export default function LoginFormCard({ children }: LoginFormCardProps) {
   return (
     <Box
-      w={{ base: "full", md: "700px" }}
-      h={{ base: "full", md: "600px" }}
+      w={{ base: "full", lg: "700px" }}
+      h={{ base: "full", lg: "600px" }}
       py={0}
       gap={0}
       display="flex"
       bg="primary"
-      borderRadius={{ base: "none", md: "xl" }}
+      borderRadius={{ base: "none", lg: "xl" }}
       border={{ base: "none" }}
-      boxShadow={{ base: "none", md: "sm" }}
+      boxShadow={{ base: "none", lg: "sm" }}
       flexDirection="row"
     >
       {children}

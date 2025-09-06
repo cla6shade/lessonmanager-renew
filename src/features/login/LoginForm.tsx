@@ -16,10 +16,10 @@ export default function LoginForm() {
     <Box
       display="flex"
       flexDirection="column"
-      w={{ base: "full", md: "50%" }}
+      w={{ base: "full", lg: "50%" }}
       h="full"
-      bg={{ base: colors.brandPanel, md: "white" }}
-      borderRightRadius={{ base: "none", md: "xl" }}
+      bg={{ base: colors.brandPanel, lg: "white" }}
+      borderRightRadius={{ base: "none", lg: "xl" }}
     >
       <form action={formAction} style={{ flexGrow: 1 }}>
         <Flex
@@ -32,7 +32,7 @@ export default function LoginForm() {
           gap={2}
         >
           <Box
-            display={{ base: "flex", md: "none" }}
+            display={{ base: "flex", lg: "none" }}
             flexDirection="column"
             alignItems="center"
             gap={2}
@@ -53,11 +53,11 @@ export default function LoginForm() {
               name="loginId"
               placeholder="아이디"
               disabled={pending}
-              bg={{ base: "transparent", md: "gray.200" }}
-              color={{ base: "white", md: "gray.800" }}
-              _placeholder={{ color: { base: "gray.300", md: "gray.500" } }}
+              bg={{ base: "transparent", lg: "gray.200" }}
+              color={{ base: "white", lg: "gray.800" }}
+              _placeholder={{ color: { base: "gray.300", lg: "gray.500" } }}
               border="1px solid"
-              borderColor={{ base: "gray.600", md: "gray.300" }}
+              borderColor={{ base: "gray.600", lg: "gray.300" }}
             />
             {loginState.errors?.fieldErrors?.loginId && (
               <Text fontSize="sm" color="red.500" mt={1}>
@@ -73,11 +73,11 @@ export default function LoginForm() {
               name="password"
               placeholder="비밀번호"
               disabled={pending}
-              bg={{ base: "transparent", md: "gray.200" }}
-              color={{ base: "white", md: "gray.800" }}
-              _placeholder={{ color: { base: "gray.300", md: "gray.500" } }}
+              bg={{ base: "transparent", lg: "gray.200" }}
+              color={{ base: "white", lg: "gray.800" }}
+              _placeholder={{ color: { base: "gray.300", lg: "gray.500" } }}
               border="1px solid"
-              borderColor={{ base: "gray.600", md: "gray.300" }}
+              borderColor={{ base: "gray.600", lg: "gray.300" }}
             />
             {loginState.errors?.fieldErrors?.password && (
               <Text fontSize="sm" color="red.500" mt={1}>
@@ -96,7 +96,7 @@ export default function LoginForm() {
             />
             <label htmlFor="isAdmin">
               <Text
-                color={{ base: "white", md: "gray.800" }}
+                color={{ base: "white", lg: "gray.800" }}
                 fontSize="sm"
                 cursor="pointer"
               >
@@ -122,7 +122,7 @@ export default function LoginForm() {
           </Button>
         </Flex>
       </form>
-      <Box display={{ base: "flex", md: "none" }} pb={20}>
+      <Box display={{ base: "flex", lg: "none" }} pb={20}>
         <BrandLinkSection />
       </Box>
     </Box>

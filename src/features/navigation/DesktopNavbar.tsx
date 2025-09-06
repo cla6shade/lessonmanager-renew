@@ -14,7 +14,7 @@ export default function DesktopNavbar() {
       bg={colors.brandPanel}
       color="white"
       zIndex={1000}
-      display={{ base: "none", md: "flex" }}
+      display={{ base: "none", lg: "flex" }}
       flexDirection="column"
       p="24px"
     >
