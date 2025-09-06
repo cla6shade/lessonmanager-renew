@@ -9,6 +9,7 @@ export interface SessionData {
   teacherId?: number;
   userId?: number;
   name: string;
+  locationId: number;
 }
 
 const sessionOptions: SessionOptions = {
@@ -37,6 +38,7 @@ export async function createSession(
   session.teacherId = sessionData.teacherId;
   session.userId = sessionData.userId;
   session.name = sessionData.name;
+  session.locationId = sessionData.locationId;
 
   return session.save();
 }
