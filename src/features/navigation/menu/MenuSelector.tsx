@@ -18,6 +18,10 @@ export default function MenuSelector() {
       fontWeight={currentMenu?.href === menu.href ? "bold" : "normal"}
       color={currentMenu?.href === menu.href ? colors.brand : "gray.300"}
       _hover={{ bg: colors.brandPanelDark }}
+      fontSize={{
+        base: "sm",
+        lg: "md",
+      }}
     >
       {menu.name}
     </Button>
