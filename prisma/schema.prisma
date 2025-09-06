@@ -109,6 +109,7 @@ model Payment {
 
 model Teacher {
   id                  Int                   @id @default(autoincrement()) @map("teacherid")
+  isManager           Boolean?              @default(false) @map("is_manager")
   locationId          Int?                  @map("location") @db.SmallInt
   gender              Boolean?
   name                String                @db.VarChar(20)
@@ -117,7 +118,7 @@ model Teacher {
   contact             String?               @db.VarChar(12)
   loginId             String?               @map("loginid") @db.VarChar(40)
   password            String?               @db.VarChar(88)
-  major               Int?                  @db.SmallInt
+  majorId             Int?                  @map("major") @db.SmallInt
   registeredAt        DateTime?             @map("registration") @db.Date
   address             String?               @db.VarChar(255)
   workingDays         Int?                  @map("working_days") @db.SmallInt
@@ -129,6 +130,7 @@ model Teacher {
   users               User[]                @relation("TeacherInCharge")
   WorkingTime         WorkingTime?          @relation("TeacherToWorkingTime")
   location            Location?             @relation(fields: [locationId], references: [id])
+  Major               Major?                @relation("MajorToTeacher", fields: [majorId], references: [id])
 
   @@map("teachers")
 }
@@ -197,8 +199,8 @@ model WorkingTime {
 
 model OpenHours {
   id        Int @id @default(1)
-  startHour Int @db.SmallInt
-  endHour   Int @db.SmallInt
+  startHour Int @map("start_hour") @db.SmallInt
+  endHour   Int @map("end_hour") @db.SmallInt
 
   @@map("open_hours")
 }
@@ -210,4 +212,13 @@ model Location {
   users    User[]
 
   @@map("locations")
+}
+
+model Major {
+  id       Int       @id @map("majorid") @db.SmallInt
+  symbol   String    @db.VarChar(20)
+  name     String    @db.VarChar(20)
+  teachers Teacher[] @relation("MajorToTeacher")
+
+  @@map("majors")
 }
