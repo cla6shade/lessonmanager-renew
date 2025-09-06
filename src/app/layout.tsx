@@ -1,4 +1,6 @@
 import ClientLayout from "@/components/ClientLayout";
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import type { Metadata } from "next";
 import { Lato, Roboto } from "next/font/google";
 
@@ -24,12 +26,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locations = await prisma.location.findMany();
+  const { isAdmin, locationId } = await getSession();
+
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
         className={`${latoSans.variable} ${robotoSans.variable} antialiased`}
       >
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout
+          locations={locations}
+          locationId={locationId!}
+          isAdmin={isAdmin}
+        >
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
