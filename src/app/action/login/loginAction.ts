@@ -4,7 +4,7 @@ import { z } from "zod";
 import { ActionState } from "../types";
 import { LoginSchema } from "./schema";
 import { canLogin, getAccount } from "./service";
-import { createSession } from "@/lib/session";
+import { createSession, destroySession } from "@/lib/session";
 
 export const loginAction = async (
   state: ActionState<typeof LoginSchema>,
@@ -39,9 +39,22 @@ export const loginAction = async (
     isAdmin,
     ...(isAdmin && { teacherId: account.id }),
     ...(!isAdmin && { userId: account.id }),
+    locationId: account.locationId!,
     name: account.name,
   });
   return {
     success: true,
   };
+};
+
+export const logoutAction = async () => {
+  try {
+    await destroySession();
+  } catch (error) {
+    return {
+      success: false,
+      errorMessage: "로그아웃에 실패했습니다.",
+    };
+  }
+  return { success: true };
 };
