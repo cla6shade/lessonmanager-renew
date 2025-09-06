@@ -109,7 +109,7 @@ model Payment {
 
 model Teacher {
   id                  Int                   @id @default(autoincrement()) @map("teacherid")
-  location            Int?                  @db.SmallInt
+  locationId          Int?                  @map("location") @db.SmallInt
   gender              Boolean?
   name                String                @db.VarChar(20)
   email               String?               @db.VarChar(38)
@@ -128,6 +128,7 @@ model Teacher {
   lessons             Lesson[]              @relation("TeacherToLesson")
   users               User[]                @relation("TeacherInCharge")
   WorkingTime         WorkingTime?          @relation("TeacherToWorkingTime")
+  location            Location?             @relation(fields: [locationId], references: [id])
 
   @@map("teachers")
 }
@@ -150,7 +151,7 @@ model UserHoldingRequest {
 
 model User {
   id                Int                   @id @default(autoincrement()) @map("userid")
-  location          Int?                  @db.SmallInt
+  locationId        Int?                  @map("location") @db.SmallInt
   name              String                @db.VarChar(20)
   gender            Boolean?
   birth             DateTime?             @db.Date
@@ -179,6 +180,7 @@ model User {
   holdingRequests   UserHoldingRequest[]  @relation("UserToHoldingRequest")
   latestLesson      Lesson?               @relation("LatestLessonRelation", fields: [latestLessonId], references: [id])
   teacherInCharge   Teacher?              @relation("TeacherInCharge", fields: [teacherInChargeId], references: [id])
+  location          Location?             @relation(fields: [locationId], references: [id])
 
   @@index([teacherInChargeId], map: "idx_users_teacherid")
   @@index([latestLessonId], map: "users_latest_lessonid_fkey")
@@ -199,4 +201,13 @@ model OpenHours {
   endHour   Int @db.SmallInt
 
   @@map("open_hours")
+}
+
+model Location {
+  id       Int       @id @map("locationid") @db.SmallInt
+  name     String    @db.VarChar(20)
+  teachers Teacher[]
+  users    User[]
+
+  @@map("locations")
 }
