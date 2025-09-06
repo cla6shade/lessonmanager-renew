@@ -1,6 +1,10 @@
 import { getSession } from "@/lib/session";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import {
+  DEFAULT_ADMIN_MENU,
+  DEFAULT_USER_MENU,
+} from "./features/navigation/menu/menus";
 
 export async function middleware(request: NextRequest) {
   const session = await getSession();
@@ -15,7 +19,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(
+      new URL(
+        session.isAdmin ? DEFAULT_ADMIN_MENU.href : DEFAULT_USER_MENU.href,
+        request.url
+      )
+    );
   }
 
   return NextResponse.next();
