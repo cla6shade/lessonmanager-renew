@@ -94,14 +94,15 @@ export default function LoginForm() {
               value="true"
               disabled={pending}
             />
-            <Text
-              as="label"
-              color={{ base: "white", md: "gray.800" }}
-              fontSize="sm"
-              cursor="pointer"
-            >
-              관리자 로그인
-            </Text>
+            <label htmlFor="isAdmin">
+              <Text
+                color={{ base: "white", md: "gray.800" }}
+                fontSize="sm"
+                cursor="pointer"
+              >
+                관리자 로그인
+              </Text>
+            </label>
           </Flex>
 
           <Button
