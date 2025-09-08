@@ -7,7 +7,9 @@
     "build": "pnpm prisma generate && next build --turbopack",
     "start": "cross-env NODE_ENV=production next start",
     "lint": "eslint",
-    "gen:prisma": "pnpm prima generate"
+    "gen:prisma": "pnpm prima generate",
+    "test": "vitest",
+    "test:ci": "vitest --run"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.26.0",
