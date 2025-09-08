@@ -1,0 +1,27 @@
+import { encryptPassword } from "@/app/action/login/service";
+
+export const mockUsers = Array.from({ length: 12 }).map((_, idx) => ({
+  id: idx + 1,
+  locationId: idx % 2 === 0 ? 0 : 1,
+  name: `User${idx + 1}`,
+  gender: idx % 2 === 0,
+  birth: new Date(`199${idx}-01-01`),
+  contact: `0105555${String(idx).padStart(4, "0")}`,
+  address: `부산광역시 주소 ${idx + 1}`,
+  loginId: `user${idx + 1}`,
+  password: encryptPassword(`hashedpassword${idx + 1}`),
+  email: `user${idx + 1}@example.com`,
+  ability: "피아노",
+  genre: idx % 2 === 0 ? "클래식" : "재즈",
+  howto: 1,
+  teacherInChargeId: idx % 2 === 0 ? 1 : 2,
+  latestLessonId: null,
+  lessonCount: 5,
+  usedLessonCount: 2,
+  paymentCount: 1,
+  streakCount: 0,
+  registeredAt: new Date("2025-01-01"),
+  isLeaved: false,
+  isSubscribed: true,
+  point: 100,
+}));

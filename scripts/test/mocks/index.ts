@@ -1,0 +1,10 @@
+export { mockMajors } from "./majors";
+export { mockLocations } from "./locations";
+export { mockTeachers } from "./teachers";
+export { mockUsers } from "./users";
+export { mockPayments } from "./payments";
+export { mockLessons } from "./lessons";
+export { mockLessonModifyHistories } from "./lessonModifyHistories";
+export { mockLessonBannedTimes } from "./lessonBannedTimes";
+export { mockWorkingTimes } from "./workingTimes";
+export { mockOpenHours } from "./openHours";
