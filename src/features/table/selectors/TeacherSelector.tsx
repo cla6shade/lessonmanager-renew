@@ -12,13 +12,13 @@ import {
 import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 import { useTable } from "../TableProvider";
-import { Teacher } from "@/generated/prisma";
+import { ExtendedTeacher } from "../types";
 
 export default function TeacherSelector() {
   const { teachers, selectedTeacher, setSelectedTeacher } = useTable();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleTeacherSelect = (teacher: Teacher | null) => {
+  const handleTeacherSelect = (teacher: ExtendedTeacher | null) => {
     setSelectedTeacher(teacher);
     setIsOpen(false);
   };
@@ -40,37 +40,13 @@ export default function TeacherSelector() {
           positioning={{ placement: "bottom" }}
         >
           <Popover.Trigger>
-            <Box
-              border="1px solid"
-              borderColor="gray.500"
-              px={{
-                base: 4,
-                lg: 4,
-              }}
-              py={2}
-              rounded="sm"
-              cursor="pointer"
-              _hover={{ bg: "gray.50" }}
-              minWidth="120px"
-            >
-              <Flex
-                align="center"
-                justify="space-between"
-                gap={2}
-                color="gray.900"
-                fontSize={{
-                  base: "xs",
-                  lg: "sm",
-                }}
-                fontWeight="medium"
-              >
-                <Flex align="center" gap={1}>
-                  <User size={16} />
-                  <Text>{displayName}</Text>
-                </Flex>
+            <TeacherSelectorContainer>
+              <User size={16} />
+              <Text>{displayName}</Text>
+              <Box display="flex" flexGrow={1} justifyContent="end">
                 <ChevronDown size={16} />
-              </Flex>
-            </Box>
+              </Box>
+            </TeacherSelectorContainer>
           </Popover.Trigger>
           <Portal>
             <Popover.Positioner>
@@ -116,6 +92,39 @@ export default function TeacherSelector() {
             </Popover.Positioner>
           </Portal>
         </Popover.Root>
+      </Flex>
+    </Box>
+  );
+}
+
+function TeacherSelectorContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      border="1px solid"
+      borderColor="gray.500"
+      px={{
+        base: 4,
+        lg: 4,
+      }}
+      py={2}
+      rounded="sm"
+      cursor="pointer"
+      _hover={{ bg: "gray.50" }}
+      minWidth="120px"
+    >
+      <Flex
+        align="center"
+        justify="space-between"
+        gap={2}
+        color="gray.900"
+        fontSize={{
+          base: "xs",
+          lg: "sm",
+        }}
+        fontWeight="medium"
+        width="100%"
+      >
+        {children}
       </Flex>
     </Box>
   );
