@@ -19,6 +19,10 @@ export default function ContentLayout({
         base: "20px",
         lg: "40px",
       }}
+      width="100%"
+      height="100%"
+      display="flex"
+      flexDirection="column"
     >
       <Heading fontSize={{ base: "20px", lg: "28px" }}>
         {currentMenu?.name}
