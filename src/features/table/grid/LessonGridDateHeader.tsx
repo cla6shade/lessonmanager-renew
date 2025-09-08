@@ -13,7 +13,7 @@ export default function LessonGridDateHeader() {
       height="52px"
     >
       <Box />
-      {dates.map((date, index) => (
+      {dates.map((date) => (
         <Flex
           alignItems="center"
           justifyContent="center"

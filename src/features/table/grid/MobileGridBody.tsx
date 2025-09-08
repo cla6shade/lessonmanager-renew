@@ -1,4 +1,4 @@
-import { Flex, Grid, Text, Box } from "@chakra-ui/react";
+import { Flex, Text, Box } from "@chakra-ui/react";
 import TimeColumn from "./TimeColumn";
 import LessonColumn from "./LessonColumn";
 import { useTable } from "../TableProvider";

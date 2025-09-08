@@ -1,7 +1,7 @@
 "use client";
 
 import { Location } from "@/generated/prisma";
-import { createContext, useContext, useState, ReactNode, use } from "react";
+import { createContext, useState, ReactNode, use } from "react";
 
 interface NavigationContextType {
   locations: Location[];

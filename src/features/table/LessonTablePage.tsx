@@ -1,6 +1,6 @@
 "use client";
 
-import { OpenHours, Teacher, WorkingTime } from "@/generated/prisma";
+import { OpenHours, WorkingTime } from "@/generated/prisma";
 import TableProvider from "./TableProvider";
 import LessonTable from "./LessonTable";
 import MobileTable from "./MobileTable";

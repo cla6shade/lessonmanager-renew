@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Lesson } from "@/generated/prisma";
 import { GetLessonsResponse } from "@/app/api/lessons/schema";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
-import { useTable } from "../TableProvider";
 
 interface UseFetchLessonProps {
   startDate: Date;

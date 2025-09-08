@@ -1,20 +1,8 @@
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import TooltipSection from "./TooltipSection";
-import { useTable } from "./TableProvider";
-import LessonGridDateHeader from "./grid/LessonGridDateHeader";
-import TimeColumn from "./grid/TimeColumn";
 import LessonGridBody from "./grid/LessonGridBody";
 
 export default function LessonTable() {
-  const {
-    workingTimes,
-    openHours,
-    teachers,
-    selectedTeacher,
-    datePeriod,
-    selectedDate,
-  } = useTable();
-
   return (
     <Flex flexGrow={1}>
       <Flex width="100%" height="100%" direction="column">

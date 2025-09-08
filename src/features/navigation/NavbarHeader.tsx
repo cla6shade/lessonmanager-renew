@@ -1,5 +1,5 @@
 import brand from "@/brand/baseInfo";
-import { Text, Flex, Box } from "@chakra-ui/react";
+import { Text, Box } from "@chakra-ui/react";
 import Image from "next/image";
 import { useNavigation } from "./location/NavigationContext";
 

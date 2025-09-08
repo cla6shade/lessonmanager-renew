@@ -1,4 +1,4 @@
-import { Button, Separator, Stack, Text } from "@chakra-ui/react";
+import { Button, Separator, Stack } from "@chakra-ui/react";
 import { useNavigation } from "./NavigationContext";
 import colors from "@/brand/colors";
 

@@ -1,4 +1,4 @@
-import { Flex, Grid, Text, Box } from "@chakra-ui/react";
+import { Flex, Grid } from "@chakra-ui/react";
 import TimeColumn from "./TimeColumn";
 import LessonGridDateHeader from "./LessonGridDateHeader";
 import LessonColumn from "./LessonColumn";

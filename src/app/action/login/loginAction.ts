@@ -50,7 +50,7 @@ export const loginAction = async (
 export const logoutAction = async () => {
   try {
     await destroySession();
-  } catch (error) {
+  } catch (_) {
     return {
       success: false,
       errorMessage: "로그아웃에 실패했습니다.",

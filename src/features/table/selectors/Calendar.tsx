@@ -3,7 +3,6 @@
 import { Flex, Text, IconButton, Grid, Button } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { formatDate } from "@/utils/date";
 
 interface CalendarProps {
   selectedPeriod: {
@@ -34,7 +33,7 @@ export default function Calendar({
     const endDate = new Date(lastDay);
     endDate.setDate(endDate.getDate() + (6 - ((lastDay.getDay() + 6) % 7)));
 
-    let current = new Date(startDate);
+    const current = new Date(startDate);
     while (current <= endDate) {
       days.push(new Date(current));
       current.setDate(current.getDate() + 1);

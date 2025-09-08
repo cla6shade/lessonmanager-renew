@@ -4,8 +4,8 @@ import crypto from "crypto";
 
 export function encryptPassword(password: string) {
   password = password + process.env.PASSWORD_SALT;
-  let algo = crypto.createHash("sha512");
-  let hash = algo.update(password);
+  const algo = crypto.createHash("sha512");
+  const hash = algo.update(password);
   return hash.digest("base64");
 }
 
