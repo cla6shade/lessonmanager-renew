@@ -1,11 +1,13 @@
 import { createContext, ReactNode, use, useCallback, useState } from "react";
-import { OpenHours, Teacher, WorkingTime } from "@/generated/prisma";
+import { OpenHours, WorkingTime } from "@/generated/prisma";
 import {
   DatePeriod,
   getCurrentDatePeriod,
   getNextDatePeriod,
   getPreviousDatePeriod,
+  setDateToStartOfDay,
 } from "@/utils/date";
+import { ExtendedTeacher } from "./types";
 
 export const TableContext = createContext<TableContextType | undefined>(
   undefined
@@ -14,21 +16,21 @@ export const TableContext = createContext<TableContextType | undefined>(
 interface TableProviderProps {
   workingTimes: WorkingTime[];
   openHours: OpenHours;
-  teachers: Teacher[];
+  teachers: ExtendedTeacher[];
   children: ReactNode;
 }
 
 interface TableContextType {
-  workingTimes: WorkingTime[];
   openHours: OpenHours;
-  teachers: Teacher[];
-  selectedTeacher: Teacher | null;
+  teachers: ExtendedTeacher[];
+  selectedTeacher: ExtendedTeacher | null;
+  workingTimes: WorkingTime[];
   datePeriod: DatePeriod;
   selectedDate: Date;
   setPeriodToNext: () => void;
   setPeriodToPrevious: () => void;
   setSelectedDate: (date: Date) => void;
-  setSelectedTeacher: (teacher: Teacher | null) => void;
+  setSelectedTeacher: (teacher: ExtendedTeacher | null) => void;
   setDatePeriod: (period: DatePeriod) => void;
 }
 
@@ -38,11 +40,14 @@ export default function TableProvider({
   openHours,
   teachers,
 }: TableProviderProps) {
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [selectedTeacher, setSelectedTeacher] =
+    useState<ExtendedTeacher | null>(null);
   const [datePeriod, setDatePeriod] = useState<DatePeriod>(
     getCurrentDatePeriod(new Date())
   );
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    setDateToStartOfDay(new Date())
+  );
 
   const setPeriodToNext = useCallback(() => {
     setDatePeriod(getNextDatePeriod(datePeriod));
