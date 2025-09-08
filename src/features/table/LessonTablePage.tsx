@@ -3,28 +3,34 @@
 import { OpenHours, Teacher, WorkingTime } from "@/generated/prisma";
 import TableProvider from "./TableProvider";
 import LessonTable from "./LessonTable";
-import { Box, Flex, Stack } from "@chakra-ui/react";
+import MobileTable from "./MobileTable";
+import { Flex, Box } from "@chakra-ui/react";
 import DateSelector from "./selectors/DateSelector";
 import TeacherSelector from "./selectors/TeacherSelector";
+import { use } from "react";
+import { ExtendedTeacher } from "./types";
 
 interface LessonTablePageProps {
-  workingTimes: WorkingTime[];
-  openHours: OpenHours;
-  teachers: Teacher[];
+  workingTimesPromise: Promise<WorkingTime[]>;
+  openHoursPromise: Promise<OpenHours | null>;
+  teachersPromise: Promise<ExtendedTeacher[]>;
 }
 
 export default function LessonTablePage({
-  workingTimes,
-  openHours,
-  teachers,
+  workingTimesPromise,
+  openHoursPromise,
+  teachersPromise,
 }: LessonTablePageProps) {
+  const openHours = use(openHoursPromise);
+  const teachers = use(teachersPromise);
+  const workingTimes = use(workingTimesPromise);
   return (
     <TableProvider
-      workingTimes={workingTimes}
-      openHours={openHours}
+      openHours={openHours!}
       teachers={teachers}
+      workingTimes={workingTimes}
     >
-      <Stack gap={4} align="stretch">
+      <Flex gap={4} direction="column" flexGrow={1}>
         <Flex
           pt={{
             base: 2,
@@ -38,8 +44,17 @@ export default function LessonTablePage({
           <DateSelector />
           <TeacherSelector />
         </Flex>
-        <LessonTable />
-      </Stack>
+
+        {/* 데스크톱 테이블 */}
+        <Box display={{ base: "none", lg: "flex" }} flexGrow={1}>
+          <LessonTable />
+        </Box>
+
+        {/* 모바일 테이블 */}
+        <Box display={{ base: "flex", lg: "none" }} flexGrow={1}>
+          <MobileTable />
+        </Box>
+      </Flex>
     </TableProvider>
   );
 }
