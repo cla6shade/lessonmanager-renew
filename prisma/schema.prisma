@@ -61,20 +61,21 @@ model LessonModifyHistory {
 }
 
 model Lesson {
-  id        Int       @id @default(autoincrement()) @map("lessonid")
-  dueDate   DateTime? @map("due") @db.Date
-  dueHour   Int?      @map("hour") @db.SmallInt
-  teacherId Int?      @map("teacherid")
-  isDone    Boolean?  @default(false) @map("is_done")
-  userId    Int?      @map("userid")
-  username  String?   @db.VarChar(20)
-  isGrand   Boolean?  @map("is_grand")
-  location  Int?      @db.SmallInt
-  note      String?   @db.VarChar(810)
-  contact   String?   @db.VarChar(20)
-  teacher   Teacher?  @relation("TeacherToLesson", fields: [teacherId], references: [id])
-  user      User?     @relation("UserToLesson", fields: [userId], references: [id])
-  lastUsers User[]    @relation("LatestLessonRelation")
+  id         Int       @id @default(autoincrement()) @map("lessonid")
+  dueDate    DateTime? @map("due") @db.Date
+  dueHour    Int?      @map("hour") @db.SmallInt
+  teacherId  Int?      @map("teacherid")
+  isDone     Boolean?  @default(false) @map("is_done")
+  userId     Int?      @map("userid")
+  username   String?   @db.VarChar(20)
+  isGrand    Boolean?  @map("is_grand")
+  locationId Int?      @map("location") @db.SmallInt
+  note       String?   @db.VarChar(810)
+  contact    String?   @db.VarChar(20)
+  teacher    Teacher?  @relation("TeacherToLesson", fields: [teacherId], references: [id])
+  user       User?     @relation("UserToLesson", fields: [userId], references: [id])
+  lastUsers  User[]    @relation("LatestLessonRelation")
+  location   Location? @relation(fields: [locationId], references: [id])
 
   @@index([dueDate], map: "idx_due")
   @@index([teacherId], map: "idx_teacherid")
@@ -128,9 +129,9 @@ model Teacher {
   modifyHistory       LessonModifyHistory[] @relation("TeacherToModifyHistory")
   lessons             Lesson[]              @relation("TeacherToLesson")
   users               User[]                @relation("TeacherInCharge")
-  WorkingTime         WorkingTime?          @relation("TeacherToWorkingTime")
+  workingTime         WorkingTime?          @relation("TeacherToWorkingTime")
   location            Location?             @relation(fields: [locationId], references: [id])
-  Major               Major?                @relation("MajorToTeacher", fields: [majorId], references: [id])
+  major               Major?                @relation("MajorToTeacher", fields: [majorId], references: [id])
 
   @@map("teachers")
 }
@@ -191,7 +192,7 @@ model User {
 
 model WorkingTime {
   teacherId Int     @id @map("teacherid")
-  times     String? @db.LongText
+  times     String  @db.LongText
   teacher   Teacher @relation("TeacherToWorkingTime", fields: [teacherId], references: [id])
 
   @@map("working_times")
@@ -210,6 +211,7 @@ model Location {
   name     String    @db.VarChar(20)
   teachers Teacher[]
   users    User[]
+  lessons  Lesson[]
 
   @@map("locations")
 }
