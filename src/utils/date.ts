@@ -3,16 +3,24 @@ export interface DatePeriod {
   endDate: Date;
 }
 
+export function setDateToStartOfDay(date: Date): Date {
+  return new Date(date.setHours(0, 0, 0, 0));
+}
+
+export function setDateToEndOfDay(date: Date): Date {
+  return new Date(date.setHours(23, 59, 59, 999));
+}
+
 export function getMondayOfWeek(date: Date): Date {
   const day = date.getDay();
   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(date.setDate(diff));
+  return setDateToStartOfDay(new Date(date.setDate(diff)));
 }
 
 export function getSundayOfWeek(date: Date): Date {
   const day = date.getDay();
   const diff = date.getDate() - day + (day === 0 ? 0 : 7);
-  return new Date(date.setDate(diff));
+  return setDateToEndOfDay(new Date(date.setDate(diff)));
 }
 
 export function getCurrentDatePeriod(date: Date): DatePeriod {
@@ -40,11 +48,31 @@ export function getPreviousDatePeriod(period: DatePeriod): DatePeriod {
   };
 }
 
-export function formatDate(date: Date): string {
+export function formatDate(
+  date: Date,
+  showYear: boolean = true,
+  showDayOfWeek: boolean = false
+): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+
+  const dayOfWeekNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const dayOfWeek = dayOfWeekNames[date.getDay()];
+
+  let formattedDate = "";
+
+  if (showYear) {
+    formattedDate += `${year}-`;
+  }
+
+  formattedDate += `${month}-${day}`;
+
+  if (showDayOfWeek) {
+    formattedDate += ` (${dayOfWeek})`;
+  }
+
+  return formattedDate;
 }
 
 export function getWeekLabel(startDate: Date): string {
@@ -69,4 +97,34 @@ export function getWeekLabel(startDate: Date): string {
   } else {
     return `${Math.abs(diffWeeks)}주 후`;
   }
+}
+
+export function getTimesInPeriod(period: {
+  startHour: number;
+  endHour: number; // endHour은 레슨 가능한 맨 마지막 시간
+}): number[] {
+  const times = [];
+  for (let hour = period.startHour; hour <= period.endHour; hour++) {
+    times.push(hour);
+  }
+  return times;
+}
+
+export function getDatesInPeriod(period: DatePeriod): Date[] {
+  const dates = [];
+  const startDate = new Date(period.startDate);
+  const endDate = new Date(period.endDate);
+
+  for (
+    let date = startDate;
+    date <= endDate;
+    date.setDate(date.getDate() + 1)
+  ) {
+    dates.push(new Date(date));
+  }
+  return dates;
+}
+
+export function getWorkingDayOfWeek(date: Date): string {
+  return date.toLocaleDateString("en-US", { weekday: "short" }).toLowerCase();
 }
