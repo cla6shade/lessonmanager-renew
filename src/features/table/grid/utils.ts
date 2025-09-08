@@ -1,0 +1,63 @@
+import { Lesson } from "@/generated/prisma";
+import { ExtendedTeacher, WorkingTimeData } from "../types";
+
+export const LESSON_STATUS_COLORS = {
+  COMPLETED: "green.600", // 완료된 레슨
+  CANCELLED: "red.400", // 당일 취소된 레슨
+  GRAND: "yellow.400", // 그랜드 레슨
+  REGULAR: "yellow.300", // 일반 레슨
+};
+
+export function getWorkingTeachersOnDate(
+  teachers: ExtendedTeacher[],
+  dayOfWeek: string
+): ExtendedTeacher[] {
+  return teachers.filter((teacher) => {
+    if (!teacher.workingTime) return false;
+    const workingTimeData = JSON.parse(
+      teacher.workingTime.times
+    ) as WorkingTimeData;
+    const dayTimes = workingTimeData[dayOfWeek as keyof WorkingTimeData];
+    return dayTimes && dayTimes.length > 0;
+  });
+}
+
+export function getTeacherWorkingHours(
+  teacher: ExtendedTeacher,
+  dayOfWeek: string
+): number[] {
+  if (!teacher.workingTime) return [];
+
+  const workingTimeData = JSON.parse(
+    teacher.workingTime.times
+  ) as WorkingTimeData;
+
+  return workingTimeData[dayOfWeek as keyof WorkingTimeData] || [];
+}
+
+export function getLessonStatusColor(lesson: Lesson): string {
+  const today = new Date();
+  const lessonDate = lesson.dueDate ? new Date(lesson.dueDate) : null;
+
+  if (
+    lessonDate &&
+    lessonDate.toDateString() === today.toDateString() &&
+    lesson.isDone &&
+    lesson.dueHour !== null
+  ) {
+    const currentHour = today.getHours();
+    if (currentHour < lesson.dueHour) {
+      return LESSON_STATUS_COLORS.CANCELLED;
+    }
+  }
+
+  if (lesson.isDone) {
+    return LESSON_STATUS_COLORS.COMPLETED;
+  }
+
+  if (lesson.isGrand) {
+    return LESSON_STATUS_COLORS.GRAND;
+  }
+
+  return LESSON_STATUS_COLORS.REGULAR;
+}
