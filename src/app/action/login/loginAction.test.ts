@@ -4,10 +4,7 @@ import { LoginSchema } from "./schema";
 import { canLogin, getAccount } from "./service";
 import { createSession, destroySession } from "@/lib/session";
 import { ActionState } from "../types";
-import {
-  getUserByLoginId,
-  getTeacherByLoginId,
-} from "../../../../scripts/test/mocks/helpers";
+import { getUserByLoginId, getTeacherByLoginId } from "@mocks/helpers";
 
 // Mock dependencies
 vi.mock("./service");
