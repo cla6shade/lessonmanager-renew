@@ -27,7 +27,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locations = await prisma.location.findMany();
-  const { isAdmin, locationId } = await getSession();
+  const { isAdmin, locationId, teacherId, userId } = await getSession();
 
   return (
     <html lang="ko" suppressHydrationWarning>

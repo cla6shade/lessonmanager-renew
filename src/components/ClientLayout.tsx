@@ -10,6 +10,8 @@ interface ClientLayoutProps {
   locations: Location[];
   isAdmin: boolean;
   locationId: number;
+  userId?: number;
+  teacherId?: number;
 }
 
 export default function ClientLayout({
@@ -17,6 +19,8 @@ export default function ClientLayout({
   locations,
   isAdmin,
   locationId,
+  userId,
+  teacherId,
 }: ClientLayoutProps) {
   return (
     <ChakraProvider value={defaultSystem}>
@@ -26,6 +30,8 @@ export default function ClientLayout({
         initialLocation={locations.find(
           (location) => location.id === locationId
         )}
+        userId={userId}
+        teacherId={teacherId}
       >
         <Box display="flex">
           <Navbar />
