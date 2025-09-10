@@ -8,6 +8,8 @@ interface NavigationContextType {
   selectedLocation: Location | null;
   setSelectedLocation: (location: Location | null) => void;
   isAdmin: boolean;
+  userId?: number;
+  teacherId?: number;
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(
@@ -19,6 +21,8 @@ interface NavigationProviderProps {
   locations: Location[];
   isAdmin: boolean;
   initialLocation?: Location | null;
+  userId?: number;
+  teacherId?: number;
 }
 
 export function NavigationProvider({
@@ -26,6 +30,8 @@ export function NavigationProvider({
   locations,
   isAdmin,
   initialLocation = null,
+  userId,
+  teacherId,
 }: NavigationProviderProps) {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     initialLocation
@@ -44,6 +50,8 @@ export function NavigationProvider({
     selectedLocation,
     setSelectedLocation: handleSetSelectedLocation,
     isAdmin,
+    userId,
+    teacherId,
   };
 
   return (
@@ -64,7 +72,20 @@ export function useNavigationContext() {
 }
 
 export function useNavigation() {
-  const { locations, selectedLocation, setSelectedLocation, isAdmin } =
-    useNavigationContext();
-  return { locations, selectedLocation, setSelectedLocation, isAdmin };
+  const {
+    locations,
+    selectedLocation,
+    setSelectedLocation,
+    isAdmin,
+    userId,
+    teacherId,
+  } = useNavigationContext();
+  return {
+    locations,
+    selectedLocation,
+    setSelectedLocation,
+    isAdmin,
+    userId,
+    teacherId,
+  };
 }
