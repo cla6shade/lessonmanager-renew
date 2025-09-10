@@ -11,8 +11,13 @@ interface WorkingTimeData {
 }
 
 export type ExtendedTeacher = Prisma.TeacherGetPayload<{
-  include: {
-    workingTime: true;
+  select: {
+    id: true;
+    name: true;
     major: true;
+    workingTime: true;
+  };
+  omit: {
+    password: true;
   };
 }>;
