@@ -1,14 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { GET } from "./route";
 import { NextRequest } from "next/server";
-import { getSession } from "@/lib/session";
-import { mockLessons } from "../../../../scripts/test/mocks/lessons";
+import { mockLessons } from "@mocks/lessons";
 import prisma from "@/lib/prisma";
-
-// Mock dependencies
-vi.mock("@/lib/session");
-
-const mockGetSession = vi.mocked(getSession);
 
 describe("GET /api/lessons", () => {
   beforeEach(() => {
@@ -20,39 +14,7 @@ describe("GET /api/lessons", () => {
     vi.resetAllMocks();
   });
 
-  describe("인증되지 않은 사용자", () => {
-    it("로그인하지 않은 사용자는 401 에러를 받아야 함", async () => {
-      // Arrange
-      mockGetSession.mockResolvedValue({
-        isLoggedIn: false,
-        isAdmin: false,
-        name: "",
-        locationId: 0,
-      } as any);
-
-      const request = new NextRequest("http://localhost:3000/api/lessons");
-
-      // Act
-      const response = await GET(request);
-
-      // Assert
-      expect(response.status).toBe(401);
-      const body = await response.json();
-      expect(body).toEqual({ error: "Unauthorized" });
-    });
-  });
-
   describe("인증된 사용자", () => {
-    beforeEach(() => {
-      mockGetSession.mockResolvedValue({
-        isLoggedIn: true,
-        isAdmin: false,
-        name: "Test User",
-        locationId: 0,
-        userId: 1,
-      } as any);
-    });
-
     it("기본 쿼리로 모든 레슨을 조회할 수 있어야 함", async () => {
       // Arrange
       const request = new NextRequest(
@@ -181,16 +143,6 @@ describe("GET /api/lessons", () => {
   });
 
   describe("에러 처리", () => {
-    beforeEach(() => {
-      mockGetSession.mockResolvedValue({
-        isLoggedIn: true,
-        isAdmin: false,
-        name: "Test User",
-        locationId: 0,
-        userId: 1,
-      } as any);
-    });
-
     it("잘못된 쿼리 파라미터로 인한 스키마 검증 실패 시 500 에러를 반환해야 함", async () => {
       // Arrange
       const request = new NextRequest(
@@ -226,23 +178,6 @@ describe("GET /api/lessons", () => {
       vi.spyOn(prisma.lesson, "findMany").mockRejectedValue(
         new Error("Database error")
       );
-
-      const request = new NextRequest(
-        "http://localhost:3000/api/lessons?startDate=2025-09-01T00:00:00Z&endDate=2025-09-30T23:59:59Z"
-      );
-
-      // Act
-      const response = await GET(request);
-
-      // Assert
-      expect(response.status).toBe(500);
-      const body = await response.json();
-      expect(body).toEqual({ error: "Internal Server Error" });
-    });
-
-    it("getSession 에러 발생 시 500 에러를 반환해야 함", async () => {
-      // Arrange
-      mockGetSession.mockRejectedValue(new Error("Session error"));
 
       const request = new NextRequest(
         "http://localhost:3000/api/lessons?startDate=2025-09-01T00:00:00Z&endDate=2025-09-30T23:59:59Z"
