@@ -11,7 +11,7 @@ export default function EmptyColumn({ allTimes, date }: EmptyColumnProps) {
       templateRows={`repeat(${allTimes.length}, 1fr)`}
       w="full"
       h="full"
-      backgroundColor="gray.50"
+      backgroundColor="gray.100"
     >
       {allTimes.map((hour, hourIndex) => (
         <Box
