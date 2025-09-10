@@ -1,7 +1,7 @@
 export const adminMenus = [
   {
     name: "레슨 시간표",
-    href: "/teacher",
+    href: "/",
   },
   {
     name: "수강생 관리",
@@ -20,7 +20,7 @@ export const adminMenus = [
 export const userMenus = [
   {
     name: "레슨 시간표",
-    href: "/user",
+    href: "/",
   },
   {
     name: "내 정보",
