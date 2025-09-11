@@ -67,21 +67,21 @@ model LessonModifyHistory {
 }
 
 model Lesson {
-  id         Int       @id @default(autoincrement()) @map("lessonid")
-  dueDate    DateTime? @map("due") @db.Date
-  dueHour    Int?      @map("hour") @db.SmallInt
-  teacherId  Int       @map("teacherid")
-  isDone     Boolean?  @default(false) @map("is_done")
-  userId     Int?      @map("userid")
-  username   String?   @db.VarChar(20)
-  isGrand    Boolean?  @map("is_grand")
-  locationId Int       @map("location") @db.SmallInt
-  note       String?   @db.VarChar(810)
-  contact    String?   @db.VarChar(20)
-  teacher    Teacher   @relation("TeacherToLesson", fields: [teacherId], references: [id])
-  user       User?     @relation("UserToLesson", fields: [userId], references: [id])
-  lastUsers  User[]    @relation("LatestLessonRelation")
-  location   Location  @relation(fields: [locationId], references: [id])
+  id         Int      @id @default(autoincrement()) @map("lessonid")
+  dueDate    DateTime @map("due") @db.Date
+  dueHour    Int      @map("hour") @db.SmallInt
+  teacherId  Int      @map("teacherid")
+  isDone     Boolean  @default(false) @map("is_done")
+  userId     Int?     @map("userid")
+  username   String?  @db.VarChar(20)
+  isGrand    Boolean  @map("is_grand")
+  locationId Int      @map("location") @db.SmallInt
+  note       String?  @db.VarChar(810)
+  contact    String?  @db.VarChar(20)
+  teacher    Teacher  @relation("TeacherToLesson", fields: [teacherId], references: [id])
+  user       User?    @relation("UserToLesson", fields: [userId], references: [id])
+  lastUsers  User[]   @relation("LatestLessonRelation")
+  location   Location @relation(fields: [locationId], references: [id])
 
   @@index([dueDate], map: "idx_due")
   @@index([teacherId], map: "idx_teacherid")
