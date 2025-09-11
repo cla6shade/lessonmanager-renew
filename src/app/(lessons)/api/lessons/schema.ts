@@ -1,6 +1,6 @@
 import { LessonSchema, LocationSchema, MajorSchema } from "@/generated/zod";
 import { z } from "zod";
-import { DataResponseSchema } from "../schema";
+import { DataResponseSchema } from "../../../schema";
 
 export const GetLessonsQuerySchema = z.object({
   startDate: z.iso.datetime().transform((value) => new Date(value)),
@@ -19,6 +19,9 @@ export const GetLessonsResponseSchema = DataResponseSchema(
         location: LocationSchema,
       }),
       location: LocationSchema,
+    }).omit({
+      contact: true,
+      note: true,
     })
   )
 );

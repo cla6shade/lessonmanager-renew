@@ -2,7 +2,7 @@ import {
   PublicUserSchema,
   PublicTeacherSchema,
   DataResponseSchema,
-} from "@/app/api/schema";
+} from "@/app/schema";
 import { LocationSchema, LessonSchema } from "@/generated/zod";
 import z from "zod";
 

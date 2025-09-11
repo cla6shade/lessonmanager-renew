@@ -8,9 +8,9 @@ import {
   use,
 } from "react";
 import { useRouter } from "next/navigation";
-import { loginAction } from "@/app/action/login/loginAction";
-import { ActionState } from "@/app/action/types";
-import { LoginSchema } from "@/app/action/login/schema";
+import { loginAction } from "@/app/(auth)/login/loginAction";
+import { ActionState } from "@/app/types";
+import { LoginSchema } from "@/app/(auth)/login/schema";
 
 const initialState: ActionState<typeof LoginSchema> = {
   success: false,

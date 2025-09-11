@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { GetLessonsResponse } from "@/app/api/lessons/schema";
+import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 import UserLessonsDialog from "@/features/dialog/UserLessonsDialog";
 import StatusBadge from "@/components/ui/StatusBadge";
 

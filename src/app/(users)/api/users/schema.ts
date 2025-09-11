@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DataResponseSchema, PublicUserSchema } from "../schema";
+import { DataResponseSchema, PublicUserSchema } from "../../../schema";
 
 export const SingleUserResponseSchema = DataResponseSchema(PublicUserSchema);
 

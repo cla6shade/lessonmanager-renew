@@ -1,4 +1,4 @@
-import { DataResponseSchema, PublicUserSchema } from "@/app/api/schema";
+import { DataResponseSchema, PublicUserSchema } from "@/app/schema";
 import z from "zod";
 
 export const UserLookupRequestSchema = z.object({

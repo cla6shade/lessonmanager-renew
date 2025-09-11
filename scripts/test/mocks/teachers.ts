@@ -1,4 +1,4 @@
-import { encryptPassword } from "@/app/action/login/service";
+import { encryptPassword } from "@/app/(auth)/login/service";
 
 export const mockTeachers = [
   {

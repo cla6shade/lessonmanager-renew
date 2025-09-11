@@ -1,13 +1,13 @@
-import { Lesson } from "@/generated/prisma";
 import { Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import Cell from "./Cell";
 import { getLessonStatusColor } from "../utils";
 import LessonDetailDialog from "../../dialog/LessonDetailDialog";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 
 interface LessonCellProps {
-  lesson: Lesson;
+  lesson: GetLessonsResponse["data"][number];
   isLastRow?: boolean;
   isLastColumn?: boolean;
 }

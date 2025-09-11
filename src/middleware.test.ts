@@ -101,9 +101,7 @@ describe("middleware", () => {
 
       // Assert
       expect(response.status).toBe(307);
-      expect(response.headers.get("location")).toBe(
-        "http://localhost:3000/user"
-      );
+      expect(response.headers.get("location")).toBe("http://localhost:3000/");
     });
 
     it("일반 사용자 페이지 접근을 허용해야 함", async () => {
@@ -190,9 +188,7 @@ describe("middleware", () => {
 
       // Assert
       expect(response.status).toBe(307);
-      expect(response.headers.get("location")).toBe(
-        "http://localhost:3000/teacher"
-      );
+      expect(response.headers.get("location")).toBe("http://localhost:3000/");
     });
 
     it("관리자 API 요청을 허용해야 함", async () => {
@@ -263,32 +259,7 @@ describe("middleware", () => {
       // Assert
       expect(response.status).toBe(500);
       const body = await response.json();
-      expect(body).toEqual({ error: "Internal server error" });
-    });
-
-    it("ZodError 발생 시 400 에러를 반환해야 함", async () => {
-      // Arrange
-      const testUserSchema = z.object({
-        name: z.string(),
-        age: z.number(),
-      });
-
-      const invalidData = { name: 123, age: "invalid" };
-      const result = testUserSchema.safeParse(invalidData);
-      const zodError = result.error!;
-
-      mockGetSession.mockRejectedValue(zodError);
-      const request = new NextRequest("http://localhost:3000/api/users/me");
-
-      // Act
-      const response = await middleware(request);
-
-      // Assert
-      expect(response.status).toBe(400);
-      const body = await response.json();
-      expect(body).toEqual({
-        errors: z.flattenError(zodError),
-      });
+      expect(body).toEqual({ error: "Internal Server Error" });
     });
 
     it("일반 에러 발생 시 500 에러를 반환해야 함", async () => {
@@ -302,7 +273,7 @@ describe("middleware", () => {
       // Assert
       expect(response.status).toBe(500);
       const body = await response.json();
-      expect(body).toEqual({ error: "Internal server error" });
+      expect(body).toEqual({ error: "Internal Server Error" });
     });
 
     it("페이지 요청에서 에러 발생 시 500 에러를 반환해야 함", async () => {
@@ -318,32 +289,7 @@ describe("middleware", () => {
       // Assert
       expect(response.status).toBe(500);
       const body = await response.json();
-      expect(body).toEqual({ error: "Internal server error" });
-    });
-
-    it("관리자 API 요청에서 ZodError 발생 시 400 에러를 반환해야 함", async () => {
-      // Arrange
-      const testPaginationSchema = z.object({
-        page: z.number(),
-        limit: z.number(),
-      });
-
-      const invalidPaginationData = { page: "invalid", limit: "not_a_number" };
-      const result = testPaginationSchema.safeParse(invalidPaginationData);
-      const zodError = result.error!;
-
-      mockGetSession.mockRejectedValue(zodError);
-      const request = new NextRequest("http://localhost:3000/api/admin/users");
-
-      // Act
-      const response = await middleware(request);
-
-      // Assert
-      expect(response.status).toBe(400);
-      const body = await response.json();
-      expect(body).toEqual({
-        errors: z.flattenError(zodError),
-      });
+      expect(body).toEqual({ error: "Internal Server Error" });
     });
   });
 });

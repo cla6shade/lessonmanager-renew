@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { ActionState } from "../types";
+import { ActionState } from "@/app/types";
 import { LoginSchema } from "./schema";
 import { canLogin, getAccount } from "./service";
 import { createSession, destroySession } from "@/lib/session";

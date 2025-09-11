@@ -3,7 +3,7 @@ import { loginAction, logoutAction } from "./loginAction";
 import { LoginSchema } from "./schema";
 import { canLogin, getAccount } from "./service";
 import { createSession, destroySession } from "@/lib/session";
-import { ActionState } from "../types";
+import { ActionState } from "@/app/types";
 import { getUserByLoginId, getTeacherByLoginId } from "@mocks/helpers";
 
 // Mock dependencies

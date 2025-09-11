@@ -1,4 +1,4 @@
-import { logoutAction } from "@/app/action/login/loginAction";
+import { logoutAction } from "@/app/(auth)/login/loginAction";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";

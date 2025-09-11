@@ -5,7 +5,8 @@ import {
   DEFAULT_ADMIN_MENU,
   DEFAULT_USER_MENU,
 } from "./features/navigation/menu/menus";
-import z from "zod";
+import z, { ZodError } from "zod";
+import { buildErrorResponse } from "./app/utils";
 
 export async function middleware(request: NextRequest) {
   try {
@@ -40,20 +41,9 @@ export async function middleware(request: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error in middleware:", error);
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          errors: z.flattenError(error),
-        },
-        { status: 400 }
-      );
-    }
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return buildErrorResponse(error as Error);
   }
 }
 

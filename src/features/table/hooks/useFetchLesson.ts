@@ -1,4 +1,4 @@
-import { GetLessonsResponse } from "@/app/api/lessons/schema";
+import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
 import { useFetch } from "@/hooks/useFetch";
 

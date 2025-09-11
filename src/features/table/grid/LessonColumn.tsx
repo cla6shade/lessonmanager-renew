@@ -6,10 +6,11 @@ import TeacherHeader from "./TeacherHeader";
 import TeacherColumn from "./TeacherColumn";
 import EmptyColumn from "./EmptyColumn";
 import { getWorkingTeachersOnDate } from "./utils";
+import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 
 interface LessonColumnProps {
   date: Date;
-  lessons: Lesson[];
+  lessons: GetLessonsResponse["data"];
 }
 
 export default function LessonColumn({ date, lessons }: LessonColumnProps) {

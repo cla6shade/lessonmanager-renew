@@ -1,4 +1,4 @@
-import { encryptPassword } from "@/app/action/login/service";
+import { encryptPassword } from "@/app/(auth)/login/service";
 
 export const mockUsers = Array.from({ length: 12 }).map((_, idx) => ({
   id: idx + 1,

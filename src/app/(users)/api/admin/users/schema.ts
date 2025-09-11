@@ -1,4 +1,4 @@
-import { PublicUserSchema, PaginatedDataResponseSchema } from "../../schema";
+import { PublicUserSchema, PaginatedDataResponseSchema } from "@/app/schema";
 import { z } from "zod";
 export const UserSearchRequestSchema = z.object({
   name: z.string().optional(),

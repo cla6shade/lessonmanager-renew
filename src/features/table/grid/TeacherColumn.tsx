@@ -1,15 +1,15 @@
-import { Lesson } from "@/generated/prisma";
 import { ExtendedTeacher } from "../types";
 import { getWorkingDayOfWeek } from "@/utils/date";
 import { Grid } from "@chakra-ui/react";
 import LessonCell from "./cell/LessonCell";
 import EmptyCell from "./cell/EmptyCell";
 import { getTeacherWorkingHours } from "./utils";
+import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 
 interface TeacherColumnProps {
   teacher: ExtendedTeacher;
   date: Date;
-  lessons: Lesson[];
+  lessons: GetLessonsResponse["data"];
   allTimes: number[];
   teacherIndex: number;
   totalTeachers: number;

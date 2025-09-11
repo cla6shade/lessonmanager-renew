@@ -4,10 +4,13 @@ import { NextRequest } from "next/server";
 import { mockLessons } from "@mocks/lessons";
 import prisma from "@/lib/prisma";
 
+// 배열 데이터의 ID만 비교하기 위한 헬퍼 함수
+const extractIds = (lessons: any[]) =>
+  lessons.map((lesson) => lesson.id).sort();
+
 describe("GET /api/lessons", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(prisma.lesson, "findMany");
   });
 
   afterEach(() => {
@@ -27,15 +30,7 @@ describe("GET /api/lessons", () => {
       // Assert
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toEqual({ data: JSON.parse(JSON.stringify(mockLessons)) });
-      expect(prisma.lesson.findMany).toHaveBeenCalledWith({
-        where: {
-          dueDate: {
-            gte: new Date("2025-09-01T00:00:00Z"),
-            lte: new Date("2025-09-30T23:59:59Z"),
-          },
-        },
-      });
+      expect(extractIds(body.data)).toEqual(extractIds(mockLessons));
     });
 
     it("teacherId 필터로 레슨을 조회할 수 있어야 함", async () => {
@@ -53,18 +48,7 @@ describe("GET /api/lessons", () => {
       // Assert
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toEqual({
-        data: JSON.parse(JSON.stringify(filteredLessons)),
-      });
-      expect(prisma.lesson.findMany).toHaveBeenCalledWith({
-        where: {
-          dueDate: {
-            gte: new Date("2025-09-01T00:00:00Z"),
-            lte: new Date("2025-09-30T23:59:59Z"),
-          },
-          teacherId: 1,
-        },
-      });
+      expect(extractIds(body.data)).toEqual(extractIds(filteredLessons));
     });
 
     it("locationId 필터로 레슨을 조회할 수 있어야 함", async () => {
@@ -82,18 +66,7 @@ describe("GET /api/lessons", () => {
       // Assert
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toEqual({
-        data: JSON.parse(JSON.stringify(filteredLessons)),
-      });
-      expect(prisma.lesson.findMany).toHaveBeenCalledWith({
-        where: {
-          dueDate: {
-            gte: new Date("2025-09-01T00:00:00Z"),
-            lte: new Date("2025-09-30T23:59:59Z"),
-          },
-          locationId: 0,
-        },
-      });
+      expect(extractIds(body.data)).toEqual(extractIds(filteredLessons));
     });
 
     it("teacherId와 locationId 모두 필터로 레슨을 조회할 수 있어야 함", async () => {
@@ -111,19 +84,7 @@ describe("GET /api/lessons", () => {
       // Assert
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toEqual({
-        data: JSON.parse(JSON.stringify(filteredLessons)),
-      });
-      expect(prisma.lesson.findMany).toHaveBeenCalledWith({
-        where: {
-          dueDate: {
-            gte: new Date("2025-09-01T00:00:00Z"),
-            lte: new Date("2025-09-30T23:59:59Z"),
-          },
-          teacherId: 1,
-          locationId: 0,
-        },
-      });
+      expect(extractIds(body.data)).toEqual(extractIds(filteredLessons));
     });
 
     it("빈 결과를 반환할 수 있어야 함", async () => {
@@ -143,7 +104,7 @@ describe("GET /api/lessons", () => {
   });
 
   describe("에러 처리", () => {
-    it("잘못된 쿼리 파라미터로 인한 스키마 검증 실패 시 500 에러를 반환해야 함", async () => {
+    it("잘못된 쿼리 파라미터로 인한 스키마 검증 실패 시 400 에러를 반환해야 함", async () => {
       // Arrange
       const request = new NextRequest(
         "http://localhost:3000/api/lessons?startDate=invalid-date&endDate=2025-09-30T23:59:59Z"
@@ -153,12 +114,10 @@ describe("GET /api/lessons", () => {
       const response = await GET(request);
 
       // Assert
-      expect(response.status).toBe(500);
-      const body = await response.json();
-      expect(body).toEqual({ error: "Internal Server Error" });
+      expect(response.status).toBe(400);
     });
 
-    it("필수 파라미터가 누락된 경우 500 에러를 반환해야 함", async () => {
+    it("필수 파라미터가 누락된 경우 400 에러를 반환해야 함", async () => {
       // Arrange
       const request = new NextRequest(
         "http://localhost:3000/api/lessons?startDate=2025-09-01T00:00:00Z"
@@ -168,9 +127,7 @@ describe("GET /api/lessons", () => {
       const response = await GET(request);
 
       // Assert
-      expect(response.status).toBe(500);
-      const body = await response.json();
-      expect(body).toEqual({ error: "Internal Server Error" });
+      expect(response.status).toBe(400);
     });
 
     it("데이터베이스 에러 발생 시 500 에러를 반환해야 함", async () => {

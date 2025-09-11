@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 
 import Pagination from "@/components/ui/pagination";
 import StatusBadge from "@/components/ui/StatusBadge";
-import { UserLessonsResponse } from "@/app/api/admin/users/[id]/lessons/schema";
+import { UserLessonsResponse } from "@/app/(users)/api/admin/users/[id]/lessons/schema";
 import { useFetchUserLessons } from "@/hooks/useFetchUserLessons";
 
 interface UserLessonsDialogProps {

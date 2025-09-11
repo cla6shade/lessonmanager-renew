@@ -1,4 +1,4 @@
-import { UserLessonsResponse } from "@/app/api/admin/users/[id]/lessons/schema";
+import { UserLessonsResponse } from "@/app/(users)/api/admin/users/[id]/lessons/schema";
 import { useFetch } from "./useFetch";
 
 interface UseFetchUserLessonsProps {
