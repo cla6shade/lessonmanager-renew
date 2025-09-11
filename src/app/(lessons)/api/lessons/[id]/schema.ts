@@ -1,5 +1,10 @@
 import { DataResponseSchema } from "@/app/schema";
-import { LessonSchema, LocationSchema, TeacherSchema } from "@/generated/zod";
+import {
+  LessonSchema,
+  LocationSchema,
+  MajorSchema,
+  TeacherSchema,
+} from "@/generated/zod";
 import z from "zod";
 
 export const GetLessonDetailResponseSchema = DataResponseSchema(
@@ -7,7 +12,8 @@ export const GetLessonDetailResponseSchema = DataResponseSchema(
     teacher: TeacherSchema.pick({
       id: true,
       name: true,
-      major: true,
+    }).extend({
+      major: MajorSchema,
     }),
     location: LocationSchema,
   })
