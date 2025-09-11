@@ -16,7 +16,6 @@ export const GetLessonsResponseSchema = DataResponseSchema(
         id: z.number(),
         name: z.string(),
         major: MajorSchema,
-        location: LocationSchema,
       }),
       location: LocationSchema,
     }).omit({
@@ -27,3 +26,13 @@ export const GetLessonsResponseSchema = DataResponseSchema(
 );
 
 export type GetLessonsResponse = z.infer<typeof GetLessonsResponseSchema>;
+
+export const CreateLessonRequestSchema = LessonSchema.pick({
+  dueDate: true,
+  dueHour: true,
+  teacherId: true,
+  locationId: true,
+  isGrand: true,
+});
+
+export type CreateLessonRequest = z.infer<typeof CreateLessonRequestSchema>;
