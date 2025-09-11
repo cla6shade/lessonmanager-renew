@@ -10,7 +10,7 @@ import { getSession } from "@/lib/session";
 
 export async function GET(
   request: NextRequest,
-  params: Promise<{ id: string }>
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -38,6 +38,7 @@ export async function GET(
       data: lesson,
     });
   } catch (error) {
+    console.error(error);
     return buildErrorResponse(error);
   }
 }

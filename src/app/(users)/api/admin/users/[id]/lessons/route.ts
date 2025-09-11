@@ -5,20 +5,13 @@ import { UserLessonsQuerySchema, UserLessonsResponse } from "./schema";
 
 export async function GET(
   request: NextRequest,
-  params: Promise<{ id: string }>
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = await params;
-    let { id } = resolvedParams;
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
 
-    const urlPath = request.url.split("/api/admin/users/")[1];
-    const urlId = urlPath ? urlPath.split("/")[0] : null;
-
-    id = urlId || id;
-
     if (!id || isNaN(Number(id))) {
-      console.log("Invalid user ID:", id);
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
 
