@@ -1,3 +1,4 @@
+import { GetLessonDetailResponse } from "@/app/(lessons)/api/lessons/[id]/schema";
 import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
 import { useFetch } from "@/hooks/useFetch";
@@ -61,4 +62,14 @@ export function useFetchWeeklyLesson(
     endDate,
     teacherId,
   });
+}
+
+export function useFetchLessonDetail(lessonId: number) {
+  const url = `/api/lessons/${lessonId}`;
+  const { data, loading, error } = useFetch<GetLessonDetailResponse>(url);
+  return {
+    lesson: data?.data,
+    loading,
+    error,
+  };
 }

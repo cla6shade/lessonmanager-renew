@@ -59,11 +59,13 @@ export default function LessonCell({
         </Box>
       </Cell>
 
-      <LessonDetailDialog
-        lesson={lesson}
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-      />
+      {isDialogOpen && (
+        <LessonDetailDialog
+          lessonId={lesson.id}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      )}
     </>
   );
 }
