@@ -1,4 +1,3 @@
-import { Lesson } from "@/generated/prisma";
 import { ExtendedTeacher, WorkingTimeData } from "../types";
 
 export const LESSON_STATUS_COLORS = {
@@ -35,7 +34,12 @@ export function getTeacherWorkingHours(
   return workingTimeData[dayOfWeek as keyof WorkingTimeData] || [];
 }
 
-export function getLessonStatusColor(lesson: Lesson): string {
+export function getLessonStatusColor(lesson: {
+  dueDate: Date;
+  isDone: boolean;
+  dueHour: number;
+  isGrand: boolean;
+}): string {
   const today = new Date();
   const lessonDate = lesson.dueDate ? new Date(lesson.dueDate) : null;
 
