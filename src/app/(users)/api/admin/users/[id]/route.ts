@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { PublicUserDetailResponse } from "./schema";
 import { buildErrorResponse } from "@/app/utils";
 
-export default async function GET(
+export async function GET(
   request: NextRequest,
-  params: Promise<{ id: string }>
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;

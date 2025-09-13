@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SingleUserResponse } from "../schema";
 import { buildErrorResponse } from "@/app/utils";
 
-export default async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { userId } = await getSession();
 

@@ -7,6 +7,7 @@ import {
   UpdateLessonResponse,
 } from "./schema";
 import { getSession } from "@/lib/session";
+import { updateLesson } from "@/app/(lessons)/service";
 
 export async function GET(
   request: NextRequest,
@@ -45,7 +46,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  params: Promise<{ id: string }>
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -56,20 +57,7 @@ export async function PUT(
     const { note, isDone } = UpdateLessonRequestSchema.parse(
       await request.json()
     );
-    const lesson = await prisma.lesson.update({
-      where: { id: Number(id) },
-      data: { note, isDone },
-      include: {
-        location: true,
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-            major: true,
-          },
-        },
-      },
-    });
+    const lesson = await updateLesson(Number(id), { note, isDone });
     if (!lesson) {
       return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
     }
@@ -83,7 +71,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  params: Promise<{ id: string }>
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;

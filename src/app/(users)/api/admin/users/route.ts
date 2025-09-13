@@ -4,7 +4,7 @@ import { getPaginationQuery, buildErrorResponse } from "@/app/utils";
 import { UserSearchRequestSchema, UserSearchResponse } from "./schema";
 import { Prisma } from "@/generated/prisma";
 
-export default async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const queryParams = {
