@@ -6,13 +6,13 @@ import { getSession } from "@/lib/session";
 import { Suspense } from "react";
 
 export default async function UserDefaultPage() {
-  const { locationId } = await getSession();
+  const { locationId, isAdmin } = await getSession();
 
   const workingTimes = prisma.workingTime.findMany();
   const openHours = prisma.openHours.findFirst();
   const teachers = prisma.teacher.findMany({
     where: {
-      locationId,
+      locationId: isAdmin ? undefined : locationId,
       isLeaved: false,
       isManager: false,
     },
@@ -21,6 +21,7 @@ export default async function UserDefaultPage() {
       name: true,
       major: true,
       workingTime: true,
+      location: true,
     },
   });
   return (
