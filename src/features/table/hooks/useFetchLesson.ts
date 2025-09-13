@@ -2,6 +2,7 @@ import { GetLessonDetailResponse } from "@/app/(lessons)/api/lessons/[id]/schema
 import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
 import { useFetch } from "@/hooks/useFetch";
+import { useState, useCallback } from "react";
 
 interface UseFetchLessonProps {
   startDate: Date;
@@ -23,18 +24,19 @@ export function useFetchLesson({
   if (teacherId) {
     searchParams.set("teacherId", teacherId.toString());
   }
-  if (selectedLocation) {
+  if (selectedLocation.id !== undefined) {
     searchParams.set("locationId", selectedLocation.id.toString());
   }
 
   const url = `/api/lessons?${searchParams.toString()}`;
 
-  const { data, loading, error } = useFetch<GetLessonsResponse>(url);
+  const { data, loading, error, refetch } = useFetch<GetLessonsResponse>(url);
 
   return {
     lessons: data?.data || [],
     loading,
     error,
+    refetch,
   };
 }
 
@@ -66,10 +68,22 @@ export function useFetchWeeklyLesson(
 
 export function useFetchLessonDetail(lessonId: number) {
   const url = `/api/lessons/${lessonId}`;
-  const { data, loading, error } = useFetch<GetLessonDetailResponse>(url);
+  const { data, loading, error, refetch } =
+    useFetch<GetLessonDetailResponse>(url);
+  const [localLesson, setLocalLesson] = useState<any>(null);
+
+  const setLesson = useCallback((newLesson: any) => {
+    setLocalLesson(newLesson);
+  }, []);
+
+  // 로컬 상태가 있으면 그것을 사용하고, 없으면 서버 데이터를 사용
+  const currentLesson = localLesson || data?.data;
+
   return {
-    lesson: data?.data,
+    lesson: currentLesson,
     loading,
     error,
+    setLesson,
+    refetch,
   };
 }
