@@ -27,9 +27,9 @@ export default function ClientLayout({
       <NavigationProvider
         locations={locations}
         isAdmin={isAdmin}
-        initialLocation={locations.find(
-          (location) => location.id === locationId
-        )}
+        initialLocation={
+          locations.find((location) => location.id === locationId)!
+        }
         userId={userId}
         teacherId={teacherId}
       >
