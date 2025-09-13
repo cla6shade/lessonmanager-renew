@@ -1,8 +1,61 @@
 import { WorkingTimeData } from "@/features/table/types";
 import prisma from "@/lib/prisma";
 import { getWorkingDayOfWeek } from "@/utils/date";
+import { LessonSearchParams, LessonSearchResult } from "./schema";
+
+export async function getLessons({
+  startDate,
+  endDate,
+  selectedTeacherId: teacherId,
+  selectedLocationId: locationId,
+}: LessonSearchParams): Promise<LessonSearchResult> {
+  return prisma.lesson.findMany({
+    where: {
+      dueDate: {
+        gte: startDate,
+        lte: endDate,
+      },
+      ...(teacherId !== undefined ? { teacherId } : {}),
+      ...(locationId !== undefined ? { locationId } : {}),
+    },
+    include: {
+      location: true,
+      teacher: {
+        select: {
+          id: true,
+          name: true,
+          major: true,
+        },
+      },
+    },
+    omit: {
+      contact: true,
+      note: true,
+    },
+  });
+}
 
 export async function createLesson() {}
+
+export async function updateLesson(
+  lessonId: number,
+  { note, isDone }: { note?: string; isDone?: boolean }
+) {
+  return prisma.lesson.update({
+    where: { id: lessonId },
+    data: { note, isDone },
+    include: {
+      location: true,
+      teacher: {
+        select: {
+          id: true,
+          name: true,
+          major: true,
+        },
+      },
+    },
+  });
+}
 
 export async function isNotBannedAt(
   date: Date,
