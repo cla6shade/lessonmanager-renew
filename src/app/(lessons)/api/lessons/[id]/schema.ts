@@ -26,6 +26,9 @@ export type GetLessonDetailResponse = z.infer<
 export const UpdateLessonRequestSchema = LessonSchema.pick({
   note: true,
   isDone: true,
+}).extend({
+  note: z.string().optional(),
+  isDone: z.boolean().optional(),
 });
 
 export type UpdateLessonRequest = z.infer<typeof UpdateLessonRequestSchema>;
