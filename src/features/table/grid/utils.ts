@@ -1,4 +1,5 @@
 import { ExtendedTeacher, WorkingTimeData } from "../types";
+import { Location } from "@/generated/prisma";
 
 export const LESSON_STATUS_COLORS = {
   COMPLETED: "green.600", // 완료된 레슨
@@ -8,6 +9,7 @@ export const LESSON_STATUS_COLORS = {
 };
 
 export function getWorkingTeachersOnDate(
+  selectedLocation: Location,
   teachers: ExtendedTeacher[],
   dayOfWeek: string
 ): ExtendedTeacher[] {
@@ -17,7 +19,11 @@ export function getWorkingTeachersOnDate(
       teacher.workingTime.times
     ) as WorkingTimeData;
     const dayTimes = workingTimeData[dayOfWeek as keyof WorkingTimeData];
-    return dayTimes && dayTimes.length > 0;
+    return (
+      dayTimes &&
+      dayTimes.length > 0 &&
+      teacher.location.id === selectedLocation.id
+    );
   });
 }
 
@@ -41,13 +47,11 @@ export function getLessonStatusColor(lesson: {
   isGrand: boolean;
 }): string {
   const today = new Date();
-  const lessonDate = lesson.dueDate ? new Date(lesson.dueDate) : null;
+  const lessonDate = new Date(lesson.dueDate);
 
   if (
-    lessonDate &&
-    lessonDate.toDateString() === today.toDateString() &&
     lesson.isDone &&
-    lesson.dueHour !== null
+    lessonDate.getTime() + lesson.dueHour * 60 * 60 * 1000 > today.getTime()
   ) {
     const currentHour = today.getHours();
     if (currentHour < lesson.dueHour) {
