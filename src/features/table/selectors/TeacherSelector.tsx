@@ -13,9 +13,11 @@ import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 import { useTable } from "../TableProvider";
 import { ExtendedTeacher } from "../types";
+import { useNavigation } from "@/features/navigation/location/NavigationContext";
 
 export default function TeacherSelector() {
   const { teachers, selectedTeacher, setSelectedTeacher } = useTable();
+  const { selectedLocation } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleTeacherSelect = (teacher: ExtendedTeacher | null) => {
@@ -64,28 +66,37 @@ export default function TeacherSelector() {
                     >
                       전체
                     </Button>
-                    {teachers.map((teacher) => (
-                      <Button
-                        key={teacher.id}
-                        variant="ghost"
-                        size="sm"
-                        justifyContent="flex-start"
-                        onClick={() => handleTeacherSelect(teacher)}
-                        bg={
-                          selectedTeacher?.id === teacher.id
-                            ? "blue.50"
-                            : "transparent"
-                        }
-                        color={
-                          selectedTeacher?.id === teacher.id
-                            ? "blue.600"
-                            : "gray.700"
-                        }
-                        _hover={{ bg: "gray.100" }}
-                      >
-                        {teacher.name}
-                      </Button>
-                    ))}
+                    {teachers.map((teacher) => {
+                      if (
+                        selectedLocation !== null &&
+                        teacher.location.id !== selectedLocation.id
+                      ) {
+                        return null;
+                      }
+                      return (
+                        <Button
+                          key={teacher.id}
+                          variant="ghost"
+                          size="sm"
+                          justifyContent="flex-start"
+                          onClick={() => handleTeacherSelect(teacher)}
+                          bg={
+                            selectedTeacher?.id === teacher.id
+                              ? "blue.50"
+                              : "transparent"
+                          }
+                          color={
+                            selectedTeacher?.id === teacher.id
+                              ? "blue.600"
+                              : "gray.700"
+                          }
+                          _hover={{ bg: "gray.100" }}
+                        >
+                          {teacher.major.symbol}
+                          {teacher.name}
+                        </Button>
+                      );
+                    })}
                   </VStack>
                 </Popover.Body>
               </Popover.Content>
