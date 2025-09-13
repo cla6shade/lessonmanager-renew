@@ -1,4 +1,9 @@
-import { LessonSchema, LocationSchema, MajorSchema } from "@/generated/zod";
+import {
+  LessonSchema,
+  LocationSchema,
+  MajorSchema,
+  TeacherSchema,
+} from "@/generated/zod";
 import { z } from "zod";
 import { DataResponseSchema } from "../../../schema";
 
@@ -36,3 +41,33 @@ export const CreateLessonRequestSchema = LessonSchema.pick({
 });
 
 export type CreateLessonRequest = z.infer<typeof CreateLessonRequestSchema>;
+
+export const UpdateLessonsRequestSchema = z.object({
+  lessons: LessonSchema.pick({
+    id: true,
+    note: true,
+    isDone: true,
+  })
+    .extend({
+      id: z.coerce.number(),
+      note: z.string().optional(),
+      isDone: z.boolean().optional(),
+    })
+    .array(),
+});
+
+export type UpdateLessonsRequest = z.infer<typeof UpdateLessonsRequestSchema>;
+
+export const UpdateLessonsResponseSchema = DataResponseSchema(
+  LessonSchema.extend({
+    teacher: TeacherSchema.pick({
+      id: true,
+      name: true,
+    }).extend({
+      major: MajorSchema,
+    }),
+    location: LocationSchema,
+  }).array()
+);
+
+export type UpdateLessonsResponse = z.infer<typeof UpdateLessonsResponseSchema>;
