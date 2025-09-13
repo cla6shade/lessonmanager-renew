@@ -1,3 +1,5 @@
+import { LessonSearchParamsSchema } from "@/app/(lessons)/schema";
+import { z } from "zod";
 import { Prisma } from "@/generated/prisma";
 
 interface WorkingTimeData {
@@ -16,8 +18,6 @@ export type ExtendedTeacher = Prisma.TeacherGetPayload<{
     name: true;
     major: true;
     workingTime: true;
-  };
-  omit: {
-    password: true;
+    location: true;
   };
 }>;
