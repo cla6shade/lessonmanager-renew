@@ -48,6 +48,11 @@ export function getPreviousDatePeriod(period: DatePeriod): DatePeriod {
   };
 }
 
+export function formatHour(hour: number | null) {
+  if (!hour) return "(없음)";
+  return `${hour}시`;
+}
+
 export function formatDate(
   date: Date,
   showYear: boolean = true,
