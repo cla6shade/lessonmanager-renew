@@ -5,8 +5,8 @@ import { createContext, useState, ReactNode, use } from "react";
 
 interface NavigationContextType {
   locations: Location[];
-  selectedLocation: Location | null;
-  setSelectedLocation: (location: Location | null) => void;
+  selectedLocation: Location;
+  setSelectedLocation: (location: Location) => void;
   isAdmin: boolean;
   userId?: number;
   teacherId?: number;
@@ -20,7 +20,7 @@ interface NavigationProviderProps {
   children: ReactNode;
   locations: Location[];
   isAdmin: boolean;
-  initialLocation?: Location | null;
+  initialLocation: Location;
   userId?: number;
   teacherId?: number;
 }
@@ -29,15 +29,14 @@ export function NavigationProvider({
   children,
   locations,
   isAdmin,
-  initialLocation = null,
+  initialLocation,
   userId,
   teacherId,
 }: NavigationProviderProps) {
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    initialLocation
-  );
+  const [selectedLocation, setSelectedLocation] =
+    useState<Location>(initialLocation);
 
-  const handleSetSelectedLocation = (location: Location | null) => {
+  const handleSetSelectedLocation = (location: Location) => {
     if (!isAdmin) {
       console.warn("Location selection is only available for admin users");
       return;
