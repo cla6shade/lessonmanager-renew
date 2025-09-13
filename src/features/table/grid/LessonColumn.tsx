@@ -6,15 +6,22 @@ import TeacherHeader from "./TeacherHeader";
 import TeacherColumn from "./TeacherColumn";
 import EmptyColumn from "./EmptyColumn";
 import { getWorkingTeachersOnDate } from "./utils";
-import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
+import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useLesson } from "../LessonProvider";
 
 interface LessonColumnProps {
   date: Date;
-  lessons: GetLessonsResponse["data"];
 }
 
-export default function LessonColumn({ date, lessons }: LessonColumnProps) {
+export default function LessonColumn({ date }: LessonColumnProps) {
   const { teachers, selectedTeacher, openHours } = useTable();
+  const { selectedLocation } = useNavigation();
+  let { lessons } = useLesson();
+
+  lessons = lessons.filter((lesson) => {
+    const lessonDate = new Date(lesson.dueDate!);
+    return lessonDate.toDateString() === date.toDateString();
+  });
 
   const dayOfWeek = getWorkingDayOfWeek(date);
   const allTimes = getTimesInPeriod(openHours);
@@ -22,6 +29,7 @@ export default function LessonColumn({ date, lessons }: LessonColumnProps) {
   const displayTeachers = selectedTeacher ? [selectedTeacher] : teachers;
 
   const workingTeachersOnDate = getWorkingTeachersOnDate(
+    selectedLocation,
     displayTeachers,
     dayOfWeek
   );

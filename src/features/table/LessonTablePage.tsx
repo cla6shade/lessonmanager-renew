@@ -9,6 +9,7 @@ import DateSelector from "./selectors/DateSelector";
 import TeacherSelector from "./selectors/TeacherSelector";
 import { use } from "react";
 import { ExtendedTeacher } from "./types";
+import LessonProvider from "./LessonProvider";
 
 interface LessonTablePageProps {
   workingTimesPromise: Promise<WorkingTime[]>;
@@ -30,31 +31,33 @@ export default function LessonTablePage({
       teachers={teachers}
       workingTimes={workingTimes}
     >
-      <Flex gap={4} direction="column" flexGrow={1}>
-        <Flex
-          pt={{
-            base: 2,
-            lg: 4,
-          }}
-          gap={{
-            base: 2,
-            lg: 0,
-          }}
-        >
-          <DateSelector />
-          <TeacherSelector />
+      <LessonProvider>
+        <Flex gap={4} direction="column" flexGrow={1}>
+          <Flex
+            pt={{
+              base: 2,
+              lg: 4,
+            }}
+            gap={{
+              base: 2,
+              lg: 0,
+            }}
+          >
+            <DateSelector />
+            <TeacherSelector />
+          </Flex>
+
+          {/* 데스크톱 테이블 */}
+          <Box display={{ base: "none", lg: "flex" }} flexGrow={1}>
+            <LessonTable />
+          </Box>
+
+          {/* 모바일 테이블 */}
+          <Box display={{ base: "flex", lg: "none" }} flexGrow={1}>
+            <MobileTable />
+          </Box>
         </Flex>
-
-        {/* 데스크톱 테이블 */}
-        <Box display={{ base: "none", lg: "flex" }} flexGrow={1}>
-          <LessonTable />
-        </Box>
-
-        {/* 모바일 테이블 */}
-        <Box display={{ base: "flex", lg: "none" }} flexGrow={1}>
-          <MobileTable />
-        </Box>
-      </Flex>
+      </LessonProvider>
     </TableProvider>
   );
 }
