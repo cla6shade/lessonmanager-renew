@@ -2,7 +2,8 @@
 
 import { Box, Flex, Button, IconButton } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useTable } from "../TableProvider";
+import { isSameDate } from "@/utils/date";
+import { useTable } from "../grid/providers/TableProvider";
 
 export default function MobileDateSelector() {
   const {
@@ -26,10 +27,6 @@ export default function MobileDateSelector() {
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-  };
-
-  const isSameDate = (date1: Date, date2: Date) => {
-    return date1.toDateString() === date2.toDateString();
   };
 
   return (
