@@ -1,4 +1,4 @@
-import { UserLessonsResponse } from "@/app/(users)/api/admin/users/[id]/lessons/schema";
+import { UserLessonsResponse } from "@/app/(users)/api/users/[id]/lessons/schema";
 import { useFetch } from "../../hooks/useFetch";
 import { useState, useCallback, useEffect } from "react";
 
@@ -16,7 +16,7 @@ export function useFetchUserLessons({
   enabled = true,
 }: UseFetchUserLessonsProps) {
   const url = enabled
-    ? `/api/admin/users/${userId}/lessons?page=${page}&limit=${limit}`
+    ? `/api/users/${userId}/lessons?page=${page}&limit=${limit}`
     : null;
 
   const { data, loading, error } = useFetch<UserLessonsResponse>(url);
