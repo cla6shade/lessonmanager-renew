@@ -22,11 +22,13 @@ export default function EmptyCell({
         width="100%"
         backgroundColor="gray.100"
       >
-        {showAddButton && (
-          <Text fontSize="2xl" color="gray.400" fontWeight="lighter">
-            +
-          </Text>
-        )}
+        <Text
+          fontSize="2xl"
+          color={showAddButton ? "gray.400" : "transparent"}
+          fontWeight="lighter"
+        >
+          +
+        </Text>
       </Box>
     </Cell>
   );
