@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
-import { useTable } from "../TableProvider";
 import { ExtendedTeacher } from "../types";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useTable } from "../grid/providers/TableProvider";
 
 export default function TeacherSelector() {
   const { teachers, selectedTeacher, setSelectedTeacher } = useTable();

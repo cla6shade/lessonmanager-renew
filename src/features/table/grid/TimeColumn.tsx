@@ -1,6 +1,6 @@
 import { getTimesInPeriod } from "@/utils/date";
-import { useTable } from "../TableProvider";
 import { Flex, Grid, Text } from "@chakra-ui/react";
+import { useTable } from "./providers/TableProvider";
 
 export default function TimeColumn() {
   const { openHours } = useTable();
@@ -10,6 +10,7 @@ export default function TimeColumn() {
       templateRows={`0.5fr repeat(${times.length}, 1fr) 0.5fr`}
       width="88px"
       flexShrink={0}
+      height="full"
     >
       <div />
       {times.map((time) => (

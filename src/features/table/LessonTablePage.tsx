@@ -1,7 +1,6 @@
 "use client";
 
 import { OpenHours, WorkingTime } from "@/generated/prisma";
-import TableProvider from "./TableProvider";
 import LessonTable from "./LessonTable";
 import MobileTable from "./MobileTable";
 import { Flex, Box } from "@chakra-ui/react";
@@ -9,7 +8,8 @@ import DateSelector from "./selectors/DateSelector";
 import TeacherSelector from "./selectors/TeacherSelector";
 import { use } from "react";
 import { ExtendedTeacher } from "./types";
-import LessonProvider from "./LessonProvider";
+import TableProvider from "./grid/providers/TableProvider";
+import LessonProvider from "./grid/providers/LessonProvider";
 
 interface LessonTablePageProps {
   workingTimesPromise: Promise<WorkingTime[]>;

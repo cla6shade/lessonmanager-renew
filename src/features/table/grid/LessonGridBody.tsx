@@ -1,21 +1,17 @@
-import { Flex, Grid, Spinner, Text, Box } from "@chakra-ui/react";
+import { Flex, Grid, Text, Box } from "@chakra-ui/react";
 import TimeColumn from "./TimeColumn";
 import LessonGridDateHeader from "./LessonGridDateHeader";
 import LessonColumn from "./LessonColumn";
-import { useTable } from "../TableProvider";
 import { getDatesInPeriod } from "@/utils/date";
-import { useFetchWeeklyLesson } from "../hooks/useFetchLesson";
+import { useTable } from "./providers/TableProvider";
+import { useLesson } from "./providers/LessonProvider";
 
 export default function LessonGridBody() {
-  const { datePeriod, selectedTeacher } = useTable();
+  const { datePeriod } = useTable();
   const dates = getDatesInPeriod(datePeriod);
-  const { lessons, error } = useFetchWeeklyLesson(
-    datePeriod.startDate,
-    datePeriod.endDate,
-    selectedTeacher?.id
-  );
+  const { lessonFetchError } = useLesson();
 
-  if (error) {
+  if (lessonFetchError) {
     return (
       <Flex grow={1} align="center" justify="center">
         <Box textAlign="center">
@@ -23,7 +19,7 @@ export default function LessonGridBody() {
             데이터를 불러오는 중 오류가 발생했습니다
           </Text>
           <Text color="gray.500" fontSize="sm">
-            {error}
+            {lessonFetchError}
           </Text>
         </Box>
       </Flex>

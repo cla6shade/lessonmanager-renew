@@ -1,6 +1,6 @@
 import { formatDate, getDatesInPeriod } from "@/utils/date";
-import { useTable } from "../TableProvider";
 import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { useTable } from "./providers/TableProvider";
 
 export default function LessonGridDateHeader() {
   const { datePeriod } = useTable();

@@ -1,5 +1,3 @@
-import { Lesson } from "@/generated/prisma";
-import { useTable } from "../TableProvider";
 import { getWorkingDayOfWeek, getTimesInPeriod } from "@/utils/date";
 import { Box, Grid } from "@chakra-ui/react";
 import TeacherHeader from "./TeacherHeader";
@@ -7,7 +5,8 @@ import TeacherColumn from "./TeacherColumn";
 import EmptyColumn from "./EmptyColumn";
 import { getWorkingTeachersOnDate } from "./utils";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
-import { useLesson } from "../LessonProvider";
+import { useTable } from "./providers/TableProvider";
+import { useLesson } from "./providers/LessonProvider";
 
 interface LessonColumnProps {
   date: Date;
@@ -50,6 +49,7 @@ export default function LessonColumn({ date }: LessonColumnProps) {
         templateColumns={`repeat(${workingTeachersOnDate.length || 1}, 1fr)`}
         w="full"
         h="calc(100% - 36px)"
+        minHeight="0"
       >
         {hasWorkingTeachers ? (
           workingTeachersOnDate.map((teacher, teacherIndex) => (

@@ -7,9 +7,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
-import { useTable } from "../TableProvider";
 import { formatDate, getCurrentDatePeriod } from "@/utils/date";
 import Calendar from "./Calendar";
+import { useTable } from "../grid/providers/TableProvider";
 
 export default function DateSelector() {
   const { datePeriod, setPeriodToPrevious, setPeriodToNext, setDatePeriod } =
