@@ -133,3 +133,14 @@ export function getDatesInPeriod(period: DatePeriod): Date[] {
 export function getWorkingDayOfWeek(date: Date): string {
   return date.toLocaleDateString("en-US", { weekday: "short" }).toLowerCase();
 }
+
+export function isSameDate(date1: Date, date2: Date) {
+  return date1.toDateString() === date2.toDateString();
+}
+
+export function isDateInPeriod(date: Date, period: DatePeriod) {
+  return (
+    date.getTime() >= period.startDate.getTime() &&
+    date.getTime() <= period.endDate.getTime()
+  );
+}
