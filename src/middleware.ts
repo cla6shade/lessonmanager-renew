@@ -5,7 +5,6 @@ import {
   DEFAULT_ADMIN_MENU,
   DEFAULT_USER_MENU,
 } from "./features/navigation/menu/menus";
-import z, { ZodError } from "zod";
 import { buildErrorResponse } from "./app/utils";
 
 export async function middleware(request: NextRequest) {

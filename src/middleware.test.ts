@@ -128,7 +128,7 @@ describe("middleware", () => {
 
     it("관리자 API 요청에 대해 401 에러를 반환해야 함", async () => {
       // Arrange
-      const request = new NextRequest("http://localhost:3000/api/admin/users");
+      const request = new NextRequest("http://localhost:3000/api/admin");
 
       // Act
       const response = await middleware(request);
@@ -193,7 +193,7 @@ describe("middleware", () => {
 
     it("관리자 API 요청을 허용해야 함", async () => {
       // Arrange
-      const request = new NextRequest("http://localhost:3000/api/admin/users");
+      const request = new NextRequest("http://localhost:3000/api/users");
 
       // Act
       const response = await middleware(request);
