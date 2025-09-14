@@ -1,23 +1,9 @@
-import {
-  Text,
-  VStack,
-  HStack,
-  Table,
-  Spinner,
-  Textarea,
-  Button,
-} from "@chakra-ui/react";
-import { Checkbox } from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
-import { useState, useCallback } from "react";
+import { Text, VStack, HStack, Spinner, Button } from "@chakra-ui/react";
+import { useState } from "react";
 
 import Pagination from "@/components/ui/pagination";
 import { useFetchUserLessons } from "@/features/dialog/useFetchUserLessons";
-import { useUpdateLessons } from "@/features/dialog/useUpdateLessons";
-import { formatDate, formatHour } from "@/utils/date";
-import { UpdateLessonsRequest } from "@/app/(lessons)/api/lessons/schema";
-
-// TODO: Next.js Server Action으로 리팩토링
+import UserLessonsForm from "./UserLessonsForm";
 
 interface UserLessonsTableProps {
   userId: number;
@@ -35,27 +21,13 @@ export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
       enabled: true,
     });
 
-  const { updateLessons, isSaving } = useUpdateLessons();
-
-  const { control, handleSubmit } = useForm<UpdateLessonsRequest>({
-    defaultValues: {
-      lessons: [],
-    },
-  });
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const onSubmit = useCallback(
-    async (data: UpdateLessonsRequest) => {
-      await updateLessons(data);
-    },
-    [updateLessons]
-  );
   if (loading) {
     return (
-      <HStack justify="center" h="256px">
+      <HStack justify="center" h="360px">
         <Spinner size="lg" />
         <Text>레슨 목록을 불러오는 중...</Text>
       </HStack>
@@ -100,92 +72,7 @@ export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
 
   return (
     <VStack gap={4} align="stretch">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack gap={4} align="stretch">
-          <Table.Root variant="line" size="sm">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeader>상태</Table.ColumnHeader>
-                <Table.ColumnHeader>날짜</Table.ColumnHeader>
-                <Table.ColumnHeader>시간</Table.ColumnHeader>
-                <Table.ColumnHeader>담당 선생님</Table.ColumnHeader>
-                <Table.ColumnHeader>위치</Table.ColumnHeader>
-                <Table.ColumnHeader>분류</Table.ColumnHeader>
-                <Table.ColumnHeader>메모</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {lessons.map((lesson, index) => (
-                <Table.Row key={lesson.id}>
-                  <Table.Cell>
-                    <Controller
-                      control={control}
-                      name={`lessons.${index}.isDone`}
-                      defaultValue={lesson.isDone || false}
-                      render={({ field: { onChange, value } }) => (
-                        <Checkbox.Root
-                          checked={value}
-                          onCheckedChange={(details) =>
-                            onChange(!!details.checked)
-                          }
-                        >
-                          <Checkbox.HiddenInput />
-                          <Checkbox.Control>
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
-                        </Checkbox.Root>
-                      )}
-                    />
-                    <input
-                      type="hidden"
-                      {...control.register(`lessons.${index}.id`)}
-                      value={lesson.id}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {formatDate(new Date(lesson.dueDate))}
-                  </Table.Cell>
-                  <Table.Cell>{formatHour(lesson.dueHour)}</Table.Cell>
-                  <Table.Cell>
-                    {lesson.teacher.major.symbol} {lesson.teacher.name}
-                  </Table.Cell>
-                  <Table.Cell>{lesson.location.name}</Table.Cell>
-                  <Table.Cell>
-                    {lesson.isGrand ? "그랜드 레슨" : "일반 레슨"}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Textarea
-                      {...control.register(`lessons.${index}.note`)}
-                      defaultValue={lesson.note || ""}
-                      placeholder="레슨 노트를 입력하세요"
-                      size="sm"
-                      minH="60px"
-                      maxW="200px"
-                      resize="vertical"
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-
-          <HStack
-            justify="flex-end"
-            pt={4}
-            borderTop="1px solid"
-            borderColor="gray.200"
-          >
-            <Button
-              type="submit"
-              colorScheme="blue"
-              loading={isSaving}
-              disabled={isSaving}
-            >
-              저장
-            </Button>
-          </HStack>
-        </VStack>
-      </form>
+      <UserLessonsForm key={currentPage} lessons={lessons} />
 
       <Pagination
         currentPage={currentPage}
@@ -194,6 +81,17 @@ export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
         itemsPerPage={itemsPerPage}
         onPageChange={handlePageChange}
       />
+
+      <HStack justify="flex-end">
+        <Button
+          type="submit"
+          form="lessons-form"
+          colorScheme="blue"
+          loadingText="저장 중..."
+        >
+          저장
+        </Button>
+      </HStack>
     </VStack>
   );
 }
