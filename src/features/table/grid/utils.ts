@@ -4,8 +4,8 @@ import { Location } from "@/generated/prisma";
 export const LESSON_STATUS_COLORS = {
   COMPLETED: "green.600", // 완료된 레슨
   CANCELLED: "red.400", // 당일 취소된 레슨
-  GRAND: "yellow.400", // 그랜드 레슨
-  REGULAR: "yellow.300", // 일반 레슨
+  GRAND: "yellow.500", // 그랜드 레슨
+  REGULAR: "yellow.200", // 일반 레슨
 };
 
 export function getWorkingTeachersOnDate(
