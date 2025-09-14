@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import GET from "./route";
+import { GET } from "./route";
 import { NextRequest } from "next/server";
 import { getSession } from "@/lib/session";
 import { mockUsers } from "@mocks/users";

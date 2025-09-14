@@ -1,13 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import GET from "./route";
+import { GET } from "./route";
 import { NextRequest } from "next/server";
 import { mockUsers } from "@mocks/users";
-import { mockLocations } from "@mocks/locations";
-import { mockTeachers } from "@mocks/teachers";
-import { mockLessons } from "@mocks/lessons";
 import prisma from "@/lib/prisma";
 
-describe("GET /api/admin/users/[id]", () => {
+describe("GET /api/users/[id]", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(prisma.user, "findUnique");
@@ -23,14 +20,13 @@ describe("GET /api/admin/users/[id]", () => {
       const userId = 1;
       const mockUser = mockUsers.find((user) => user.id === userId);
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${userId}`
+        `http://localhost:3000/api/users/${userId}`
       );
 
       // Act
-      const response = await GET(
-        request,
-        Promise.resolve({ id: userId.toString() })
-      );
+      const response = await GET(request, {
+        params: Promise.resolve({ id: userId.toString() }),
+      });
 
       // Assert
       expect(response.status).toBe(200);
@@ -65,14 +61,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const userId = 999;
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${userId}`
+        `http://localhost:3000/api/users/${userId}`
       );
 
       // Act
-      const response = await GET(
-        request,
-        Promise.resolve({ id: userId.toString() })
-      );
+      const response = await GET(request, {
+        params: Promise.resolve({ id: userId.toString() }),
+      });
 
       // Assert
       expect(response.status).toBe(404);
@@ -97,14 +92,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const userId = 1;
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${userId}`
+        `http://localhost:3000/api/users/${userId}`
       );
 
       // Act
-      const response = await GET(
-        request,
-        Promise.resolve({ id: userId.toString() })
-      );
+      const response = await GET(request, {
+        params: Promise.resolve({ id: userId.toString() }),
+      });
 
       // Assert
       expect(response.status).toBe(200);
@@ -117,14 +111,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const userId = 1;
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${userId}`
+        `http://localhost:3000/api/users/${userId}`
       );
 
       // Act
-      const response = await GET(
-        request,
-        Promise.resolve({ id: userId.toString() })
-      );
+      const response = await GET(request, {
+        params: Promise.resolve({ id: userId.toString() }),
+      });
 
       // Assert
       expect(response.status).toBe(200);
@@ -139,11 +132,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const invalidId = "invalid";
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${invalidId}`
+        `http://localhost:3000/api/users/${invalidId}`
       );
 
       // Act
-      const response = await GET(request, Promise.resolve({ id: invalidId }));
+      const response = await GET(request, {
+        params: Promise.resolve({ id: invalidId }),
+      });
 
       // Assert
       expect(response.status).toBe(400);
@@ -155,11 +150,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const emptyId = "";
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${emptyId}`
+        `http://localhost:3000/api/users/${emptyId}`
       );
 
       // Act
-      const response = await GET(request, Promise.resolve({ id: emptyId }));
+      const response = await GET(request, {
+        params: Promise.resolve({ id: emptyId }),
+      });
 
       // Assert
       expect(response.status).toBe(400);
@@ -171,11 +168,13 @@ describe("GET /api/admin/users/[id]", () => {
       // Arrange
       const zeroId = "0";
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/${zeroId}`
+        `http://localhost:3000/api/users/${zeroId}`
       );
 
       // Act
-      const response = await GET(request, Promise.resolve({ id: zeroId }));
+      const response = await GET(request, {
+        params: Promise.resolve({ id: zeroId }),
+      });
 
       // Assert
       expect(response.status).toBe(404);

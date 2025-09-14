@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { mockUsers } from "@mocks/users";
 import prisma from "@/lib/prisma";
 
-describe("GET /api/admin/users/lookup", () => {
+describe("GET /api/users/lookup", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(prisma.user, "findMany");
@@ -23,7 +23,7 @@ describe("GET /api/admin/users/lookup", () => {
         .map(({ id, name, contact }) => ({ id, name, contact }));
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/lookup?query=${searchQuery}`
+        `http://localhost:3000/api/users/lookup?query=${searchQuery}`
       );
 
       // Act
@@ -56,7 +56,7 @@ describe("GET /api/admin/users/lookup", () => {
         .map(({ id, name, contact }) => ({ id, name, contact }));
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/lookup?query=${searchQuery}`
+        `http://localhost:3000/api/users/lookup?query=${searchQuery}`
       );
 
       // Act
@@ -86,7 +86,7 @@ describe("GET /api/admin/users/lookup", () => {
       const searchQuery = "존재하지않는사용자";
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/lookup?query=${searchQuery}`
+        `http://localhost:3000/api/users/lookup?query=${searchQuery}`
       );
 
       // Act
@@ -106,7 +106,7 @@ describe("GET /api/admin/users/lookup", () => {
         .map(({ id, name, contact }) => ({ id, name, contact }));
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users/lookup?query=${searchQuery}`
+        `http://localhost:3000/api/users/lookup?query=${searchQuery}`
       );
 
       // Act

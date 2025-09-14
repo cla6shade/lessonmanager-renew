@@ -1,13 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import GET from "./route";
+import { GET } from "./route";
 import { NextRequest } from "next/server";
 import { mockUsers } from "@mocks/users";
-import { mockLocations } from "@mocks/locations";
-import { mockTeachers } from "@mocks/teachers";
-import { mockLessons } from "@mocks/lessons";
 import prisma from "@/lib/prisma";
 
-describe("GET /api/admin/users", () => {
+describe("GET /api/users", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(prisma.user, "findMany");
@@ -22,7 +19,7 @@ describe("GET /api/admin/users", () => {
     it("기본 쿼리로 모든 사용자를 조회할 수 있어야 함", async () => {
       // Arrange
       const request = new NextRequest(
-        "http://localhost:3000/api/admin/users?page=1&limit=20"
+        "http://localhost:3000/api/users?page=1&limit=20"
       );
 
       // Act
@@ -75,7 +72,7 @@ describe("GET /api/admin/users", () => {
       ).length;
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users?name=${nameFilter}&page=1&limit=20`
+        `http://localhost:3000/api/users?name=${nameFilter}&page=1&limit=20`
       );
 
       // Act
@@ -120,7 +117,7 @@ describe("GET /api/admin/users", () => {
       ).length;
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users?contact=${contactFilter}&page=1&limit=20`
+        `http://localhost:3000/api/users?contact=${contactFilter}&page=1&limit=20`
       );
 
       // Act
@@ -142,7 +139,7 @@ describe("GET /api/admin/users", () => {
       ).length;
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users?locationId=${locationId}&page=1&limit=20`
+        `http://localhost:3000/api/users?locationId=${locationId}&page=1&limit=20`
       );
 
       // Act
@@ -166,7 +163,7 @@ describe("GET /api/admin/users", () => {
       ).length;
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users?name=${nameFilter}&locationId=${locationId}&page=1&limit=20`
+        `http://localhost:3000/api/users?name=${nameFilter}&locationId=${locationId}&page=1&limit=20`
       );
 
       // Act
@@ -186,7 +183,7 @@ describe("GET /api/admin/users", () => {
       const limit = 5;
 
       const request = new NextRequest(
-        `http://localhost:3000/api/admin/users?page=${page}&limit=${limit}`
+        `http://localhost:3000/api/users?page=${page}&limit=${limit}`
       );
 
       // Act
