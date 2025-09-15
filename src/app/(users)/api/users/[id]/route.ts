@@ -1,14 +1,18 @@
 import prisma from "@/lib/prisma";
-import { getSession } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 import { PublicUserDetailResponse } from "./schema";
 import { buildErrorResponse } from "@/app/utils";
+import { getSession } from "@/lib/session";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { isAdmin } = await getSession();
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const { id } = await params;
     if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });

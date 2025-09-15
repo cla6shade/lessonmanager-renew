@@ -9,8 +9,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { isAdmin, isLoggedIn } = await getSession();
-    if (!isAdmin || !isLoggedIn) {
+    const { isAdmin } = await getSession();
+    if (!isAdmin) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { id } = await params;
