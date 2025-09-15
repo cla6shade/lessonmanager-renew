@@ -5,6 +5,7 @@ import LessonCell from "./cell/LessonCell";
 import EmptyCell from "./cell/EmptyCell";
 import { getTeacherWorkingHours } from "./utils";
 import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
+import { useLesson } from "./providers/LessonProvider";
 
 interface TeacherColumnProps {
   teacher: ExtendedTeacher;
@@ -25,12 +26,22 @@ export default function TeacherColumn({
 }: TeacherColumnProps) {
   const dayOfWeek = getWorkingDayOfWeek(date);
   const teacherWorkingHours = getTeacherWorkingHours(teacher, dayOfWeek);
+  const { bannedTimes } = useLesson();
 
   return (
     <Grid templateRows={`repeat(${allTimes.length}, 1fr)`} w="full" h="full">
       {allTimes.map((hour, hourIndex) => {
         const isWorkingHour = teacherWorkingHours.includes(hour);
         const hourLessons = lessons.filter((lesson) => lesson.dueHour === hour);
+
+        const isBanned = bannedTimes.some(
+          (bannedTime) =>
+            bannedTime.teacherId === teacher.id &&
+            new Date(bannedTime.date).toDateString() === date.toDateString() &&
+            bannedTime.hour === hour
+        );
+        const cellDateTime = new Date(date);
+        cellDateTime.setHours(hour, 0, 0, 0);
 
         const cellKey = `${teacher.id}-${date.toDateString()}-${hour}`;
         const isLastRow = hourIndex === allTimes.length - 1;
@@ -61,7 +72,9 @@ export default function TeacherColumn({
         return (
           <EmptyCell
             key={cellKey}
-            showAddButton={true}
+            showAddButton={
+              !isBanned && new Date().getTime() < cellDateTime.getTime()
+            }
             isLastRow={isLastRow}
             isLastColumn={isLastColumn}
           />
