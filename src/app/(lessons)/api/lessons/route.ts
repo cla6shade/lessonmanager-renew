@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import {
+  CreateLessonRequestSchema,
   GetLessonsQuerySchema,
   GetLessonsResponse,
   UpdateLessonsRequestSchema,
@@ -48,3 +49,22 @@ export async function PUT(request: NextRequest) {
     return buildErrorResponse(error);
   }
 }
+
+// export async function POST(request: NextRequest) {
+//   try {
+//     const {
+//       isAdmin,
+//       userId: sessionUserId,
+//       teacherId: sessionTeacherId,
+//     } = await getSession();
+//     if (!sessionUserId || !sessionTeacherId) {
+//       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//     }
+//     const { dueDate, dueHour, teacherId, userId, locationId, isGrand } =
+//       CreateLessonRequestSchema.parse(await request.json());
+//     }
+//     return NextResponse.json<CreateLessonResponse>({ data: lesson });
+//   } catch (error) {
+//     return buildErrorResponse(error);
+//   }
+// }
