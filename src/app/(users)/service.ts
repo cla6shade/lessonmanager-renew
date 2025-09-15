@@ -1,5 +1,23 @@
 import prisma from "@/lib/prisma";
 
+export async function setUserLatestLesson(userId: number, lessonId: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      latestLessonId: lessonId,
+    },
+  });
+}
+
+export async function setTeacherInCharge(userId: number, teacherId: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      teacherInChargeId: teacherId,
+    },
+  });
+}
+
 export async function hasLessonCount(userId: number) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
