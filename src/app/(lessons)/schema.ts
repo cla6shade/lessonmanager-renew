@@ -1,15 +1,16 @@
 import { LessonSchema, LocationSchema, MajorSchema } from "@/generated/zod";
+import { toKstDate } from "@/utils/date";
 import { z } from "zod";
 
 export const LessonSearchParamsSchema = z.object({
   startDate: z.iso
     .datetime()
     .optional()
-    .transform((value) => (value ? new Date(value) : undefined)),
+    .transform((value) => (value ? toKstDate(value) : undefined)),
   endDate: z.iso
     .datetime()
     .optional()
-    .transform((value) => (value ? new Date(value) : undefined)),
+    .transform((value) => (value ? toKstDate(value) : undefined)),
   selectedTeacherId: z.coerce.number().optional(),
   selectedLocationId: z.coerce.number().optional(),
 });

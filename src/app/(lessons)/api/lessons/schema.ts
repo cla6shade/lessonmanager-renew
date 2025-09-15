@@ -6,10 +6,11 @@ import {
 } from "@/generated/zod";
 import { z } from "zod";
 import { DataResponseSchema } from "../../../schema";
+import { toKstDate } from "@/utils/date";
 
 export const GetLessonsQuerySchema = z.object({
-  startDate: z.iso.datetime().transform((value) => new Date(value)),
-  endDate: z.iso.datetime().transform((value) => new Date(value)),
+  startDate: z.iso.datetime().transform(toKstDate),
+  endDate: z.iso.datetime().transform(toKstDate),
   teacherId: z.coerce.number().optional(),
   locationId: z.coerce.number().optional(),
 });

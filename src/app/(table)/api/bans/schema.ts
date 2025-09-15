@@ -1,10 +1,11 @@
 import { LessonBannedTimesSchema, TeacherSchema } from "@/generated/zod";
 import { z } from "zod";
 import { DataResponseSchema } from "../../../schema";
+import { toKstDate } from "@/utils/date";
 
 export const GetBannedTimesQuerySchema = z.object({
-  startDate: z.iso.datetime().transform((value) => new Date(value)),
-  endDate: z.iso.datetime().transform((value) => new Date(value)),
+  startDate: z.iso.datetime().transform(toKstDate),
+  endDate: z.iso.datetime().transform(toKstDate),
   teacherId: z.coerce.number().optional(),
 });
 
@@ -31,7 +32,7 @@ export const CreateBannedTimeRequestSchema = LessonBannedTimesSchema.pick({
   hour: true,
 }).extend({
   teacherId: z.coerce.number(),
-  date: z.iso.datetime().transform((value) => new Date(value)),
+  date: z.iso.datetime().transform(toKstDate),
   hour: z.coerce.number(),
 });
 
@@ -59,6 +60,8 @@ export const UpdateBannedTimesRequestSchema = z.object({
       teacherId: true,
       date: true,
       hour: true,
+    }).extend({
+      date: z.iso.datetime().transform(toKstDate),
     })
   ),
 });

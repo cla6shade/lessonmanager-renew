@@ -144,3 +144,9 @@ export function isDateInPeriod(date: Date, period: DatePeriod) {
     date.getTime() <= period.endDate.getTime()
   );
 }
+
+export function toKstDate(val: string): Date {
+  const d = new Date(val);
+  d.setHours(d.getHours() + 9);
+  return d;
+}
