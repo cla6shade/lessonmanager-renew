@@ -1,8 +1,13 @@
 import { Text, VStack, HStack, Separator, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { CenteredSpinner } from "@/components/Spinner";
 import { formatDate, formatHour } from "@/utils/date";
+import { useUpdate } from "@/hooks/useUpdate";
+import {
+  UpdateLessonRequest,
+  UpdateLessonResponse,
+} from "@/app/(lessons)/api/lessons/[id]/schema";
 
 interface LessonDetailContentProps {
   lesson: any;
@@ -19,40 +24,35 @@ export default function LessonDetailContent({
   onUserLessonsClick,
   onLessonUpdate,
 }: LessonDetailContentProps) {
-  const [isUpdating, setIsUpdating] = useState(false);
+  const { update, isSaving } = useUpdate<
+    UpdateLessonRequest,
+    UpdateLessonResponse
+  >();
 
   const formatText = (text: string | null) => {
     if (!text || text.trim() === "") return "(없음)";
     return text;
   };
 
-  const handleToggleDone = async () => {
+  const handleToggleDone = useCallback(async () => {
     if (!lesson) return;
 
-    setIsUpdating(true);
-    try {
-      const response = await fetch(`/api/lessons/${lesson.id}`, {
+    const result = await update(
+      { isDone: !lesson.isDone },
+      {
+        endpoint: `/api/lessons/${lesson.id}`,
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          isDone: !lesson.isDone,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update lesson");
+        successMessage: lesson.isDone
+          ? "레슨이 미완료 처리되었습니다."
+          : "레슨이 완료 처리되었습니다.",
+        errorMessage: "레슨 상태 업데이트 중 오류가 발생했습니다.",
       }
+    );
 
-      const result = await response.json();
-      onLessonUpdate(result.data);
-    } catch (error) {
-      console.error("Error updating lesson:", error);
-    } finally {
-      setIsUpdating(false);
+    if (result.success && result.data) {
+      onLessonUpdate(result.data.data);
     }
-  };
+  }, [lesson, update, onLessonUpdate]);
 
   if (loading) {
     return <CenteredSpinner size="lg" minHeight="300px" />;
@@ -143,7 +143,7 @@ export default function LessonDetailContent({
       <Button
         colorScheme={lesson.isDone ? "orange" : "green"}
         onClick={handleToggleDone}
-        loading={isUpdating}
+        loading={isSaving}
         loadingText="처리 중..."
       >
         {lesson.isDone ? "레슨 미완료 처리하기" : "레슨 완료 처리하기"}
