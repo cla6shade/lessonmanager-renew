@@ -3,6 +3,7 @@ import { useState } from "react";
 import UserLessonsDialog from "@/features/dialog/UserLessonsDialog";
 import { useFetchLessonDetail } from "../hooks/useFetchLesson";
 import LessonDetailContent from "./LessonDetailContent";
+import { useLesson } from "../grid/providers/LessonProvider";
 
 interface LessonDetailDialogProps {
   lessonId: number;
@@ -17,6 +18,7 @@ export default function LessonDetailDialog({
 }: LessonDetailDialogProps) {
   const [isUserLessonsDialogOpen, setIsUserLessonsDialogOpen] = useState(false);
   const { lesson, loading, error, setLesson } = useFetchLessonDetail(lessonId);
+  const { refetchLessons } = useLesson();
 
   return (
     <>
@@ -42,7 +44,10 @@ export default function LessonDetailDialog({
                   loading={loading}
                   error={error}
                   onUserLessonsClick={() => setIsUserLessonsDialogOpen(true)}
-                  onLessonUpdate={setLesson}
+                  onLessonUpdate={(lesson) => {
+                    setLesson(lesson);
+                    refetchLessons();
+                  }}
                 />
               </Dialog.Body>
             </Dialog.Content>
