@@ -1,37 +1,25 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { UpdateLessonsRequest } from "@/app/(lessons)/api/lessons/schema";
+import { useUpdate } from "@/hooks/useUpdate";
 
 export function useUpdateLessons() {
-  const [isSaving, setIsSaving] = useState(false);
+  const { update, isSaving, error } = useUpdate<UpdateLessonsRequest>();
 
-  const updateLessons = useCallback(async (data: UpdateLessonsRequest) => {
-    setIsSaving(true);
-    try {
-      const response = await fetch("/api/lessons", {
+  const updateLessons = useCallback(
+    async (data: UpdateLessonsRequest) => {
+      await update(data, {
+        endpoint: "/api/lessons",
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        successMessage: "저장되었습니다.",
+        errorMessage: "저장 중 오류가 발생했습니다.",
       });
-
-      if (!response.ok) {
-        alert("저장 중 오류가 발생했습니다.");
-        console.log(response);
-        return;
-      }
-
-      alert("저장되었습니다.");
-    } catch (error) {
-      console.error("저장 중 오류:", error);
-      alert("저장 중 오류가 발생했습니다.");
-    } finally {
-      setIsSaving(false);
-    }
-  }, []);
+    },
+    [update]
+  );
 
   return {
     updateLessons,
     isSaving,
+    error,
   };
 }
