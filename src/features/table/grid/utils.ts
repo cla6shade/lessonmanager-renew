@@ -1,3 +1,4 @@
+import { isSameDate } from "@/utils/date";
 import { ExtendedTeacher, WorkingTimeData } from "../types";
 import { Location } from "@/generated/prisma";
 
@@ -49,10 +50,7 @@ export function getLessonStatusColor(lesson: {
   const today = new Date();
   const lessonDate = new Date(lesson.dueDate);
 
-  if (
-    lesson.isDone &&
-    lessonDate.getTime() + lesson.dueHour * 60 * 60 * 1000 > today.getTime()
-  ) {
+  if (lesson.isDone && isSameDate(lessonDate, today)) {
     const currentHour = today.getHours();
     if (currentHour < lesson.dueHour) {
       return LESSON_STATUS_COLORS.CANCELLED;
