@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState, createContext, use } from "react";
+import { useEffect, useState, createContext, use } from "react";
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import { useFetchWeeklyLesson } from "../../hooks/useFetchLesson";
-import { isSameDate } from "@/utils/date";
 import {
   createLessonStore,
   LessonState,
   LessonStore,
 } from "../../stores/lessonStore";
 import { useTable } from "./TableProvider";
+import useFetchBannedTimes from "../../hooks/useFetchBannedTimes";
 
 const LessonStoreContext = createContext<LessonStore | null>(null);
 
@@ -17,7 +17,7 @@ interface LessonProviderProps {
 }
 
 export default function LessonProvider({ children }: LessonProviderProps) {
-  const { datePeriod, selectedTeacher, selectedDate } = useTable();
+  const { datePeriod, selectedTeacher } = useTable();
 
   const { lessons, loading, error, refetch } = useFetchWeeklyLesson(
     datePeriod.startDate,
@@ -25,17 +25,17 @@ export default function LessonProvider({ children }: LessonProviderProps) {
     selectedTeacher?.id
   );
 
-  const currentDate = selectedDate ?? new Date();
-
-  const dailyLessons = useMemo(() => {
-    return lessons.filter((lesson) => {
-      const lessonDate = new Date(lesson.dueDate!);
-      return isSameDate(lessonDate, currentDate);
+  const { data: bannedTimes, refetch: refetchBannedTimes } =
+    useFetchBannedTimes({
+      startDate: datePeriod.startDate,
+      endDate: datePeriod.endDate,
+      teacherId: selectedTeacher?.id,
     });
-  }, [lessons, currentDate]);
 
   const initialState: LessonState = {
     lessons,
+    bannedTimes,
+    refetchBannedTimes,
     isLessonLoading: loading,
     lessonFetchError: error,
     refetchLessons: refetch,
@@ -48,11 +48,19 @@ export default function LessonProvider({ children }: LessonProviderProps) {
   useEffect(() => {
     store.setState({
       lessons,
+      bannedTimes,
+      refetchBannedTimes,
       isLessonLoading: loading,
       lessonFetchError: error,
       refetchLessons: refetch,
     });
-  }, [lessons, dailyLessons, loading, error, refetch, store]);
+  }, [lessons, loading, error, refetch, store]);
+
+  useEffect(() => {
+    store.setState({
+      bannedTimes,
+    });
+  }, [bannedTimes, store]);
 
   return (
     <LessonStoreContext.Provider value={store}>
@@ -72,11 +80,16 @@ export function useLesson() {
   const refetchLessons = useLessonStoreSelector((s) => s.refetchLessons);
   const isLessonLoading = useLessonStoreSelector((s) => s.isLessonLoading);
   const lessonFetchError = useLessonStoreSelector((s) => s.lessonFetchError);
-
+  const bannedTimes = useLessonStoreSelector((s) => s.bannedTimes);
+  const refetchBannedTimes = useLessonStoreSelector(
+    (s) => s.refetchBannedTimes
+  );
   return {
     lessons,
     refetchLessons,
     isLessonLoading,
     lessonFetchError,
+    bannedTimes,
+    refetchBannedTimes,
   };
 }
