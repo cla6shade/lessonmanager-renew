@@ -1,31 +1,21 @@
 "use client";
 
-import React from "react";
-import {
-  Dialog,
-  Button,
-  Box,
-  Text,
-  Flex,
-  Portal,
-  Checkbox,
-  CheckboxCard,
-} from "@chakra-ui/react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import {
-  formatDate,
-  getTimesInPeriod,
-  getWorkingDayOfWeek,
-} from "@/utils/date";
+import React, { useEffect, useState } from "react";
+import { Dialog, Button, Box, Text, Portal } from "@chakra-ui/react";
+import { formatDate, getWorkingDayOfWeek } from "@/utils/date";
 import { useTable } from "../../grid/providers/TableProvider";
 import { useLesson } from "../../grid/providers/LessonProvider";
 import { getWorkingTeachersOnDate } from "../../grid/utils";
 import { useNavigation } from "../../../navigation/location/NavigationContext";
-import BannedTimeCell from "./BannedTimeCell";
-import TimeHeaderCell from "./TimeHeaderCell";
-import TeacherHeaderCell from "./TeacherHeaderCell";
-import TimeCell from "./TimeCell";
 import BannedTimeLegend from "./BannedTimeLegend";
+import BannedTimeGrid from "./BannedTimeGrid";
+import {
+  CellType,
+  BannedTimeGrid as BannedTimeGridType,
+  getBannedTimeGrid,
+  createUpdateBannedTimesRequest,
+} from "./utils";
+import { useUpdateBannedTimes } from "./useUpdateBannedTimes";
 
 interface BannedTimeEditDialogProps {
   isOpen: boolean;
@@ -41,8 +31,8 @@ export default function BannedTimeEditDialog({
   const { openHours, teachers } = useTable();
   const { selectedLocation } = useNavigation();
   const { bannedTimes, refetchBannedTimes } = useLesson();
+  const { updateBannedTimes, isSaving, error } = useUpdateBannedTimes();
 
-  const allTimes = getTimesInPeriod(openHours);
   const dayOfWeek = getWorkingDayOfWeek(selectedDate);
   const workingTeachers = getWorkingTeachersOnDate(
     selectedLocation,
@@ -50,87 +40,43 @@ export default function BannedTimeEditDialog({
     dayOfWeek
   );
 
-  // 초기 banned times 데이터 생성
-  const getInitialBannedTimes = () => {
-    const existingBannedTimes = bannedTimes.filter(
-      (bt) =>
-        new Date(bt.date).toDateString() === selectedDate.toDateString() &&
-        workingTeachers.some((teacher) => teacher.id === bt.teacherId)
+  const [defaultTimeGrid, setDefaultTimeGrid] = useState<BannedTimeGridType>(
+    {}
+  );
+  const [timeGrid, setTimeGrid] = useState<BannedTimeGridType>({});
+
+  useEffect(() => {
+    setTimeGrid(
+      getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers)
+    );
+    setDefaultTimeGrid(
+      getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers)
+    );
+  }, [selectedDate]);
+
+  const handleSubmit = async () => {
+    const updateRequest = createUpdateBannedTimesRequest(
+      defaultTimeGrid,
+      timeGrid,
+      selectedDate,
+      bannedTimes
     );
 
-    return existingBannedTimes.map((bt) => ({
-      id: bt.id,
-      teacherId: bt.teacherId,
-      date: selectedDate,
-      hour: bt.hour,
-    }));
-  };
-
-  // React Hook Form 설정 (기존 데이터로 초기화)
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      bannedTimes: getInitialBannedTimes(),
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "bannedTimes",
-  });
-
-  // checkbox 클릭 핸들러 - 단순하게 toggle
-  const handleCellClick = (teacherId: number, hour: number) => {
-    const existingIndex = fields.findIndex(
-      (field) => field.teacherId === teacherId && field.hour === hour
-    );
-
-    if (existingIndex >= 0) {
-      remove(existingIndex);
-    } else {
-      append({
-        teacherId,
-        date: selectedDate,
-        hour,
-      });
+    if (
+      updateRequest.deleteIds.length === 0 &&
+      updateRequest.bannedTimes.length === 0
+    ) {
+      onClose();
+      return;
     }
-  };
 
-  // 특정 셀이 banned인지 확인 - 폼에 있는 것들만
-  const isCellBanned = (teacherId: number, hour: number) => {
-    return fields.some(
-      (field) => field.teacherId === teacherId && field.hour === hour
-    );
-  };
+    const result = await updateBannedTimes(updateRequest);
 
-  const onSubmit = async (data: { bannedTimes: any[] }) => {
-    try {
-      const initialBannedTimes = getInitialBannedTimes();
-
-      // 기존 데이터 모두 삭제
-      const deleteIds = initialBannedTimes.map((bt) => bt.id);
-
-      const response = await fetch("/api/bans", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          deleteIds,
-          bannedTimes: data.bannedTimes,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update banned times");
-      }
-
+    if (result.success) {
       await refetchBannedTimes();
       onClose();
-    } catch (error) {
-      console.error("Error saving banned times:", error);
     }
   };
-
   return (
     <Portal>
       <Dialog.Root open={isOpen} onOpenChange={(e) => e.open || onClose()}>
@@ -138,70 +84,61 @@ export default function BannedTimeEditDialog({
         <Dialog.Positioner>
           <Dialog.Content maxW="600px">
             <Dialog.Header>
-              <Dialog.Title>수업 금지 시간 편집</Dialog.Title>
+              <Dialog.Title>예약 불가능 시간 편집</Dialog.Title>
               <Text fontSize="sm" color="gray.600" mt={1}>
                 {formatDate(selectedDate)} - {selectedLocation.name}
               </Text>
             </Dialog.Header>
             <Dialog.CloseTrigger />
             <Dialog.Body>
-              {workingTeachers.length === 0 ? (
+              {error && (
+                <Box
+                  mb={4}
+                  p={3}
+                  bg="red.50"
+                  borderColor="red.200"
+                  borderWidth="1px"
+                  borderRadius="md"
+                >
+                  <Text color="red.600" fontSize="sm">
+                    {error}
+                  </Text>
+                </Box>
+              )}
+              {!openHours ? (
+                <Text>로드 중</Text>
+              ) : workingTeachers.length === 0 ? (
                 <Text>해당 날짜에 근무하는 선생님이 없습니다.</Text>
               ) : (
                 <Box>
                   <BannedTimeLegend />
-
-                  <Box as="table" width="100%" borderCollapse="collapse">
-                    <Box as="thead">
-                      <Box as="tr">
-                        <TimeHeaderCell>시간</TimeHeaderCell>
-                        {workingTeachers.map((teacher) => (
-                          <TeacherHeaderCell key={`header-${teacher.id}`}>
-                            {teacher.name}
-                          </TeacherHeaderCell>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box as="tbody">
-                      {allTimes.map((hour) => (
-                        <Box as="tr" key={`row-${hour}`}>
-                          <TimeCell>{hour}:00</TimeCell>
-                          {workingTeachers.map((teacher) => (
-                            <BannedTimeCell
-                              key={`${teacher.id}-${hour}`}
-                              teacher={teacher}
-                              hour={hour}
-                              dayOfWeek={dayOfWeek}
-                              selectedDate={selectedDate}
-                              bannedTimes={bannedTimes}
-                              onClick={() => handleCellClick(teacher.id, hour)}
-                            >
-                              <Checkbox.Root
-                                checked={isCellBanned(teacher.id, hour)}
-                                onCheckedChange={() =>
-                                  handleCellClick(teacher.id, hour)
-                                }
-                                size="sm"
-                              >
-                                <Checkbox.HiddenInput />
-                                <Checkbox.Control>
-                                  <Checkbox.Indicator />
-                                </Checkbox.Control>
-                              </Checkbox.Root>
-                            </BannedTimeCell>
-                          ))}
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
+                  <BannedTimeGrid
+                    defaultTimeGrid={defaultTimeGrid}
+                    timeGrid={timeGrid}
+                    workingTeachers={workingTeachers}
+                    onCellClick={(teacherId, hour) => {
+                      setTimeGrid((prev) => ({
+                        ...prev,
+                        [teacherId]: {
+                          ...prev[teacherId],
+                          [hour]:
+                            prev[teacherId]?.[hour] === "banned"
+                              ? "available"
+                              : "banned",
+                        },
+                      }));
+                    }}
+                  />
                 </Box>
               )}
             </Dialog.Body>
             <Dialog.Footer>
-              <Button variant="outline" onClick={onClose}>
+              <Button variant="outline" onClick={onClose} disabled={isSaving}>
                 취소
               </Button>
-              <Button onClick={handleSubmit(onSubmit)}>저장</Button>
+              <Button onClick={handleSubmit} loading={isSaving}>
+                저장
+              </Button>
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>
