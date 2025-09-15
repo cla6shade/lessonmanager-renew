@@ -4,6 +4,7 @@ import { NavigationProvider } from "@/features/navigation/location/NavigationCon
 import Navbar from "@/features/navigation/Navbar";
 import { Location } from "@/generated/prisma";
 import { Box, ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/toaster";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -40,6 +41,7 @@ export default function ClientLayout({
           </Box>
         </Box>
       </NavigationProvider>
+      <Toaster />
     </ChakraProvider>
   );
 }
