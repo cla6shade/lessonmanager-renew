@@ -1,70 +1,34 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
-import { getTeacherWorkingHours } from "../../grid/utils";
-import { ExtendedTeacher } from "../../types";
 import { ReactNode } from "react";
+import { CellType, getCellColor } from "./utils";
+import { getCellBorderColor } from "./utils";
 
 interface BannedTimeCellProps {
-  teacher: ExtendedTeacher;
-  hour: number;
-  dayOfWeek: string;
-  selectedDate: Date;
-  bannedTimes: any[];
+  isDefaultBanned: boolean;
   onClick?: () => void;
   children: ReactNode;
+  cellType: CellType;
 }
 
 export default function BannedTimeCell({
-  teacher,
-  hour,
-  dayOfWeek,
-  selectedDate,
-  bannedTimes,
+  isDefaultBanned,
   onClick,
   children,
+  cellType,
 }: BannedTimeCellProps) {
-  const teacherWorkingHours = getTeacherWorkingHours(teacher, dayOfWeek);
-  const isWorkingHour = teacherWorkingHours.includes(hour);
-  const isBanned = bannedTimes.some(
-    (bannedTime) =>
-      bannedTime.teacherId === teacher.id &&
-      new Date(bannedTime.date).toDateString() ===
-        selectedDate.toDateString() &&
-      bannedTime.hour === hour
-  );
-
-  const getCellColor = () => {
-    if (!isWorkingHour) {
-      return "gray.100";
-    }
-    if (isBanned) {
-      return "red.200";
-    }
-    return "green.100";
-  };
-
-  const getCellBorderColor = () => {
-    if (!isWorkingHour) {
-      return "gray.300";
-    }
-    if (isBanned) {
-      return "red.400";
-    }
-    return "green.300";
-  };
-
   return (
     <Box
       as="td"
       p={1}
       textAlign="center"
-      bg={getCellColor()}
+      bg={getCellColor(cellType)}
       border="1px solid"
-      borderColor={getCellBorderColor()}
-      cursor={isWorkingHour ? "pointer" : "not-allowed"}
-      onClick={isWorkingHour ? onClick : undefined}
-      _hover={isWorkingHour ? { opacity: 0.8 } : {}}
+      borderColor={getCellBorderColor(cellType)}
+      cursor={cellType === "not-working-hour" ? "not-allowed" : "pointer"}
+      onClick={cellType === "not-working-hour" ? undefined : onClick}
+      _hover={cellType === "available" ? { opacity: 0.8 } : {}}
       transition="all 0.2s"
       w="80px"
     >
