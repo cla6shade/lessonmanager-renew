@@ -36,8 +36,13 @@ export const CreateLessonRequestSchema = LessonSchema.pick({
   dueDate: true,
   dueHour: true,
   teacherId: true,
+  userId: true,
   locationId: true,
   isGrand: true,
+  contact: true,
+  username: true,
+}).extend({
+  userId: z.coerce.number().optional(),
 });
 
 export type CreateLessonRequest = z.infer<typeof CreateLessonRequestSchema>;
