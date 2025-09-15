@@ -8,6 +8,33 @@ import { z } from "zod";
 import { DataResponseSchema } from "../../../schema";
 import { toKstDate } from "@/utils/date";
 
+export const CreateLessonByAdminInputSchema = LessonSchema.pick({
+  dueDate: true,
+  dueHour: true,
+  teacherId: true,
+  userId: true,
+  locationId: true,
+  isGrand: true,
+  contact: true,
+  username: true,
+});
+
+export const CreateLessonByUserInputSchema = LessonSchema.pick({
+  dueDate: true,
+  dueHour: true,
+  teacherId: true,
+  locationId: true,
+  isGrand: true,
+}).strict();
+
+export type CreateLessonByAdminInput = z.infer<
+  typeof CreateLessonByAdminInputSchema
+>;
+
+export type CreateLessonByUserInput = z.infer<
+  typeof CreateLessonByUserInputSchema
+>;
+
 export const GetLessonsQuerySchema = z.object({
   startDate: z.iso.datetime().transform(toKstDate),
   endDate: z.iso.datetime().transform(toKstDate),
