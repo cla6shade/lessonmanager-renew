@@ -37,11 +37,11 @@ model Holding {
 }
 
 model LessonBannedTimes {
-  id        Int       @id @default(autoincrement()) @map("bannedid")
-  teacherId Int?      @map("teacherid")
-  date      DateTime? @db.Date
-  hour      Int?      @db.SmallInt
-  teacher   Teacher?  @relation("TeacherToBannedTimes", fields: [teacherId], references: [id])
+  id        Int      @id @default(autoincrement()) @map("bannedid")
+  teacherId Int      @map("teacherid")
+  date      DateTime @db.Date
+  hour      Int      @db.SmallInt
+  teacher   Teacher  @relation("TeacherToBannedTimes", fields: [teacherId], references: [id])
 
   @@index([teacherId], map: "lesson_banned_times_teacherid_fkey")
   @@map("lesson_banned_times")
@@ -174,10 +174,10 @@ model User {
   howto             Int?                  @db.SmallInt
   teacherInChargeId Int?                  @map("teacher_in_charge")
   latestLessonId    Int?                  @map("latest_lessonid")
-  lessonCount       Int?                  @default(0) @map("lesson_count") @db.SmallInt
-  usedLessonCount   Int?                  @default(0) @map("lesson_count_used") @db.SmallInt
-  paymentCount      Int?                  @default(0) @map("payment_count") @db.SmallInt
-  streakCount       Int?                  @default(0) @map("streak_count") @db.SmallInt
+  lessonCount       Int                   @default(0) @map("lesson_count") @db.SmallInt
+  usedLessonCount   Int                   @default(0) @map("lesson_count_used") @db.SmallInt
+  paymentCount      Int                   @default(0) @map("payment_count") @db.SmallInt
+  streakCount       Int                   @default(0) @map("streak_count") @db.SmallInt
   registeredAt      DateTime              @default(now()) @map("registration") @db.Timestamp(0)
   isLeaved          Boolean?              @default(false) @map("leaved")
   isSubscribed      Boolean?              @default(true) @map("subscribed")
