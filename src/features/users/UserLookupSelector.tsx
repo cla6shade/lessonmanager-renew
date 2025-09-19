@@ -21,8 +21,7 @@ export default function UserLookupSelector({
   const [open, setOpen] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  // 검색 실행
-  const runSearch = async (query: string) => {
+  const lookup = async (query: string) => {
     if (!query.trim()) {
       setResults([]);
       setOpen(false);
@@ -51,7 +50,7 @@ export default function UserLookupSelector({
     const query = inputRef.current?.value || "";
     if (timer) clearTimeout(timer);
     const newTimer = setTimeout(() => {
-      runSearch(query);
+      lookup(query);
     }, debounceMs);
     setTimer(newTimer);
   };
