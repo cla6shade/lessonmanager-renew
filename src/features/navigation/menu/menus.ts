@@ -5,7 +5,7 @@ export const adminMenus = [
   },
   {
     name: "수강생 관리",
-    href: "/teacher/student-management",
+    href: "/teacher/user-management",
   },
   {
     name: "선생님 관리",
