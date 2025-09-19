@@ -38,6 +38,8 @@ export default async function RootLayout({
           locations={locations}
           locationId={locationId!}
           isAdmin={isAdmin}
+          userId={userId}
+          teacherId={teacherId}
         >
           {children}
         </ClientLayout>
