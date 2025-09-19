@@ -21,13 +21,12 @@ export default function LessonCell({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { isAdmin, userId } = useNavigation();
 
+  const isOwnLesson = userId === lesson.userId;
+
   const handleOpenDialog = () => {
-    if (isAdmin) {
+    if (isAdmin || isOwnLesson) {
       setIsDialogOpen(true);
-    } else {
-      if (userId === lesson.userId) {
-        setIsDialogOpen(true);
-      }
+      return;
     }
   };
 
