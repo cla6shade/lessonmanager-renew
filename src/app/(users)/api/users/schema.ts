@@ -1,26 +1,84 @@
-import { z } from "zod";
+import { optional, z } from "zod";
 import {
   DataResponseSchema,
   PaginatedDataResponseSchema,
   PublicUserSchema,
 } from "@/app/schema";
 
+import {
+  LocationSchema,
+  TeacherSchema,
+  LessonSchema,
+  PaymentSchema,
+  UserSchema,
+} from "@/generated/zod";
+import { Prisma } from "@/generated/prisma";
+
 export const SingleUserResponseSchema = DataResponseSchema(PublicUserSchema);
 
 export type SingleUserResponse = z.infer<typeof SingleUserResponseSchema>;
+
+export const UserSearchFilterSchema = z.enum([
+  "ALL",
+  "ACTIVE",
+  "ONE_DAY_BEFORE_LESSON",
+  "ONE_WEEK_BEFORE_REREGISTER",
+  "BIRTHDAY",
+  "STARTDATE_NON_SET",
+  "MORE_THAN_6_MONTHS",
+]);
+
+export type UserSearchFilter = z.infer<typeof UserSearchFilterSchema>;
 
 export const UserSearchRequestSchema = z.object({
   name: z.string().optional(),
   contact: z.string().optional(),
   locationId: z.coerce.number().optional(),
+  filter: UserSearchFilterSchema.default("ALL"),
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
 });
 
 export type UserSearchRequest = z.infer<typeof UserSearchRequestSchema>;
 
+export type UserSearchSelectInput = {
+  include: {
+    location: true;
+    teacherInCharge: {
+      select: {
+        id: true;
+        name: true;
+        major: true;
+        location: true;
+      };
+    };
+    latestLesson: true;
+    payments: Prisma.PaymentFindManyArgs;
+  };
+  skip: number;
+  take: number;
+  omit: { password: true };
+  orderBy: Prisma.UserFindManyArgs["orderBy"];
+};
+export type RawUserSearchResult = Prisma.UserGetPayload<UserSearchSelectInput>;
+
+export const UserSearchResultSchema = UserSchema.omit({
+  password: true,
+}).extend({
+  location: LocationSchema,
+  teacherInCharge: TeacherSchema.pick({
+    id: true,
+    name: true,
+    major: true,
+    location: true,
+  }).nullable(),
+  latestLesson: LessonSchema.nullable(),
+  payments: z.array(PaymentSchema),
+});
+export type UserSearchResult = z.infer<typeof UserSearchResultSchema>;
+
 export const UserSearchResponseSchema = PaginatedDataResponseSchema(
-  z.array(PublicUserSchema)
+  z.array(UserSearchResultSchema)
 );
 
 export type UserSearchResponse = z.infer<typeof UserSearchResponseSchema>;
