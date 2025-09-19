@@ -3,7 +3,7 @@ import { toaster } from "@/components/ui/toaster";
 
 export interface UpdateOptions {
   endpoint: string;
-  method?: "PUT" | "POST" | "PATCH";
+  method?: "PUT" | "POST" | "PATCH" | "DELETE";
   successMessage?: string;
   errorMessage?: string;
 }
@@ -32,18 +32,32 @@ export function useUpdate<TRequest, TResponse = unknown>() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: options.method === "DELETE" ? undefined : JSON.stringify(data),
         });
 
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error("API 오류:", errorText);
-          const errorMessage =
-            options.errorMessage ||
-            `서버 오류가 발생했습니다. (${response.status})`;
+          let serverErrorMessage = `서버 오류가 발생했습니다. (${response.status})`;
+
+          try {
+            const errorData = await response.json();
+            console.error("API 오류:", errorData);
+
+            if (errorData.error && typeof errorData.error === "string") {
+              serverErrorMessage = errorData.error;
+            }
+          } catch {
+            // JSON 파싱 실패 시 기본 메시지 사용
+          }
+
+          const errorMessage = options.errorMessage || serverErrorMessage;
           setError(errorMessage);
 
-          if (options.errorMessage) {
+          // errorMessage가 지정되거나 서버에서 의미있는 에러 메시지가 온 경우 토스트 표시
+          if (
+            options.errorMessage ||
+            serverErrorMessage !==
+              `서버 오류가 발생했습니다. (${response.status})`
+          ) {
             toaster.create({
               title: "오류",
               description: errorMessage,
@@ -72,16 +86,15 @@ export function useUpdate<TRequest, TResponse = unknown>() {
       } catch (error) {
         console.error("업데이트 중 오류:", error);
         const errorMessage =
-          options.errorMessage || "네트워크 오류가 발생했습니다.";
+          options.errorMessage || "서버 오류가 발생했습니다.";
         setError(errorMessage);
 
-        if (options.errorMessage) {
-          toaster.create({
-            title: "오류",
-            description: errorMessage,
-            type: "error",
-          });
-        }
+        // errorMessage가 지정되거나 네트워크 오류인 경우 토스트 표시
+        toaster.create({
+          title: "오류",
+          description: errorMessage,
+          type: "error",
+        });
 
         return { success: false, error: errorMessage };
       } finally {
