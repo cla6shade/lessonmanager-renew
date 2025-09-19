@@ -6,6 +6,7 @@ import EmptyCell from "./cell/EmptyCell";
 import { getTeacherWorkingHours } from "./utils";
 import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
 import { useLesson } from "./providers/LessonProvider";
+import LessonReservationProvider from "./providers/LessonReservationProvider";
 
 interface TeacherColumnProps {
   teacher: ExtendedTeacher;
@@ -70,14 +71,20 @@ export default function TeacherColumn({
         }
 
         return (
-          <EmptyCell
+          <LessonReservationProvider
             key={cellKey}
-            showAddButton={
-              !isBanned && new Date().getTime() < cellDateTime.getTime()
-            }
-            isLastRow={isLastRow}
-            isLastColumn={isLastColumn}
-          />
+            selectedDate={date}
+            selectedTeacher={teacher}
+            dueHour={hour}
+          >
+            <EmptyCell
+              showAddButton={
+                !isBanned && new Date().getTime() < cellDateTime.getTime()
+              }
+              isLastRow={isLastRow}
+              isLastColumn={isLastColumn}
+            />
+          </LessonReservationProvider>
         );
       })}
     </Grid>
