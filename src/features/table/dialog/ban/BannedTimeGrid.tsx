@@ -10,14 +10,12 @@ import { getTimesInPeriod } from "@/utils/date";
 import { useTable } from "../../grid/providers/TableProvider";
 
 interface BannedTimeGridProps {
-  defaultTimeGrid: BannedTimeGridType;
   timeGrid: BannedTimeGridType;
   workingTeachers: ExtendedTeacher[];
   onCellClick: (teacherId: number, hour: number) => void;
 }
 
 export default function BannedTimeGrid({
-  defaultTimeGrid,
   timeGrid,
   workingTeachers,
   onCellClick,
@@ -51,13 +49,8 @@ export default function BannedTimeGrid({
                 <BannedTimeCell
                   key={`${teacherId}-${hour}`}
                   cellType={timeGrid[teacherId][hour]}
-                  isDefaultBanned={
-                    defaultTimeGrid[teacherId][hour] === "banned"
-                  }
                   onClick={() => onCellClick(Number(teacherId), Number(hour))}
-                >
-                  {timeGrid[teacherId][hour] === "banned" ? "🚫" : ""}
-                </BannedTimeCell>
+                />
               );
             })}
           </Box>

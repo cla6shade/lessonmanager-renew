@@ -113,7 +113,6 @@ export default function BannedTimeEditDialog({
                 <Box>
                   <BannedTimeLegend />
                   <BannedTimeGrid
-                    defaultTimeGrid={defaultTimeGrid}
                     timeGrid={timeGrid}
                     workingTeachers={workingTeachers}
                     onCellClick={(teacherId, hour) => {

@@ -6,14 +6,12 @@ import { CellType, getCellColor } from "./utils";
 import { getCellBorderColor } from "./utils";
 
 interface BannedTimeCellProps {
-  isDefaultBanned: boolean;
   onClick?: () => void;
-  children: ReactNode;
+  children?: ReactNode;
   cellType: CellType;
 }
 
 export default function BannedTimeCell({
-  isDefaultBanned,
   onClick,
   children,
   cellType,
