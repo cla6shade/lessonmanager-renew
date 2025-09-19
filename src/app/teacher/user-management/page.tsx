@@ -1,3 +1,10 @@
-export default function UserManagementPage() {
-  return <div>UserManagementPage</div>;
+import ContentLayout from "@/components/ContentLayout";
+import UserManagementPage from "@/features/users/UserManagementPage";
+
+export default function UserManagementServerPage() {
+  return (
+    <ContentLayout>
+      <UserManagementPage />
+    </ContentLayout>
+  );
 }
