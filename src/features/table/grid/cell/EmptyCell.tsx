@@ -1,5 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import Cell from "./Cell";
+import { useState } from "react";
+import LessonReservationDialog from "@/features/table/dialog/lessons/reservation/LessonReservationDialog";
 
 interface EmptyCellProps {
   showAddButton?: boolean;
@@ -12,6 +14,7 @@ export default function EmptyCell({
   isLastRow = false,
   isLastColumn = false,
 }: EmptyCellProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <Cell isLastRow={isLastRow} isLastColumn={isLastColumn}>
       <Box
@@ -21,6 +24,13 @@ export default function EmptyCell({
         height="100%"
         width="100%"
         backgroundColor="gray.100"
+        cursor={showAddButton ? "pointer" : "default"}
+        _hover={{
+          backgroundColor: showAddButton ? "gray.200" : "gray.100",
+        }}
+        onClick={() => {
+          showAddButton && setIsDialogOpen(true);
+        }}
       >
         <Text
           fontSize="2xl"
@@ -30,6 +40,13 @@ export default function EmptyCell({
           +
         </Text>
       </Box>
+
+      {isDialogOpen && (
+        <LessonReservationDialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      )}
     </Cell>
   );
 }
