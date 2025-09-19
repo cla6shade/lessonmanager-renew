@@ -26,7 +26,10 @@ export default function LessonDetailDialog({
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content
+              maxW={{ base: "full", md: "md" }}
+              mx={{ base: 4, md: "auto" }}
+            >
               <Dialog.Header>
                 <Text fontSize="lg" fontWeight="bold">
                   레슨 상세 정보
@@ -46,6 +49,10 @@ export default function LessonDetailDialog({
                   onUserLessonsClick={() => setIsUserLessonsDialogOpen(true)}
                   onLessonUpdate={(lesson) => {
                     setLesson(lesson);
+                    refetchLessons();
+                  }}
+                  onLessonCancel={() => {
+                    onClose();
                     refetchLessons();
                   }}
                 />
