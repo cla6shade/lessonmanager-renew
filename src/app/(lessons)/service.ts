@@ -6,9 +6,37 @@ import {
   CreateLessonByAdminInput,
   CreateLessonByUserInput,
 } from "./api/lessons/schema";
-import { hasLessonCount } from "../(users)/service";
+import { Lesson } from "@/generated/prisma";
 
-export async function getLessons({
+export function cancelLesson(lessonId: number) {
+  return prisma.lesson.delete({
+    where: { id: lessonId },
+  });
+}
+
+export function isOwnLesson({
+  lesson,
+  userId,
+}: {
+  lesson: Lesson;
+  userId: number;
+}) {
+  return lesson.userId === userId;
+}
+
+export function isBeforeCancelDeadline({
+  lesson,
+  requestedAt,
+}: {
+  lesson: Lesson;
+  requestedAt: Date;
+}) {
+  const cancelDeadline = new Date(lesson.dueDate);
+  cancelDeadline.setDate(cancelDeadline.getDate() - 1);
+  cancelDeadline.setHours(21, 0, 0, 0);
+  return requestedAt < cancelDeadline;
+}
+export function getLessons({
   startDate,
   endDate,
   selectedTeacherId: teacherId,
@@ -40,7 +68,7 @@ export async function getLessons({
   });
 }
 
-export async function createLessonByAdmin({
+export function createLessonByAdmin({
   dueDate,
   dueHour,
   teacherId,
@@ -55,7 +83,7 @@ export async function createLessonByAdmin({
       dueDate,
       dueHour,
       teacherId,
-      userId,
+      userId: userId || null,
       locationId,
       isGrand,
       contact,
@@ -64,9 +92,10 @@ export async function createLessonByAdmin({
   });
 }
 
-export async function createLessonByUser(
+export function createLessonByUser(
   { dueDate, dueHour, teacherId, locationId, isGrand }: CreateLessonByUserInput,
-  userId: number
+  userId: number,
+  username: string
 ) {
   return prisma.lesson.create({
     data: {
@@ -76,15 +105,12 @@ export async function createLessonByUser(
       locationId,
       isGrand,
       userId,
+      username,
     },
   });
 }
 
-export async function canCreateLesson({ userId }: { userId: number }) {
-  return hasLessonCount(userId);
-}
-
-export async function updateLesson(
+export function updateLesson(
   lessonId: number,
   { note, isDone }: { note?: string; isDone?: boolean }
 ) {
@@ -114,20 +140,28 @@ export async function isBannedAt(date: Date, hour: number, teacherId: number) {
   });
   return !!bannedTime;
 }
-
 export async function isAvailableAt(
   date: Date,
   hour: number,
+  locationId: number,
+  teacherId: number,
   isGrand: boolean
 ) {
-  const lesson = await prisma.lesson.findFirst({
+  const overlap = await prisma.lesson.findFirst({
     where: {
       dueDate: date,
       dueHour: hour,
-      isGrand: isGrand,
+      locationId,
+      OR: [
+        // 같은 시간대 동일한 grand 여부는 하나만 가능
+        { isGrand },
+        // 같은 시간대 동일한 선생님은 하나만 가능
+        { teacherId },
+      ],
     },
   });
-  return !lesson;
+
+  return !overlap;
 }
 
 export async function isTeacherAvailableAt(

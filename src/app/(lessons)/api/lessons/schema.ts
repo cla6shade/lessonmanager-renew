@@ -17,6 +17,11 @@ export const CreateLessonByAdminInputSchema = LessonSchema.pick({
   isGrand: true,
   contact: true,
   username: true,
+}).extend({
+  dueDate: z.iso.datetime().transform(toKstDate),
+  userId: z.coerce.number().optional(),
+  username: z.string().optional(),
+  contact: z.string().optional(),
 });
 
 export const CreateLessonByUserInputSchema = LessonSchema.pick({
@@ -25,7 +30,11 @@ export const CreateLessonByUserInputSchema = LessonSchema.pick({
   teacherId: true,
   locationId: true,
   isGrand: true,
-}).strict();
+})
+  .extend({
+    dueDate: z.iso.datetime().transform(toKstDate),
+  })
+  .strict();
 
 export type CreateLessonByAdminInput = z.infer<
   typeof CreateLessonByAdminInputSchema
@@ -33,6 +42,20 @@ export type CreateLessonByAdminInput = z.infer<
 
 export type CreateLessonByUserInput = z.infer<
   typeof CreateLessonByUserInputSchema
+>;
+
+export const CreateLessonByAdminResponseSchema =
+  DataResponseSchema(LessonSchema);
+
+export type CreateLessonByAdminResponse = z.infer<
+  typeof CreateLessonByAdminResponseSchema
+>;
+
+export const CreateLessonByUserResponseSchema =
+  DataResponseSchema(LessonSchema);
+
+export type CreateLessonByUserResponse = z.infer<
+  typeof CreateLessonByUserResponseSchema
 >;
 
 export const GetLessonsQuerySchema = z.object({
