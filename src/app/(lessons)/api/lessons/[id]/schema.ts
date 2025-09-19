@@ -34,3 +34,7 @@ export const UpdateLessonRequestSchema = LessonSchema.pick({
 export type UpdateLessonRequest = z.infer<typeof UpdateLessonRequestSchema>;
 
 export type UpdateLessonResponse = GetLessonDetailResponse;
+
+export const CancelLessonResponseSchema = DataResponseSchema(LessonSchema);
+
+export type CancelLessonResponse = z.infer<typeof CancelLessonResponseSchema>;
