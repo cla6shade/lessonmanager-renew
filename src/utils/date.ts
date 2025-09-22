@@ -145,7 +145,7 @@ export function isDateInPeriod(date: Date, period: DatePeriod) {
   );
 }
 
-export function toKstDate(val: string): Date {
+export function toKstDate(val: string | Date): Date {
   const d = new Date(val);
   d.setHours(d.getHours() + 9);
   return d;
