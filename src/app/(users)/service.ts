@@ -13,74 +13,100 @@ export async function searchUsers({
   name,
   contact,
   locationId,
+  birthDate,
   filter,
   page,
   limit,
 }: UserSearchRequest): Promise<[RawUserSearchResult[], number]> {
-  let where = getUserWhereInput({ name, contact, locationId });
-  const userSelectInput = getUserSelectInput({ page, limit });
+  let where = getUserWhereInput({ name, contact, locationId, birthDate });
+  const userSelectInput = getUserSelectInput();
+  const paginationInput = getPaginationInput({ page, limit });
 
   switch (filter) {
     case "ALL":
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "ACTIVE":
+      const yesterdayEnd = new Date();
+      yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
+      yesterdayEnd.setHours(23, 59, 59, 0);
       where = {
         ...where,
         payments: {
           some: {
             AND: [
-              { startDate: { lte: toKstDate(new Date().toISOString()) } },
-              { endDate: { gte: toKstDate(new Date().toISOString()) } },
+              { endDate: { gte: toKstDate(yesterdayEnd) } },
               { refunded: false },
+              { isStartDateNonSet: false },
             ],
           },
         },
       };
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "ONE_DAY_BEFORE_LESSON":
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
       where = {
         ...where,
         lessons: {
           some: {
-            dueDate: {
-              gte: new Date(),
-              lte: new Date(Date.now() + 24 * 60 * 60 * 1000),
-            },
+            dueDate: toKstDate(tomorrow),
           },
         },
       };
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "ONE_WEEK_BEFORE_REREGISTER":
+      const oneWeekAfter = new Date();
+      oneWeekAfter.setDate(oneWeekAfter.getDate() + 7);
+      oneWeekAfter.setHours(0, 0, 0, 0);
       where = {
         ...where,
         payments: {
           some: {
-            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            endDate: toKstDate(oneWeekAfter),
             refunded: false,
           },
         },
       };
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "BIRTHDAY":
-      return getBirthdayUsers(where, userSelectInput);
+      const userIds = await getBirthdayUserIds();
+      where = {
+        ...where,
+        id: { in: userIds },
+      };
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "STARTDATE_NON_SET":
       where = {
         ...where,
         payments: { some: { isStartDateNonSet: true } },
       };
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
 
     case "MORE_THAN_6_MONTHS":
       return getLongTermUsers({ page, limit }, where);
 
     default:
-      return findUsers(where, userSelectInput);
+      return findUsers(where, userSelectInput, paginationInput);
   }
+}
+
+export async function getBirthdayUserIds(): Promise<number[]> {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  const rows = await prisma.$queryRaw<{ userid: number }[]>`
+  SELECT userid
+  FROM users
+  WHERE MONTH(birth) = ${month} AND DAY(birth) = ${day}
+`;
+
+  return rows.map((r) => r.userid);
 }
 
 export async function getLongTermUsers(
@@ -99,109 +125,42 @@ export async function getLongTermUsers(
     ...where,
   };
 
-  return findUsers(where, getUserSelectInput({ page, limit }));
-}
-
-export async function getBirthdayUsers(
-  where: Prisma.UserWhereInput,
-  selectInput: UserSearchSelectInput
-): Promise<[RawUserSearchResult[], number]> {
-  const limit = (selectInput as any).take ?? 20;
-  const offset = (selectInput as any).skip ?? 0;
-
-  const name = (where as any).name?.contains;
-  const contact = (where as any).contact?.contains;
-  const locationId = where.locationId;
-  const hasLocationId = locationId !== undefined && locationId !== null;
-
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const day = today.getDate();
-
-  const [users, count] = await Promise.all([
-    prisma.$queryRaw<RawUserSearchResult[]>`
-      SELECT 
-        u.userid,
-        u.location,
-        u.name,
-        u.gender,
-        u.birth,
-        u.contact,
-        u.address,
-        u.loginid,
-        u.email,
-        u.ability,
-        u.genre,
-        u.howto,
-        u.teacher_in_charge,
-        u.latest_lessonid,
-        u.lesson_count,
-        u.lesson_count_used,
-        u.payment_count,
-        u.streak_count,
-        u.registration,
-        u.leaved,
-        u.subscribed,
-        u.point
-      FROM users u
-      WHERE u.leaved = 0
-        ${
-          hasLocationId
-            ? Prisma.sql`AND u.location = ${locationId}`
-            : Prisma.empty
-        }
-        ${name ? Prisma.sql`AND u.name LIKE ${"%" + name + "%"}` : Prisma.empty}
-        ${
-          contact
-            ? Prisma.sql`AND u.contact LIKE ${"%" + contact + "%"}`
-            : Prisma.empty
-        }
-        AND MONTH(u.birth) = ${month}
-        AND DAY(u.birth) = ${day}
-      ORDER BY u.registration DESC
-      LIMIT ${limit} OFFSET ${offset};
-    `,
-    prisma.$queryRaw<{ count: number }[]>`
-      SELECT COUNT(*) as count
-      FROM users u
-      WHERE u.leaved = 0
-        ${
-          hasLocationId
-            ? Prisma.sql`AND u.location = ${locationId}`
-            : Prisma.empty
-        }
-        ${name ? Prisma.sql`AND u.name LIKE ${"%" + name + "%"}` : Prisma.empty}
-        ${
-          contact
-            ? Prisma.sql`AND u.contact LIKE ${"%" + contact + "%"}`
-            : Prisma.empty
-        }
-        AND MONTH(u.birth) = ${month}
-        AND DAY(u.birth) = ${day}
-    `.then((res) => Number(res[0].count)),
-  ]);
-
-  return [users, count];
+  return findUsers(
+    where,
+    getUserSelectInput(),
+    getPaginationInput({ page, limit })
+  );
 }
 
 async function findUsers(
   where: Prisma.UserWhereInput,
-  selectInput: UserSearchSelectInput
+  selectInput: Omit<UserSearchSelectInput, "skip" | "take">,
+  paginationInput: { skip: number; take: number }
 ): Promise<[RawUserSearchResult[], number]> {
   return Promise.all([
-    prisma.user.findMany({ where, ...selectInput }),
+    prisma.user.findMany({ where, ...selectInput, ...paginationInput }),
     getUserTotalCount(where),
   ]);
+}
+
+export async function findUser(id: number) {
+  return prisma.user.findFirstOrThrow({
+    where: { id },
+    ...getUserSelectInput(),
+  });
 }
 
 export function getUserTotalCount(where: Prisma.UserWhereInput) {
   return prisma.user.count({ where });
 }
 
-export function getUserSelectInput({
-  page,
-  limit,
-}: Pick<UserSearchRequest, "page" | "limit">): UserSearchSelectInput {
+export function getUserSelectInput(): Omit<
+  UserSearchSelectInput,
+  "skip" | "take"
+> {
+  const yesterdayEnd = new Date();
+  yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
+  yesterdayEnd.setHours(23, 59, 59, 0);
   return {
     include: {
       location: true,
@@ -219,11 +178,8 @@ export function getUserSelectInput({
         where: {
           isStartDateNonSet: false,
           refunded: false,
-          startDate: {
-            lte: toKstDate(new Date().toISOString()),
-          },
           endDate: {
-            gte: toKstDate(new Date().toISOString()),
+            gte: toKstDate(yesterdayEnd),
           },
         },
         take: 1,
@@ -231,15 +187,22 @@ export function getUserSelectInput({
     },
     omit: { password: true },
     orderBy: { registeredAt: "desc" as const },
-    ...getPaginationQuery(page, limit),
   };
+}
+
+export function getPaginationInput({
+  page,
+  limit,
+}: Pick<UserSearchRequest, "page" | "limit">) {
+  return getPaginationQuery(page, limit);
 }
 
 export function getUserWhereInput({
   name,
   contact,
   locationId,
-}: Pick<UserSearchRequest, "name" | "contact" | "locationId">) {
+  birthDate,
+}: Partial<UserSearchRequest>) {
   const whereInput: Prisma.UserWhereInput = { isLeaved: false };
 
   if (name) {
@@ -250,6 +213,9 @@ export function getUserWhereInput({
   }
   if (locationId !== undefined) {
     whereInput.locationId = locationId;
+  }
+  if (birthDate) {
+    whereInput.birth = birthDate;
   }
   return whereInput;
 }

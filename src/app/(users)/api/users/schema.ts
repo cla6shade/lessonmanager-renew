@@ -1,4 +1,4 @@
-import { optional, z } from "zod";
+import { z } from "zod";
 import {
   DataResponseSchema,
   PaginatedDataResponseSchema,
@@ -11,8 +11,10 @@ import {
   LessonSchema,
   PaymentSchema,
   UserSchema,
+  MajorSchema,
 } from "@/generated/zod";
 import { Prisma } from "@/generated/prisma";
+import { toKstDate } from "@/utils/date";
 
 export const SingleUserResponseSchema = DataResponseSchema(PublicUserSchema);
 
@@ -35,6 +37,10 @@ export const UserSearchRequestSchema = z.object({
   contact: z.string().optional(),
   locationId: z.coerce.number().optional(),
   filter: UserSearchFilterSchema.default("ALL"),
+  birthDate: z.iso
+    .datetime()
+    .transform((val) => (val ? toKstDate(val) : undefined))
+    .optional(),
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
 });
@@ -71,7 +77,11 @@ export const UserSearchResultSchema = UserSchema.omit({
     name: true,
     major: true,
     location: true,
-  }).nullable(),
+  })
+    .extend({
+      major: MajorSchema,
+    })
+    .nullable(),
   latestLesson: LessonSchema.nullable(),
   payments: z.array(PaymentSchema),
 });

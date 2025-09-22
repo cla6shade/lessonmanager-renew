@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
     const queryParams = {
       name: searchParams.get("name") || undefined,
       contact: searchParams.get("contact") || undefined,
+      birthDate: searchParams.get("birthDate") || undefined,
       locationId:
         searchParams.get("locationId") === null
           ? undefined
@@ -24,11 +25,13 @@ export async function GET(request: NextRequest) {
     };
 
     const validatedParams = UserSearchRequestSchema.parse(queryParams);
-    const { name, contact, locationId, filter, page, limit } = validatedParams;
+    const { name, contact, birthDate, locationId, filter, page, limit } =
+      validatedParams;
 
     let [users, total] = await searchUsers({
       name,
       contact,
+      birthDate,
       locationId,
       filter,
       page,
