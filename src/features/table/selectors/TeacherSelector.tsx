@@ -82,12 +82,12 @@ export default function TeacherSelector() {
                           onClick={() => handleTeacherSelect(teacher)}
                           bg={
                             selectedTeacher?.id === teacher.id
-                              ? "blue.50"
+                              ? "brand.50"
                               : "transparent"
                           }
                           color={
                             selectedTeacher?.id === teacher.id
-                              ? "blue.600"
+                              ? "brand.600"
                               : "gray.700"
                           }
                           _hover={{ bg: "gray.100" }}

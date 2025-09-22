@@ -72,7 +72,7 @@ export default function MobileDateSelector() {
                 <Box
                   fontSize="sm"
                   fontWeight={isToday ? "bold" : "medium"}
-                  color={isToday && !isSelected ? "blue.500" : undefined}
+                  color={isToday && !isSelected ? "brand.500" : undefined}
                 >
                   {date.getDate()}
                 </Box>

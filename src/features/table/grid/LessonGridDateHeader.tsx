@@ -34,7 +34,7 @@ export default function LessonGridDateHeader() {
             borderColor="gray.200"
             cursor="pointer"
             _hover={{
-              bg: "blue.50",
+              bg: "brand.50",
             }}
             onClick={() => handleDateClick(date)}
           >

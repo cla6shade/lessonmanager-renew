@@ -110,10 +110,10 @@ export default function Calendar({
               width="8"
               fontSize="xs"
               onClick={() => onDateSelect(day)}
-              bg={isInSelectedWeek ? "blue.100" : "transparent"}
+              bg={isInSelectedWeek ? "brand.100" : "transparent"}
               color={isCurrentMonth ? "black" : "gray.400"}
               _hover={{
-                bg: isInSelectedWeek ? "blue.200" : "gray.100",
+                bg: isInSelectedWeek ? "bra d.200" : "gray.100",
               }}
             >
               {day.getDate()}
