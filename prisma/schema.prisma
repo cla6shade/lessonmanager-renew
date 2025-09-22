@@ -92,21 +92,21 @@ model Lesson {
 
 model Payment {
   userId            Int       @map("userid")
-  months            Int?      @db.SmallInt
-  lessonCount       Int?      @map("lesson_count") @db.SmallInt
-  isReregister      Boolean?  @map("is_reregister")
-  method            Int?      @db.SmallInt
+  months            Int       @db.SmallInt
+  lessonCount       Int       @map("lesson_count") @db.SmallInt
+  isReregister      Boolean   @map("is_reregister")
+  method            Int       @db.SmallInt
   startDate         DateTime? @map("start") @db.Date
   endDate           DateTime? @map("end") @db.Date
   memo              String?   @map("etc") @db.VarChar(180)
-  createdAt         DateTime? @map("payment_date") @db.Date
-  paymentAmount     Int?      @map("payment_amount")
-  refunded          Boolean?  @default(false)
-  refundedAmount    Int?      @default(0) @map("refunded_amount")
-  isStartDateNonSet Boolean?  @default(false) @map("startdate_non_set")
+  createdAt         DateTime  @map("payment_date") @db.Date
+  paymentAmount     Int       @map("payment_amount")
+  refunded          Boolean   @default(false)
+  refundedAmount    Int       @default(0) @map("refunded_amount")
+  isStartDateNonSet Boolean   @default(false) @map("startdate_non_set")
   id                Int       @id @default(autoincrement()) @map("paymentid")
-  maxHoldingAmount  Int?      @default(0) @map("max_holding_amount")
-  usedHoldingAmount Int?      @default(0) @map("used_holding_amount")
+  maxHoldingAmount  Int       @default(0) @map("max_holding_amount")
+  usedHoldingAmount Int       @default(0) @map("used_holding_amount")
   holdings          Holding[] @relation("PaymentToHolding")
   user              User      @relation("UserToPayment", fields: [userId], references: [id])
 
