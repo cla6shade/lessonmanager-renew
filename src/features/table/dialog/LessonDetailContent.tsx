@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useCallback } from "react";
-import StatusBadge from "@/components/ui/StatusBadge";
+import StatusBadge from "@/components/ui/status-badge";
 import { CenteredSpinner } from "@/components/Spinner";
 import { formatDate, formatHour } from "@/utils/date";
 import { useUpdate } from "@/hooks/useUpdate";
