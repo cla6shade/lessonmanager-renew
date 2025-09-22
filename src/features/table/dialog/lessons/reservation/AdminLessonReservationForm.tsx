@@ -276,7 +276,7 @@ export default function AdminLessonReservationForm({
           </Button>
           <Button
             type="submit"
-            colorScheme="blue"
+            colorScheme="brand"
             loading={isSaving}
             loadingText="예약 중"
             size="sm"
