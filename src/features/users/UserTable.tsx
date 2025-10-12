@@ -42,38 +42,21 @@ export default function UserTable() {
   const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(
     null
   );
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [isLessonsDialogOpen, setIsLessonsDialogOpen] = useState(false);
-  const [isPaymentsDialogOpen, setIsPaymentsDialogOpen] = useState(false);
+  const [openDialogType, setOpenDialogType] = useState<
+    "detail" | "lessons" | "payments" | null
+  >(null);
 
-  const handleDetailClick = (user: UserSearchResult) => {
+  const openDialog = (
+    user: UserSearchResult,
+    dialogType: "detail" | "lessons" | "payments"
+  ) => {
     setSelectedUser(user);
-    setIsDetailDialogOpen(true);
+    setOpenDialogType(dialogType);
   };
 
-  const handleLessonsClick = (user: UserSearchResult) => {
-    setSelectedUser(user);
-    setIsLessonsDialogOpen(true);
-  };
-
-  const handlePaymentsClick = (user: UserSearchResult) => {
-    setSelectedUser(user);
-    setIsPaymentsDialogOpen(true);
-  };
-
-  const handleDetailDialogClose = () => {
-    setIsDetailDialogOpen(false);
+  const closeDialog = () => {
     setSelectedUser(null);
-  };
-
-  const handleLessonsDialogClose = () => {
-    setIsLessonsDialogOpen(false);
-    setSelectedUser(null);
-  };
-
-  const handlePaymentsDialogClose = () => {
-    setIsPaymentsDialogOpen(false);
-    setSelectedUser(null);
+    setOpenDialogType(null);
   };
 
   const locationCollection = createListCollection({
@@ -208,21 +191,21 @@ export default function UserTable() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleDetailClick(user)}
+                      onClick={() => openDialog(user, "detail")}
                     >
                       상세 보기
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleLessonsClick(user)}
+                      onClick={() => openDialog(user, "lessons")}
                     >
                       레슨 내역
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handlePaymentsClick(user)}
+                      onClick={() => openDialog(user, "payments")}
                     >
                       결제 내역
                     </Button>
@@ -255,23 +238,24 @@ export default function UserTable() {
         <>
           <UserDetailDialog
             user={selectedUser}
-            isOpen={isDetailDialogOpen}
-            onClose={handleDetailDialogClose}
-            onUserUpdate={() => {
-              refetchUsers();
+            onUserUpdate={(user: UserSearchResult) => {
+              setSelectedUser(user);
             }}
+            isOpen={openDialogType === "detail"}
+            onClose={closeDialog}
+            refetchUsers={refetchUsers}
           />
           <UserLessonsDialog
             userId={selectedUser.id}
             userName={selectedUser.name}
-            isOpen={isLessonsDialogOpen}
-            onClose={handleLessonsDialogClose}
+            isOpen={openDialogType === "lessons"}
+            onClose={closeDialog}
           />
           <UserPaymentsDialog
             userId={selectedUser.id}
             userName={selectedUser.name}
-            isOpen={isPaymentsDialogOpen}
-            onClose={handlePaymentsDialogClose}
+            isOpen={openDialogType === "payments"}
+            onClose={closeDialog}
           />
         </>
       )}
