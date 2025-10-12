@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { toaster } from "@/components/ui/toaster";
+import { DataResponse } from "@/app/schema";
+import z from "zod";
 
 export interface UpdateOptions {
   endpoint: string;
@@ -14,7 +16,10 @@ export interface UpdateResult<T> {
   error?: string;
 }
 
-export function useUpdate<TRequest, TResponse = unknown>() {
+export function useUpdate<
+  TRequest,
+  TResponse extends DataResponse<z.ZodType>
+>() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -82,7 +87,7 @@ export function useUpdate<TRequest, TResponse = unknown>() {
           });
         }
 
-        return { success: true, data: result };
+        return { success: true, data: result as TResponse };
       } catch (error) {
         console.error("업데이트 중 오류:", error);
         const errorMessage =
