@@ -92,3 +92,31 @@ export const UserSearchResponseSchema = PaginatedDataResponseSchema(
 );
 
 export type UserSearchResponse = z.infer<typeof UserSearchResponseSchema>;
+
+export const CreateUserRequestSchema = UserSchema.pick({
+  locationId: true,
+  name: true,
+  gender: true,
+  birth: true,
+  contact: true,
+  loginId: true,
+  password: true,
+  email: true,
+  ability: true,
+  genre: true,
+  howto: true,
+  address: true,
+}).extend({
+  passwordConfirm: z.string(),
+  birth: z.iso
+    .datetime()
+    .transform((val) => (val ? toKstDate(val) : undefined)),
+});
+
+export const CreateUserResponseSchema = DataResponseSchema(
+  UserSchema.pick({
+    id: true,
+  })
+);
+
+export type CreateUserResponse = z.infer<typeof CreateUserResponseSchema>;

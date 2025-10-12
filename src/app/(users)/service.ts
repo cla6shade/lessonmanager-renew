@@ -176,11 +176,18 @@ export function getUserSelectInput(): Omit<
       payments: {
         orderBy: { endDate: "desc" as const },
         where: {
-          isStartDateNonSet: false,
-          refunded: false,
-          endDate: {
-            gte: toKstDate(yesterdayEnd),
-          },
+          // isStartDateNonSet: false,
+          OR: [
+            { isStartDateNonSet: true },
+            {
+              AND: {
+                refunded: false,
+                endDate: {
+                  gte: toKstDate(yesterdayEnd),
+                },
+              },
+            },
+          ],
         },
         take: 1,
       },
@@ -282,4 +289,50 @@ export async function useLessonCount(userId: number, count: number) {
       },
     },
   });
+}
+
+export async function getUserPaymentsInRange(
+  startDate: Date,
+  endDate: Date,
+  userIds?: number[]
+) {
+  return prisma.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+      payments: {
+        some: getRangedPaymentWhereInput(startDate, endDate),
+      },
+    },
+    include: {
+      payments: {
+        where: getRangedPaymentWhereInput(startDate, endDate),
+        orderBy: {
+          endDate: "desc",
+        },
+        take: 1,
+      },
+    },
+  });
+}
+
+function getRangedPaymentWhereInput(startDate: Date, endDate: Date) {
+  return {
+    refunded: false,
+    OR: [
+      {
+        AND: [
+          { startDate: { gte: startDate } },
+          { startDate: { lte: endDate } },
+        ],
+      },
+      {
+        AND: [{ endDate: { gte: startDate } }, { endDate: { lte: endDate } }],
+      },
+      {
+        AND: [{ startDate: { lte: startDate } }, { endDate: { gte: endDate } }],
+      },
+    ],
+  };
 }
