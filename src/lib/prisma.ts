@@ -20,6 +20,7 @@ const prisma =
 export default prisma;
 
 if (!global.__prismaQueryLoggerAttached__) {
+  const PRISMA_LOG_LEVEL = process.env.PRISMA_LOG_LEVEL;
   prisma.$on("query", (e) => {
     let params: unknown;
     try {
@@ -27,11 +28,13 @@ if (!global.__prismaQueryLoggerAttached__) {
     } catch {
       params = e.params;
     }
-    console.log("--- PRISMA QUERY ---");
-    console.log(e.query);
-    console.log("PARAMS:", params);
-    console.log("DURATION:", e.duration, "ms");
-    console.log("--------------------\n");
+    if (PRISMA_LOG_LEVEL === "debug") {
+      console.log("--- PRISMA QUERY ---");
+      console.log(e.query);
+      console.log("PARAMS:", params);
+      console.log("DURATION:", e.duration, "ms");
+      console.log("--------------------\n");
+    }
   });
   global.__prismaQueryLoggerAttached__ = true;
 }
