@@ -2,13 +2,14 @@
 
 import { NavigationProvider } from "@/features/navigation/location/NavigationContext";
 import Navbar from "@/features/navigation/Navbar";
-import { Location } from "@/generated/prisma";
+import { Location, Major } from "@/generated/prisma";
 import { Box, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
   locations: Location[];
+  majors: Major[];
   isAdmin: boolean;
   locationId: number;
   userId?: number;
@@ -18,6 +19,7 @@ interface ClientLayoutProps {
 export default function ClientLayout({
   children,
   locations,
+  majors,
   isAdmin,
   locationId,
   userId,
@@ -27,6 +29,7 @@ export default function ClientLayout({
     <ChakraProvider value={defaultSystem}>
       <NavigationProvider
         locations={locations}
+        majors={majors}
         isAdmin={isAdmin}
         initialLocation={
           locations.find((location) => location.id === locationId)!
