@@ -1,5 +1,6 @@
 import { Teacher, User } from "@/generated/zod";
 import prisma from "@/lib/prisma";
+import { toKstDate } from "@/utils/date";
 import crypto from "crypto";
 
 export function encryptPassword(password: string) {
@@ -15,7 +16,10 @@ export async function canLogin(account: Teacher | User, isAdmin: boolean) {
     where: {
       userId: account.id,
       refunded: false,
-      OR: [{ isStartDateNonSet: true }, { endDate: { gte: new Date() } }],
+      OR: [
+        { isStartDateNonSet: true },
+        { endDate: { gte: toKstDate(new Date()) } },
+      ],
     },
     orderBy: {
       createdAt: "desc",
