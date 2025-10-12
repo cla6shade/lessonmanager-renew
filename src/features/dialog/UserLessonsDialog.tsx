@@ -20,7 +20,7 @@ export default function UserLessonsDialog({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content maxW="6xl" maxH="80vh">
+          <Dialog.Content maxW="6xl">
             <Dialog.Header>
               <Text fontSize="lg" fontWeight="bold">
                 {userName}님의 레슨 목록
@@ -32,7 +32,7 @@ export default function UserLessonsDialog({
               </Dialog.CloseTrigger>
             </Dialog.Header>
             <Dialog.Body>
-              <VStack gap={4} align="stretch" maxH="60vh" overflow="auto">
+              <VStack gap={4} align="stretch" overflow="auto">
                 <UserLessonsTable userId={userId} />
               </VStack>
             </Dialog.Body>
