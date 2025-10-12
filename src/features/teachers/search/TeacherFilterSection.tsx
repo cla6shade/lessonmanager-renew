@@ -4,17 +4,10 @@ import { Flex, Button, HStack, VStack, Input } from "@chakra-ui/react";
 import { Calendar } from "lucide-react";
 import { useRef } from "react";
 import { useTeacherFilter } from "./TeacherFilterProvider";
-import { useTeacherManagement } from "./TeacherManagmentProvider";
+import { useTeacherManagement } from "../TeacherManagmentProvider";
 
 export default function TeacherFilterSection() {
-  const {
-    startDate,
-    endDate,
-    setStartDate,
-    setEndDate,
-    getStartDateISO,
-    getEndDateISO,
-  } = useTeacherFilter();
+  const { startDate, endDate, setStartDate, setEndDate } = useTeacherFilter();
   const { setPage } = useTeacherManagement();
 
   const startYearRef = useRef<HTMLInputElement>(null);

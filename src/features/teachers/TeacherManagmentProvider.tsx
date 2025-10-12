@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useTeacherFilter } from "./TeacherFilterProvider";
+import { useTeacherFilter } from "./search/TeacherFilterProvider";
 import useFetchTeachers from "./hooks/useFetchTeachers";
 import { toaster } from "@/components/ui/toaster";
 

@@ -17,7 +17,7 @@ export default function LessonDetailDialog({
   onClose,
 }: LessonDetailDialogProps) {
   const [isUserLessonsDialogOpen, setIsUserLessonsDialogOpen] = useState(false);
-  const { lesson, loading, error, setLesson } = useFetchLessonDetail(lessonId);
+  const { lesson, loading, error } = useFetchLessonDetail(lessonId);
   const { refetchLessons } = useLesson();
 
   return (
@@ -47,8 +47,7 @@ export default function LessonDetailDialog({
                   loading={loading}
                   error={error}
                   onUserLessonsClick={() => setIsUserLessonsDialogOpen(true)}
-                  onLessonUpdate={(lesson) => {
-                    setLesson(lesson);
+                  onLessonUpdate={() => {
                     refetchLessons();
                   }}
                   onLessonCancel={() => {

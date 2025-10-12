@@ -1,14 +1,14 @@
 "use client";
 
 import { Button, Flex, HStack } from "@chakra-ui/react";
-import TeacherFilterSection from "./TeacherFilterSection";
-import { TeacherFilterProvider } from "./TeacherFilterProvider";
 import TeacherTable from "./table/TeacherTable";
 import CreateTeacherDialog from "@/features/teachers/creation/CreateTeacherDialog";
 import TeacherTableDialog from "./workingTimes/TeacherTableDialog";
 import { Plus, Clock } from "lucide-react";
 import { useState } from "react";
 import { TeacherManagmentProvider } from "./TeacherManagmentProvider";
+import { TeacherFilterProvider } from "./search/TeacherFilterProvider";
+import TeacherFilterSection from "./search/TeacherFilterSection";
 
 export default function TeacherManagementPage() {
   const [isCreateTeacherDialogOpen, setIsCreateTeacherDialogOpen] =
