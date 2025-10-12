@@ -12,7 +12,7 @@ import { CenteredSpinner } from "@/components/Spinner";
 import { formatDate } from "@/utils/date";
 import { useUpdateTeacher } from "./useUpdateTeacher";
 import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import TeacherEditForm from "@/features/teachers/details/TeacherEditForm";
 
 interface TeacherDetailContentProps {

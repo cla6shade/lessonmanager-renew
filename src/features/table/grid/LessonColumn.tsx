@@ -4,8 +4,8 @@ import TeacherHeader from "./TeacherHeader";
 import TeacherColumn from "./TeacherColumn";
 import EmptyColumn from "./EmptyColumn";
 import { getWorkingTeachersOnDate } from "./utils";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
-import { useTable } from "./providers/TableProvider";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
+import { useTable } from "../providers/TableProvider";
 import { useLesson } from "./providers/LessonProvider";
 
 interface LessonColumnProps {

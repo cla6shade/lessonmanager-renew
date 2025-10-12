@@ -1,7 +1,7 @@
 "use client";
 
-import { NavigationProvider } from "@/features/navigation/location/NavigationContext";
-import Navbar from "@/features/navigation/Navbar";
+import { NavigationProvider } from "@/features/navigation/provider/NavigationContext";
+import Navbar from "@/features/navigation/navbar/Navbar";
 import { Location, Major } from "@/generated/prisma";
 import { Box, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";

@@ -1,5 +1,5 @@
 import { Button, Separator, Stack } from "@chakra-ui/react";
-import { useNavigation } from "./NavigationContext";
+import { useNavigation } from "../provider/NavigationContext";
 import colors from "@/brand/colors";
 
 export default function LocationSelector() {

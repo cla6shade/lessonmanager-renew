@@ -5,7 +5,7 @@ import {
 import { ExtendedTeacher } from "../../types";
 import { getTimesInPeriod, getWorkingDayOfWeek } from "@/utils/date";
 import { getTeacherWorkingHours } from "../../grid/utils";
-import { OpenHours } from "@prisma/client";
+import { OpenHours } from "@/generated/prisma";
 
 export type CellType = "banned" | "available" | "not-working-hour";
 

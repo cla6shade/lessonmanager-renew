@@ -1,6 +1,6 @@
 import { Text, Dialog, Portal, Button } from "@chakra-ui/react";
 import { useState } from "react";
-import UserLessonsDialog from "@/features/dialog/UserLessonsDialog";
+import UserLessonsDialog from "@/features/users/lessons/UserLessonsDialog";
 import { useFetchLessonDetail } from "../hooks/useFetchLesson";
 import LessonDetailContent from "./LessonDetailContent";
 import { useLesson } from "../grid/providers/LessonProvider";

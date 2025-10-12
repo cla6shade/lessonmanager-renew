@@ -1,7 +1,7 @@
 import brand from "@/brand/baseInfo";
 import { Text, Box } from "@chakra-ui/react";
 import Image from "next/image";
-import { useNavigation } from "./location/NavigationContext";
+import { useNavigation } from "../provider/NavigationContext";
 
 export default function NavbarHeader() {
   const { selectedLocation } = useNavigation();

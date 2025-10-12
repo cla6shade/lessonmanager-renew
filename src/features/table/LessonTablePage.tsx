@@ -8,7 +8,7 @@ import DateSelector from "./selectors/DateSelector";
 import TeacherSelector from "./selectors/TeacherSelector";
 import { use } from "react";
 import { ExtendedTeacher } from "./types";
-import TableProvider from "./grid/providers/TableProvider";
+import TableProvider from "./providers/TableProvider";
 import LessonProvider from "./grid/providers/LessonProvider";
 
 interface LessonTablePageProps {
@@ -47,12 +47,10 @@ export default function LessonTablePage({
             <TeacherSelector />
           </Flex>
 
-          {/* 데스크톱 테이블 */}
           <Box display={{ base: "none", lg: "flex" }} flexGrow={1}>
             <LessonTable />
           </Box>
 
-          {/* 모바일 테이블 */}
           <Box display={{ base: "flex", lg: "none" }} flexGrow={1}>
             <MobileTable />
           </Box>

@@ -18,7 +18,7 @@ export interface UpdateResult<T> {
 
 export function useUpdate<
   TRequest,
-  TResponse extends DataResponse<z.ZodType>
+  TResponse extends DataResponse<z.ZodType> = {}
 >() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

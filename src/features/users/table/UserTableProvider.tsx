@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigation } from "../navigation/location/NavigationContext";
-import { useFilter } from "./FilterProvider";
-import useFetchUsers from "./hooks/useFetchUsers";
+import { useNavigation } from "../../navigation/provider/NavigationContext";
+import { useFilter } from "../search/FilterProvider";
+import useFetchUsers from "../search/useFetchUsers";
 import { toaster } from "@/components/ui/toaster";
 
 interface UserTableContextType {

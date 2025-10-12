@@ -9,6 +9,7 @@ import { searchTeachers, createTeacher } from "../../service";
 import { buildErrorResponse } from "@/app/utils";
 import { getSession } from "@/lib/session";
 import { encryptPassword } from "@/app/(auth)/login/service";
+import { initWorkingTime } from "@/app/(table)/service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -87,6 +88,7 @@ export async function POST(request: NextRequest) {
     };
 
     const { id } = await createTeacher(creationData);
+    await initWorkingTime(id);
 
     return NextResponse.json<CreateTeacherResponse>({
       data: {

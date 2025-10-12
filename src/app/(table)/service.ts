@@ -86,8 +86,6 @@ export async function updateWorkingTime(
   requestData: UpdateWorkingTimeRequest
 ): Promise<WorkingTimeData> {
   const { teacherId, times } = requestData;
-
-  // 선생님이 존재하는지 확인
   const teacher = await prisma.teacher.findUnique({
     where: { id: teacherId },
   });
@@ -96,7 +94,6 @@ export async function updateWorkingTime(
     throw new Error("존재하지 않는 선생님입니다.");
   }
 
-  // WorkingTime 업데이트
   const workingTime = await prisma.workingTime.update({
     where: {
       teacherId,
@@ -106,18 +103,50 @@ export async function updateWorkingTime(
     },
   });
 
-  const parsedTimes: WorkingTimeData = JSON.parse(workingTime.times);
-
-  return parsedTimes;
+  return times;
 }
 
 export async function getWorkingTimes() {
-  const times = await prisma.workingTime.findMany();
+  const times = await prisma.workingTime.findMany({
+    where: {
+      teacher: {
+        isLeaved: false,
+        isManager: false,
+      },
+    },
+    include: {
+      teacher: {
+        select: {
+          id: true,
+          name: true,
+          major: true,
+          location: true,
+        },
+      },
+    },
+  });
 
   return times.map((time) => {
     return {
       teacherId: time.teacherId,
       times: JSON.parse(time.times) as WorkingTimeData,
     };
+  });
+}
+
+export async function initWorkingTime(teacherId: number) {
+  return prisma.workingTime.create({
+    data: {
+      teacherId,
+      times: JSON.stringify({
+        mon: [],
+        tue: [],
+        wed: [],
+        thu: [],
+        fri: [],
+        sat: [],
+        sun: [],
+      }),
+    },
   });
 }

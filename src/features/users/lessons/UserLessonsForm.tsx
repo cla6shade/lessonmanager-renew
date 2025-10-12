@@ -1,7 +1,7 @@
 import { VStack, Table, Checkbox, Textarea } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 
-import { useUpdateLessons } from "@/features/dialog/useUpdateLessons";
+import { useUpdateLessons } from "@/features/users/lessons/useUpdateLessons";
 import { formatDate, formatHour } from "@/utils/date";
 import { UpdateLessonsRequest } from "@/app/(lessons)/api/lessons/schema";
 import { UserLessonsResponse } from "@/app/(users)/api/users/[id]/lessons/schema";

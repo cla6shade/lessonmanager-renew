@@ -39,7 +39,7 @@ export function NavigationProvider({
   const [selectedLocation, setSelectedLocation] =
     useState<Location>(initialLocation);
 
-  const handleSetSelectedLocation = (location: Location) => {
+  const handleLocationSelection = (location: Location) => {
     if (!isAdmin) {
       console.warn("Location selection is only available for admin users");
       return;
@@ -50,7 +50,7 @@ export function NavigationProvider({
   const value: NavigationContextType = {
     locations,
     selectedLocation,
-    setSelectedLocation: handleSetSelectedLocation,
+    setSelectedLocation: handleLocationSelection,
     isAdmin,
     userId,
     teacherId,

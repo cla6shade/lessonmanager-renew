@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { formatDate, getCurrentDatePeriod } from "@/utils/date";
 import Calendar from "./Calendar";
-import { useTable } from "../grid/providers/TableProvider";
+import { useTable } from "../providers/TableProvider";
 
 export default function DateSelector() {
   const { datePeriod, setPeriodToPrevious, setPeriodToNext, setDatePeriod } =

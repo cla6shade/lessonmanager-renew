@@ -1,6 +1,6 @@
 import { formatDate, getDatesInPeriod } from "@/utils/date";
 import { Box, Flex, Grid, Text, useDisclosure } from "@chakra-ui/react";
-import { useTable } from "./providers/TableProvider";
+import { useTable } from "../providers/TableProvider";
 import { useState } from "react";
 import BannedTimeEditDialog from "../dialog/ban/BannedTimeEditDialog";
 

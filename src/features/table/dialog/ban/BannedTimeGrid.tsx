@@ -7,7 +7,7 @@ import BannedTimeCell from "./BannedTimeCell";
 import TimeHeaderCell from "./TimeHeaderCell";
 import TeacherHeaderCell from "./TeacherHeaderCell";
 import { getTimesInPeriod } from "@/utils/date";
-import { useTable } from "../../grid/providers/TableProvider";
+import { useTable } from "../../providers/TableProvider";
 
 interface BannedTimeGridProps {
   timeGrid: BannedTimeGridType;

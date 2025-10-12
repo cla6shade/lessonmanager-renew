@@ -1,11 +1,11 @@
 "use client";
 
 import { Button, Flex } from "@chakra-ui/react";
-import { FilterProvider } from "./FilterProvider";
-import { UserTableProvider } from "./UserTableProvider";
-import FilterSection from "./FilterSection";
-import UserTable from "./UserTable";
-import CreateUserDialog from "@/features/dialog/CreateUserDialog";
+import { FilterProvider } from "./search/FilterProvider";
+import { UserTableProvider } from "./table/UserTableProvider";
+import FilterSection from "./search/FilterSection";
+import UserTable from "./table/UserTable";
+import CreateUserDialog from "@/features/users/creation/CreateUserDialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 

@@ -7,7 +7,7 @@ import {
   LessonState,
   LessonStore,
 } from "../../stores/lessonStore";
-import { useTable } from "./TableProvider";
+import { useTable } from "../../providers/TableProvider";
 import useFetchBannedTimes from "../../hooks/useFetchBannedTimes";
 
 const LessonStoreContext = createContext<LessonStore | null>(null);

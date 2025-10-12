@@ -11,15 +11,15 @@ import {
 import { useState, useCallback } from "react";
 import { CenteredSpinner } from "@/components/Spinner";
 import { formatDate } from "@/utils/date";
-import { useUpdateUser } from "./hooks/useUpdateUser";
+import { useUpdateUser } from "./useUpdateUser";
 import { UpdateUserRequestSchema } from "@/app/(users)/api/users/[id]/schema";
-import { useUserTable } from "./UserTableProvider";
+import { useUserTable } from "../table/UserTableProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import LocationSelector from "@/features/selectors/LocationSelector";
 import z from "zod";
 import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import UserStartdateSetDialog from "../dialog/UserStartdateSetDialog";
+import UserStartdateSetDialog from "../payments/UserStartdateSetDialog";
 
 const UpdateUserFormSchema = UpdateUserRequestSchema.omit({
   birth: true,

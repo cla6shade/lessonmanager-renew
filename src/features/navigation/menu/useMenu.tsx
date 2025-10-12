@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 import { adminMenus, userMenus } from "./menus";
-import { useNavigation } from "../location/NavigationContext";
+import { useNavigation } from "../provider/NavigationContext";
 
 export default function useMenu() {
   const { isAdmin } = useNavigation();

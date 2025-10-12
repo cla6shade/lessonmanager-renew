@@ -45,7 +45,6 @@ export default function UserLookupSelector({
     }
   };
 
-  // input 변화 감지 + debounce
   const handleChange = () => {
     const query = inputRef.current?.value || "";
     if (timer) clearTimeout(timer);

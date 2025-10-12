@@ -3,7 +3,7 @@
 import { Box, Flex, Button, IconButton } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { isSameDate } from "@/utils/date";
-import { useTable } from "../grid/providers/TableProvider";
+import { useTable } from "../providers/TableProvider";
 
 export default function MobileDateSelector() {
   const {

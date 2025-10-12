@@ -16,9 +16,9 @@ import { formatDate } from "@/utils/date";
 import { SkeletonTable } from "@/components/ui/skeleton";
 import Pagination from "@/components/ui/pagination";
 import { useUserTable } from "./UserTableProvider";
-import UserDetailDialog from "./UserDetailDialog";
-import UserLessonsDialog from "@/features/dialog/UserLessonsDialog";
-import UserPaymentsDialog from "@/features/dialog/UserPaymentsDialog";
+import UserDetailDialog from "../details/UserDetailDialog";
+import UserLessonsDialog from "@/features/users/lessons/UserLessonsDialog";
+import UserPaymentsDialog from "@/features/users/payments/UserPaymentsDialog";
 import { UserSearchResult } from "@/app/(users)/api/users/schema";
 
 export default function UserTable() {
@@ -60,7 +60,7 @@ export default function UserTable() {
   };
 
   const locationCollection = createListCollection({
-    items: locations.map((location) => ({
+    items: locations.map((location: any) => ({
       label: location.name,
       value: location.id.toString(),
     })),
@@ -116,7 +116,7 @@ export default function UserTable() {
                   onValueChange={(details) => {
                     const locationId = parseInt(details.value[0]);
                     const location = locations.find(
-                      (loc) => loc.id === locationId
+                      (loc: any) => loc.id === locationId
                     );
                     if (location) {
                       setSelectedLocation(location);
@@ -138,7 +138,7 @@ export default function UserTable() {
                   <Portal>
                     <Select.Positioner>
                       <Select.Content>
-                        {locationCollection.items.map((item) => (
+                        {locationCollection.items.map((item: any) => (
                           <Select.Item key={item.value} item={item}>
                             {item.label}
                           </Select.Item>
@@ -161,7 +161,7 @@ export default function UserTable() {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {users.map((user) => (
+            {users.map((user: any) => (
               <Table.Row key={user.id}>
                 <Table.Cell pt={4}>
                   <Checkbox.Root

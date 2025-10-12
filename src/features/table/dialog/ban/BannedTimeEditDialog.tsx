@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, Button, Box, Text, Portal } from "@chakra-ui/react";
 import { formatDate, getWorkingDayOfWeek } from "@/utils/date";
-import { useTable } from "../../grid/providers/TableProvider";
+import { useTable } from "../../providers/TableProvider";
 import { useLesson } from "../../grid/providers/LessonProvider";
 import { getWorkingTeachersOnDate } from "../../grid/utils";
-import { useNavigation } from "../../../navigation/location/NavigationContext";
+import { useNavigation } from "../../../navigation/provider/NavigationContext";
 import BannedTimeLegend from "./BannedTimeLegend";
 import BannedTimeGrid from "./BannedTimeGrid";
 import {

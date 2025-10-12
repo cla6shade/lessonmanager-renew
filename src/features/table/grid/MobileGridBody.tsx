@@ -1,7 +1,7 @@
 import { Flex, Text, Box, Spinner } from "@chakra-ui/react";
 import TimeColumn from "./TimeColumn";
 import LessonColumn from "./LessonColumn";
-import { useTable } from "./providers/TableProvider";
+import { useTable } from "../providers/TableProvider";
 
 export default function MobileGridBody() {
   const { selectedDate } = useTable();

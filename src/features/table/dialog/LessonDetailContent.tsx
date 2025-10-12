@@ -16,7 +16,7 @@ import {
   UpdateLessonResponse,
 } from "@/app/(lessons)/api/lessons/[id]/schema";
 import LessonCancelDialog from "./LessonCancelDialog";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 
 interface LessonDetailContentProps {
   lesson: any;

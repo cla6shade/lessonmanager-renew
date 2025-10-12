@@ -1,7 +1,7 @@
 import colors from "@/brand/colors";
 import { Drawer, Box } from "@chakra-ui/react";
 import { useState } from "react";
-import PageHeader from "./PageHeader";
+import PageHeader from "../PageHeader";
 import NavbarHeader from "./NavbarHeader";
 import NavbarBody from "./NavbarBody";
 

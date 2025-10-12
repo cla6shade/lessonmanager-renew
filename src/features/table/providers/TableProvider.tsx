@@ -1,20 +1,8 @@
-import {
-  useState,
-  useEffect,
-  createContext,
-  ReactNode,
-  use,
-  useRef,
-} from "react";
-import type { StoreApi } from "zustand";
+import { createContext, ReactNode, use, useRef } from "react";
 import { useStore } from "zustand";
 import { OpenHours, WorkingTime } from "@/generated/prisma";
-import { ExtendedTeacher } from "../../types";
-import {
-  createTableStore,
-  TableState,
-  TableStore,
-} from "../../stores/tableStore";
+import { ExtendedTeacher } from "../types";
+import { createTableStore, TableState, TableStore } from "../stores/tableStore";
 
 const TableStoreContext = createContext<TableStore | null>(null);
 

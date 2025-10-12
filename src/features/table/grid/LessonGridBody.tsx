@@ -3,7 +3,7 @@ import TimeColumn from "./TimeColumn";
 import LessonGridDateHeader from "./LessonGridDateHeader";
 import LessonColumn from "./LessonColumn";
 import { getDatesInPeriod } from "@/utils/date";
-import { useTable } from "./providers/TableProvider";
+import { useTable } from "../providers/TableProvider";
 import { useLesson } from "./providers/LessonProvider";
 
 export default function LessonGridBody() {

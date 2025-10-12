@@ -1,6 +1,7 @@
 import { isSameDate } from "@/utils/date";
-import { ExtendedTeacher, WorkingTimeData } from "../types";
+import { ExtendedTeacher } from "../types";
 import { Location } from "@/generated/prisma";
+import { WorkingTimeData } from "@/app/(table)/api/working-times/schema";
 
 export const LESSON_STATUS_COLORS = {
   COMPLETED: "green.600", // 완료된 레슨

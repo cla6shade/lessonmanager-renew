@@ -4,7 +4,7 @@ import { Button, Flex, HStack } from "@chakra-ui/react";
 import TeacherFilterSection from "./TeacherFilterSection";
 import { TeacherFilterProvider } from "./TeacherFilterProvider";
 import TeacherTable from "./table/TeacherTable";
-import CreateTeacherDialog from "@/features/dialog/CreateTeacherDialog";
+import CreateTeacherDialog from "@/features/teachers/creation/CreateTeacherDialog";
 import TeacherTableDialog from "./workingTimes/TeacherTableDialog";
 import { Plus, Clock } from "lucide-react";
 import { useState } from "react";

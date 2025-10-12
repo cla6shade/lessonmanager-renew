@@ -12,20 +12,19 @@ import {
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateTeacherRequestSchema } from "@/app/(teachers)/api/teachers/schema";
-import { useCreateTeacher } from "@/features/teachers/hooks/useCreateTeacher";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { CreateUserRequestSchema } from "@/app/(users)/api/users/schema";
+import { useCreateUser } from "@/features/users/creation/useCreateUser";
+import { useUserTable } from "@/features/users/table/UserTableProvider";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import LocationSelector from "@/features/selectors/LocationSelector";
-import MajorSelector from "@/features/selectors/MajorSelector";
 import { buildDate } from "@/utils/date";
-import { useTeacherManagement } from "../teachers/TeacherManagmentProvider";
 
-interface CreateTeacherDialogProps {
+interface CreateUserDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CreateTeacherFormSchema = CreateTeacherRequestSchema.extend({
+const CreateUserFormSchema = CreateUserRequestSchema.extend({
   birthYear: z.string().optional(),
   birthMonth: z.string().optional(),
   birthDay: z.string().optional(),
@@ -33,12 +32,12 @@ const CreateTeacherFormSchema = CreateTeacherRequestSchema.extend({
   birth: true,
 });
 
-export default function CreateTeacherDialog({
+export default function CreateUserDialog({
   isOpen,
   onClose,
-}: CreateTeacherDialogProps) {
-  const { refetchTeachers } = useTeacherManagement();
-  const { locations, majors } = useNavigation();
+}: CreateUserDialogProps) {
+  const { refetchUsers } = useUserTable();
+  const { locations } = useNavigation();
 
   const {
     handleSubmit,
@@ -47,30 +46,30 @@ export default function CreateTeacherDialog({
     watch,
     reset,
     formState: { errors },
-  } = useForm<z.input<typeof CreateTeacherFormSchema>>({
-    resolver: zodResolver(CreateTeacherFormSchema),
+  } = useForm<z.input<typeof CreateUserFormSchema>>({
+    resolver: zodResolver(CreateUserFormSchema),
     defaultValues: {
       locationId: 0,
-      majorId: 0,
       name: "",
-      gender: false,
+      gender: false, // false = 남성, true = 여성
       contact: "",
       loginId: "",
       password: "",
       passwordConfirm: "",
       email: "",
+      ability: "",
+      genre: "",
+      howto: 1,
       address: "",
-      isManager: false,
-      workingDays: 0,
       birthYear: "",
       birthMonth: "",
       birthDay: "",
     },
   });
 
-  const { createTeacher, isSaving } = useCreateTeacher();
+  const { createUser, isSaving } = useCreateUser();
 
-  const onSubmit = async (data: z.output<typeof CreateTeacherFormSchema>) => {
+  const onSubmit = async (data: z.output<typeof CreateUserFormSchema>) => {
     const birth: Date | undefined = buildDate(
       data.birthYear,
       data.birthMonth,
@@ -79,7 +78,6 @@ export default function CreateTeacherDialog({
 
     const createData = {
       locationId: data.locationId,
-      majorId: data.majorId,
       name: data.name,
       gender: data.gender,
       birth: birth?.toISOString(),
@@ -88,15 +86,16 @@ export default function CreateTeacherDialog({
       password: data.password,
       passwordConfirm: data.passwordConfirm,
       email: data.email,
+      ability: data.ability,
+      genre: data.genre,
+      howto: data.howto,
       address: data.address,
-      isManager: data.isManager,
-      workingDays: data.workingDays,
     };
 
-    const result = await createTeacher(createData as any);
+    const result = await createUser(createData as any);
 
     if (result.success) {
-      refetchTeachers();
+      refetchUsers();
       reset();
       onClose();
     }
@@ -104,11 +103,6 @@ export default function CreateTeacherDialog({
 
   const handleLocationSelect = (locationId: number) => {
     setValue("locationId", locationId);
-  };
-
-  const handleMajorSelect = (majorId: number) => {
-    setValue("majorId", majorId);
-    setValue("isManager", majorId === 2);
   };
 
   const handleClose = () => {
@@ -128,7 +122,7 @@ export default function CreateTeacherDialog({
           <Dialog.Content maxH="90vh" overflow="auto">
             <Dialog.Header>
               <Text fontSize="lg" fontWeight="bold">
-                새 선생님 생성
+                새 사용자 생성
               </Text>
               <Dialog.CloseTrigger asChild>
                 <Button size="sm" variant="ghost" aria-label="닫기">
@@ -156,27 +150,6 @@ export default function CreateTeacherDialog({
                     {errors.locationId && (
                       <Text color="red.500" fontSize="sm" mt={1}>
                         {errors.locationId.message}
-                      </Text>
-                    )}
-                  </Box>
-
-                  {/* 전공 */}
-                  <Box>
-                    <Text fontWeight="bold" mb={2}>
-                      전공{" "}
-                      <Text as="span" color="red.500">
-                        *
-                      </Text>
-                    </Text>
-                    <MajorSelector
-                      majors={majors}
-                      selectedMajorId={watch("majorId")}
-                      onMajorSelect={handleMajorSelect}
-                      placeholder="전공을 선택하세요"
-                    />
-                    {errors.majorId && (
-                      <Text color="red.500" fontSize="sm" mt={1}>
-                        {errors.majorId.message}
                       </Text>
                     )}
                   </Box>
@@ -371,32 +344,36 @@ export default function CreateTeacherDialog({
                     )}
                   </Box>
 
-                  {/* 관리자 여부 (자동 설정) */}
+                  {/* 경력 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      관리자 여부
-                    </Text>
-                    <Text color="gray.600" fontSize="sm">
-                      {watch("majorId") === 2
-                        ? "매니저 전공 선택으로 인해 자동으로 관리자로 설정됩니다."
-                        : "일반 선생님으로 설정됩니다."}
-                    </Text>
-                  </Box>
-
-                  {/* 근무일수 */}
-                  <Box>
-                    <Text fontWeight="bold" mb={2}>
-                      근무일수
+                      경력
                     </Text>
                     <Input
-                      {...register("workingDays", { valueAsNumber: true })}
-                      type="number"
-                      placeholder="근무일수를 입력하세요"
-                      borderColor={errors.workingDays ? "red.500" : undefined}
+                      {...register("ability")}
+                      placeholder="경력을 입력하세요"
+                      borderColor={errors.ability ? "red.500" : undefined}
                     />
-                    {errors.workingDays && (
+                    {errors.ability && (
                       <Text color="red.500" fontSize="sm" mt={1}>
-                        {errors.workingDays.message}
+                        {errors.ability.message}
+                      </Text>
+                    )}
+                  </Box>
+
+                  {/* 장르 */}
+                  <Box>
+                    <Text fontWeight="bold" mb={2}>
+                      장르
+                    </Text>
+                    <Input
+                      {...register("genre")}
+                      placeholder="선호 장르를 입력하세요"
+                      borderColor={errors.genre ? "red.500" : undefined}
+                    />
+                    {errors.genre && (
+                      <Text color="red.500" fontSize="sm" mt={1}>
+                        {errors.genre.message}
                       </Text>
                     )}
                   </Box>

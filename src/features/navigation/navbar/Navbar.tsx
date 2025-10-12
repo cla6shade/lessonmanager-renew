@@ -1,4 +1,4 @@
-import useMenu from "./menu/useMenu";
+import useMenu from "../menu/useMenu";
 import MobileNavbar from "./MobileNavbar";
 import DesktopNavbar from "./DesktopNavbar";
 

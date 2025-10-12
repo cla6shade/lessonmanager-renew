@@ -1,4 +1,4 @@
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import { useLesson } from "@/features/table/grid/providers/LessonProvider";
 import { Dialog } from "@chakra-ui/react";
 import { Portal } from "@chakra-ui/react";

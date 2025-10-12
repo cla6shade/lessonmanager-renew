@@ -12,8 +12,8 @@ import {
 import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 import { ExtendedTeacher } from "../types";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
-import { useTable } from "../grid/providers/TableProvider";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
+import { useTable } from "../providers/TableProvider";
 
 interface TeacherSelectorProps {
   displayAllLocations?: boolean;

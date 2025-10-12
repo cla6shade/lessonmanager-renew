@@ -2,7 +2,7 @@
 
 import { Flex, Input, Button, HStack, VStack } from "@chakra-ui/react";
 import FilterSelector from "./FilterSelector";
-import { useUserTable } from "./UserTableProvider";
+import { useUserTable } from "../table/UserTableProvider";
 import { useFilter } from "./FilterProvider";
 import { Filter } from "lucide-react";
 import { useRef } from "react";

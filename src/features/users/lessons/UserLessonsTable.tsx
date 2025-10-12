@@ -2,23 +2,22 @@ import { Text, VStack, HStack, Spinner, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
 import Pagination from "@/components/ui/pagination";
-import { useFetchUserPayments } from "./useFetchUserPayments";
-import UserPaymentsForm from "./UserPaymentsForm";
+import { useFetchUserLessons } from "@/features/users/lessons/useFetchUserLessons";
+import UserLessonsForm from "./UserLessonsForm";
 
-interface UserPaymentsTableProps {
+interface UserLessonsTableProps {
   userId: number;
 }
 
-export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
+export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const { payments, totalPages, totalItems, loading, error } =
-    useFetchUserPayments({
+  const { lessons, totalPages, totalItems, loading, error } =
+    useFetchUserLessons({
       userId,
       page: currentPage,
       limit: itemsPerPage,
-      enabled: true,
     });
 
   const handlePageChange = (page: number) => {
@@ -29,7 +28,7 @@ export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
     return (
       <HStack justify="center" h="360px">
         <Spinner size="lg" />
-        <Text>결제 내역을 불러오는 중...</Text>
+        <Text>레슨 목록을 불러오는 중...</Text>
       </HStack>
     );
   }
@@ -52,7 +51,7 @@ export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
     );
   }
 
-  if (payments.length === 0) {
+  if (lessons.length === 0) {
     return (
       <VStack
         p={4}
@@ -63,16 +62,16 @@ export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
         align="stretch"
       >
         <Text color="blue.600" fontWeight="bold">
-          결제 내역이 없습니다
+          레슨이 없습니다
         </Text>
-        <Text color="blue.600">해당 사용자의 결제 기록이 없습니다.</Text>
+        <Text color="blue.600">해당 사용자의 레슨 기록이 없습니다.</Text>
       </VStack>
     );
   }
 
   return (
     <VStack gap={4} align="stretch">
-      <UserPaymentsForm key={currentPage} payments={payments} />
+      <UserLessonsForm key={currentPage} lessons={lessons} />
 
       <Pagination
         currentPage={currentPage}
@@ -83,7 +82,12 @@ export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
       />
 
       <HStack justify="flex-end">
-        <Button type="submit" form="payments-form" colorScheme="blue">
+        <Button
+          type="submit"
+          form="lessons-form"
+          colorScheme="blue"
+          loadingText="저장 중..."
+        >
           저장
         </Button>
       </HStack>

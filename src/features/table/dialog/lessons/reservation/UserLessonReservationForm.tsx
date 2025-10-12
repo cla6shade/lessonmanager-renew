@@ -6,7 +6,7 @@ import { useForm, Controller, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateLessonByUserInputSchema } from "@/app/(lessons)/api/lessons/schema";
 import { useLessonReservation } from "@/features/table/grid/providers/LessonReservationProvider";
-import { useNavigation } from "@/features/navigation/location/NavigationContext";
+import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import { useCreateLesson } from "./useCreateLesson";
 import { formatDate, formatHour } from "@/utils/date";
 import z from "zod";
