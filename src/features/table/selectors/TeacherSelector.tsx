@@ -15,7 +15,13 @@ import { ExtendedTeacher } from "../types";
 import { useNavigation } from "@/features/navigation/location/NavigationContext";
 import { useTable } from "../grid/providers/TableProvider";
 
-export default function TeacherSelector() {
+interface TeacherSelectorProps {
+  displayAllLocations?: boolean;
+}
+
+export default function TeacherSelector({
+  displayAllLocations = false,
+}: TeacherSelectorProps) {
   const { teachers, selectedTeacher, setSelectedTeacher } = useTable();
   const { selectedLocation } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +32,9 @@ export default function TeacherSelector() {
   };
 
   const displayName = selectedTeacher ? selectedTeacher.name : "전체";
+  const locationTeachers = displayAllLocations
+    ? teachers
+    : teachers.filter((teacher) => teacher.location.id === selectedLocation.id);
 
   return (
     <Box
@@ -66,16 +75,10 @@ export default function TeacherSelector() {
                     >
                       전체
                     </Button>
-                    {teachers.map((teacher) => {
-                      if (
-                        selectedLocation !== null &&
-                        teacher.location.id !== selectedLocation.id
-                      ) {
-                        return null;
-                      }
+                    {locationTeachers.map((teacher) => {
                       return (
                         <Button
-                          key={teacher.id}
+                          key={`teacher-selection-${teacher.id}-${teacher.location.id}`}
                           variant="ghost"
                           size="sm"
                           justifyContent="flex-start"
