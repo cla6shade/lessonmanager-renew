@@ -150,3 +150,16 @@ export function toKstDate(val: string | Date): Date {
   d.setHours(d.getHours() + 9);
   return d;
 }
+
+export function buildDate(
+  year?: string | number,
+  month?: string | number,
+  day?: string | number
+): Date | undefined {
+  if (!year || !month || !day) return undefined;
+  return new Date(
+    parseInt(year.toString()),
+    parseInt(month.toString()) - 1,
+    parseInt(day.toString())
+  );
+}
