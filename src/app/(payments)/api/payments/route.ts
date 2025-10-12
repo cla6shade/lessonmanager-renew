@@ -24,6 +24,7 @@ export async function PUT(request: NextRequest) {
             memo: paymentUpdate.memo,
             startDate: paymentUpdate.startDate,
             endDate: paymentUpdate.endDate,
+            isStartDateNonSet: paymentUpdate.isStartDateNonSet,
           },
         });
         return updated;

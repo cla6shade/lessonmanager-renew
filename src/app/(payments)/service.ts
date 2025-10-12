@@ -22,7 +22,7 @@ export async function isUserInPayment(userId: number) {
       refunded: false,
       isStartDateNonSet: false,
       endDate: {
-        gte: toKstDate(new Date().toISOString()),
+        gte: toKstDate(new Date()),
       },
     },
   });

@@ -4,9 +4,9 @@ import { PaymentSchema } from "@/generated/zod";
 import { toKstDate } from "@/utils/date";
 
 export const UpdatePaymentRequestSchema = z.object({
-  id: z.number().int().positive(),
+  id: z.coerce.number().int().positive(),
   refunded: z.boolean().optional(),
-  refundedAmount: z.number().int().min(0).optional(),
+  refundedAmount: z.coerce.number().int().min(0).optional(),
   memo: z.string().optional(),
   startDate: z.iso
     .datetime()
@@ -16,6 +16,7 @@ export const UpdatePaymentRequestSchema = z.object({
     .datetime()
     .transform((val) => (val ? toKstDate(val) : undefined))
     .optional(),
+  isStartDateNonSet: z.boolean().optional(),
 });
 
 export const UpdatePaymentsRequestSchema = z.object({
