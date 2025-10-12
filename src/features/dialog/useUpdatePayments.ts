@@ -1,21 +1,25 @@
 import { useCallback } from "react";
-import { UpdatePaymentsRequestSchema } from "@/app/(payments)/api/payments/schema";
 import { z } from "zod";
+import {
+  UpdatePaymentsRequestSchema,
+  UpdatePaymentsResponse,
+} from "@/app/(payments)/api/payments/schema";
 import { useUpdate } from "@/hooks/useUpdate";
 
 export function useUpdatePayments() {
-  const { update, isSaving, error } =
-    useUpdate<z.input<typeof UpdatePaymentsRequestSchema>>();
+  const { update, isSaving, error } = useUpdate<
+    z.input<typeof UpdatePaymentsRequestSchema>,
+    UpdatePaymentsResponse
+  >();
 
   const updatePayments = useCallback(
     async (data: z.input<typeof UpdatePaymentsRequestSchema>) => {
-      const result = await update(data, {
+      return await update(data, {
         endpoint: "/api/payments",
         method: "PUT",
-        successMessage: "저장되었습니다.",
-        errorMessage: "저장 중 오류가 발생했습니다.",
+        successMessage: "결제 정보가 저장되었습니다.",
+        errorMessage: "결제 정보 저장 중 오류가 발생했습니다.",
       });
-      return result;
     },
     [update]
   );

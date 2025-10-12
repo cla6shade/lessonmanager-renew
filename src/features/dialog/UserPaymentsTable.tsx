@@ -1,31 +1,30 @@
-import { Text, VStack, HStack, Spinner } from "@chakra-ui/react";
+import { Text, VStack, HStack, Spinner, Button } from "@chakra-ui/react";
+import { useState } from "react";
+
 import Pagination from "@/components/ui/pagination";
+import { useFetchUserPayments } from "./useFetchUserPayments";
 import UserPaymentsForm from "./UserPaymentsForm";
-import { Payment } from "@/generated/prisma";
 
 interface UserPaymentsTableProps {
-  payments: Payment[];
-  totalPages: number;
-  totalItems: number;
-  loading: boolean;
-  error: string | null;
-  currentPage: number;
-  itemsPerPage: number;
-  onPageChange: (page: number) => void;
-  refetch: () => void;
+  userId: number;
 }
 
-export default function UserPaymentsTable({
-  payments,
-  totalPages,
-  totalItems,
-  loading,
-  error,
-  currentPage,
-  itemsPerPage,
-  onPageChange,
-  refetch,
-}: UserPaymentsTableProps) {
+export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+
+  const { payments, totalPages, totalItems, loading, error } =
+    useFetchUserPayments({
+      userId,
+      page: currentPage,
+      limit: itemsPerPage,
+      enabled: true,
+    });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   if (loading) {
     return (
       <HStack justify="center" h="360px">
@@ -73,15 +72,21 @@ export default function UserPaymentsTable({
 
   return (
     <VStack gap={4} align="stretch">
-      <UserPaymentsForm payments={payments} refetch={refetch} />
+      <UserPaymentsForm key={currentPage} payments={payments} />
 
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
-        onPageChange={onPageChange}
+        onPageChange={handlePageChange}
       />
+
+      <HStack justify="flex-end">
+        <Button type="submit" form="payments-form" colorScheme="blue">
+          저장
+        </Button>
+      </HStack>
     </VStack>
   );
 }
