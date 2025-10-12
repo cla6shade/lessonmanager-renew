@@ -1,6 +1,6 @@
 "use client";
 
-import { Location } from "@/generated/prisma";
+import { Location, Major } from "@/generated/prisma";
 import { createContext, useState, ReactNode, use } from "react";
 
 interface NavigationContextType {
@@ -10,6 +10,7 @@ interface NavigationContextType {
   isAdmin: boolean;
   userId?: number;
   teacherId?: number;
+  majors: Major[];
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(
@@ -19,6 +20,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(
 interface NavigationProviderProps {
   children: ReactNode;
   locations: Location[];
+  majors: Major[];
   isAdmin: boolean;
   initialLocation: Location;
   userId?: number;
@@ -28,6 +30,7 @@ interface NavigationProviderProps {
 export function NavigationProvider({
   children,
   locations,
+  majors,
   isAdmin,
   initialLocation,
   userId,
@@ -51,6 +54,7 @@ export function NavigationProvider({
     isAdmin,
     userId,
     teacherId,
+    majors,
   };
 
   return (
@@ -78,6 +82,7 @@ export function useNavigation() {
     isAdmin,
     userId,
     teacherId,
+    majors,
   } = useNavigationContext();
   return {
     locations,
@@ -86,5 +91,6 @@ export function useNavigation() {
     isAdmin,
     userId,
     teacherId,
+    majors,
   };
 }
