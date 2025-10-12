@@ -1,4 +1,3 @@
-import { WorkingTimeData } from "@/features/table/types";
 import prisma from "@/lib/prisma";
 import { getWorkingDayOfWeek } from "@/utils/date";
 import { LessonSearchParams, LessonSearchResult } from "./schema";
@@ -7,6 +6,7 @@ import {
   CreateLessonByUserInput,
 } from "./api/lessons/schema";
 import { Lesson } from "@/generated/prisma";
+import { WorkingTimeData } from "../(table)/api/working-times/schema";
 
 export function cancelLesson(lessonId: number) {
   return prisma.lesson.delete({
