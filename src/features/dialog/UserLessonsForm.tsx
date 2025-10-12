@@ -5,6 +5,7 @@ import { useUpdateLessons } from "@/features/dialog/useUpdateLessons";
 import { formatDate, formatHour } from "@/utils/date";
 import { UpdateLessonsRequest } from "@/app/(lessons)/api/lessons/schema";
 import { UserLessonsResponse } from "@/app/(users)/api/users/[id]/lessons/schema";
+import { useEffect } from "react";
 
 interface UserLessonsFormProps {
   lessons: UserLessonsResponse["data"];
@@ -21,9 +22,14 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
     })
   );
 
-  const { control, handleSubmit, register } = useForm<UpdateLessonsRequest>({
-    defaultValues: { lessons: defaultLessons },
-  });
+  const { control, handleSubmit, register, reset } =
+    useForm<UpdateLessonsRequest>({
+      defaultValues: { lessons: defaultLessons },
+    });
+
+  useEffect(() => {
+    reset({ lessons: defaultLessons });
+  }, [lessons, reset]);
 
   const onSubmit = async (data: UpdateLessonsRequest) => {
     await updateLessons(data);
@@ -85,8 +91,8 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
                     {...register(`lessons.${index}.note`)}
                     placeholder="레슨 노트를 입력하세요"
                     size="sm"
-                    minH="60px"
-                    maxW="200px"
+                    minH="80px"
+                    minW="200px"
                     resize="vertical"
                   />
                 </Table.Cell>
