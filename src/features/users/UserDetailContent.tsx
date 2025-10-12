@@ -6,6 +6,7 @@ import {
   Button,
   Input,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import { useState, useCallback } from "react";
 import { CenteredSpinner } from "@/components/Spinner";
@@ -18,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import LocationSelector from "@/features/selectors/LocationSelector";
 import z from "zod";
 import { UserSearchResult } from "@/app/(users)/api/users/schema";
+import UserStartdateSetDialog from "../dialog/UserStartdateSetDialog";
 
 const UpdateUserFormSchema = UpdateUserRequestSchema.omit({
   birth: true,
@@ -32,18 +34,21 @@ interface UserDetailContentProps {
   loading: boolean;
   error: string | null;
   onUserUpdate: (updatedUser: UserSearchResult) => void;
+  refetchUsers: () => void;
 }
 
 export default function UserDetailContent({
   user,
   loading,
   onUserUpdate,
+  refetchUsers,
 }: UserDetailContentProps) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const { update, isSaving } = useUpdateUser();
   const { locations } = useUserTable();
-
+  const [isStartDateSetDialogOpen, setIsStartDateSetDialogOpen] =
+    useState(false);
   const form = useForm<
     z.input<typeof UpdateUserFormSchema>,
     z.output<typeof UpdateUserFormSchema>
@@ -99,15 +104,15 @@ export default function UserDetailContent({
         locationId: data.locationId,
       };
 
-      const result = await update(updateData, {
+      const { success, data: updatedUser } = await update(updateData, {
         endpoint: `/api/users/${user.id}`,
         method: "PUT",
         successMessage: "사용자 정보가 수정되었습니다.",
       });
 
-      if (result.success && result.data) {
-        onUserUpdate(result.data.data);
-
+      if (success && updatedUser) {
+        onUserUpdate(updatedUser.data);
+        refetchUsers();
         setIsEditMode(false);
       }
     },
@@ -230,7 +235,7 @@ export default function UserDetailContent({
           {user.payments && user.payments.length === 1 && (
             <HStack justify="space-between">
               <Text fontWeight="bold">결제 기간:</Text>
-              <Text>
+              <Flex gap={2} align="center">
                 {user.payments[0].startDate && user.payments[0].endDate
                   ? `${formatDate(
                       new Date(user.payments[0].startDate),
@@ -247,7 +252,18 @@ export default function UserDetailContent({
                     (환불됨)
                   </Text>
                 )}
-              </Text>
+                {user.payments[0].isStartDateNonSet ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setIsStartDateSetDialogOpen(true);
+                    }}
+                  >
+                    설정
+                  </Button>
+                ) : null}
+              </Flex>
             </HStack>
           )}
 
@@ -285,7 +301,6 @@ export default function UserDetailContent({
               <HStack gap={2}>
                 <Box flex={1}>
                   <Input
-                    type="number"
                     placeholder="년도"
                     {...form.register("birthYear")}
                     borderColor={
@@ -300,7 +315,6 @@ export default function UserDetailContent({
                 </Box>
                 <Box flex={1}>
                   <Input
-                    type="number"
                     placeholder="월"
                     {...form.register("birthMonth")}
                     borderColor={
@@ -315,7 +329,6 @@ export default function UserDetailContent({
                 </Box>
                 <Box flex={1}>
                   <Input
-                    type="number"
                     placeholder="일"
                     {...form.register("birthDay")}
                     borderColor={
@@ -463,7 +476,7 @@ export default function UserDetailContent({
               <Button
                 onClick={form.handleSubmit(handleSave)}
                 loading={isSaving}
-                loadingText="저장 중..."
+                loadingText="저장 중"
                 colorPalette="brand"
                 flex={1}
               >
@@ -476,6 +489,13 @@ export default function UserDetailContent({
           </VStack>
         </VStack>
       )}
+      <UserStartdateSetDialog
+        isOpen={isStartDateSetDialogOpen}
+        onClose={() => setIsStartDateSetDialogOpen(false)}
+        paymentId={user.payments?.[0]?.id || 0}
+        user={user}
+        onUserUpdate={onUserUpdate}
+      />
     </VStack>
   );
 }

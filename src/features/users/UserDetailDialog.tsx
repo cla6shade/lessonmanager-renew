@@ -6,6 +6,7 @@ interface UserDetailDialogProps {
   user: UserSearchResult;
   isOpen: boolean;
   onClose: () => void;
+  refetchUsers: () => void;
   onUserUpdate: (updatedUser: UserSearchResult) => void;
 }
 
@@ -13,6 +14,7 @@ export default function UserDetailDialog({
   user,
   isOpen,
   onClose,
+  refetchUsers,
   onUserUpdate,
 }: UserDetailDialogProps) {
   return (
@@ -38,9 +40,10 @@ export default function UserDetailDialog({
             <Dialog.Body>
               <UserDetailContent
                 user={user}
+                onUserUpdate={onUserUpdate}
                 loading={false}
                 error={null}
-                onUserUpdate={onUserUpdate}
+                refetchUsers={refetchUsers}
               />
             </Dialog.Body>
           </Dialog.Content>
