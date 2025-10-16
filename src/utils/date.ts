@@ -152,11 +152,10 @@ export function toKstDate(val: string | Date): Date {
 }
 
 export function buildDate(
-  year?: string | number,
-  month?: string | number,
-  day?: string | number
-): Date | undefined {
-  if (!year || !month || !day) return undefined;
+  year: string | number,
+  month: string | number,
+  day: string | number
+): Date {
   return new Date(
     parseInt(year.toString()),
     parseInt(month.toString()) - 1,
