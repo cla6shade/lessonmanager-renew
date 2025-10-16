@@ -8,7 +8,7 @@ import NavbarBody from "./NavbarBody";
 export default function MobileNavbar() {
   const [open, setOpen] = useState(false);
 
-  const onOpenChange = (e: any) => setOpen(e.open);
+  const onOpenChange = (e: { open: boolean }) => setOpen(e.open);
 
   return (
     <>
