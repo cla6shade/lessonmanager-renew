@@ -2,12 +2,14 @@
 
 import { Box, Button, VStack, Text, HStack } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
-import { useForm, Controller, type Resolver } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateLessonByUserInputSchema } from "@/app/(lessons)/api/lessons/schema";
 import { useLessonReservation } from "@/features/table/grid/providers/LessonReservationProvider";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { useCreateLesson } from "./useCreateLesson";
+import {
+  CreateLessonByUserFormSchema,
+  useCreateLesson,
+} from "./useCreateLesson";
 import { formatDate, formatHour } from "@/utils/date";
 import z from "zod";
 
@@ -24,17 +26,13 @@ export default function UserLessonReservationForm({
   const { selectedLocation } = useNavigation();
   const { createLesson, isSaving } = useCreateLesson();
 
-  const schema = CreateLessonByUserInputSchema;
-  type FormIn = z.input<typeof schema>;
-  type FormOut = z.output<typeof schema>;
-
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<FormIn>({
-    resolver: zodResolver(schema) as unknown as Resolver<FormIn>,
+  } = useForm<z.input<typeof CreateLessonByUserFormSchema>>({
+    resolver: zodResolver(CreateLessonByUserFormSchema),
     defaultValues: {
       dueDate: selectedDate.toISOString(),
       dueHour: dueHour,
@@ -44,13 +42,15 @@ export default function UserLessonReservationForm({
     },
   });
 
-  const onSubmit = async (data: FormOut) => {
+  const onSubmit = async (
+    data: z.output<typeof CreateLessonByUserFormSchema>
+  ) => {
     const result = await createLesson(data);
     if (result.success) onSuccess();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit as any)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <VStack gap={4} align="stretch">
         <Box p={3} bg="gray.50" borderRadius="md">
           <VStack gap={1} align="stretch">

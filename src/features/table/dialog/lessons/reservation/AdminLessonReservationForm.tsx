@@ -2,12 +2,12 @@
 
 import { Box, Button, VStack, Text, HStack, Input } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
-import { useForm, Controller, type Resolver } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateLessonByAdminInputSchema } from "@/app/(lessons)/api/lessons/schema";
 import { useLessonReservation } from "@/features/table/grid/providers/LessonReservationProvider";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { useCreateLesson } from "./useCreateLesson";
+import { CreateLessonByAdminFormSchema, useCreateLesson } from "./useCreateLesson";
 import { formatDate, formatHour } from "@/utils/date";
 import { useState } from "react";
 import { UserLookupResponse } from "@/app/(users)/api/users/lookup/schema";
@@ -31,18 +31,14 @@ export default function AdminLessonReservationForm({
     UserLookupResponse["data"][number] | null
   >(null);
 
-  const schema = CreateLessonByAdminInputSchema;
-  type FormIn = z.input<typeof schema>;
-  type FormOut = z.output<typeof schema>;
-
   const {
     control,
     handleSubmit,
     register,
     setValue,
     formState: { errors },
-  } = useForm<FormIn>({
-    resolver: zodResolver(schema) as unknown as Resolver<FormIn>,
+  } = useForm<z.input<typeof CreateLessonByAdminFormSchema>>({
+    resolver: zodResolver(CreateLessonByAdminFormSchema),
     defaultValues: {
       dueDate: selectedDate.toISOString(),
       dueHour: dueHour,
@@ -55,7 +51,9 @@ export default function AdminLessonReservationForm({
     },
   });
 
-  const onSubmit = async (data: FormOut) => {
+  const onSubmit = async (
+    data: z.output<typeof CreateLessonByAdminFormSchema>
+  ) => {
     const result = await createLesson(data);
     if (result.success) onSuccess();
   };
@@ -75,7 +73,7 @@ export default function AdminLessonReservationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit as any)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <VStack gap={4} align="stretch">
         <Box p={3} bg="gray.50" borderRadius="md">
           <VStack gap={1} align="stretch">
@@ -118,10 +116,7 @@ export default function AdminLessonReservationForm({
         </Box>
 
         <input type="hidden" {...register("dueDate")} />
-        <input
-          type="hidden"
-          {...register("dueHour", { valueAsNumber: true })}
-        />
+        <input type="hidden" {...register("dueHour", { valueAsNumber: true })} />
         <input
           type="hidden"
           {...register("teacherId", { valueAsNumber: true })}
@@ -163,10 +158,7 @@ export default function AdminLessonReservationForm({
                   size="xs"
                   colorScheme="red"
                   variant="ghost"
-                  onClick={() => {
-                    setSelectedUser(null);
-                    setValue("userId", undefined);
-                  }}
+                  onClick={() => handleUserSelect(null)}
                 >
                   선택 해제
                 </Button>
@@ -186,11 +178,10 @@ export default function AdminLessonReservationForm({
                   <Text fontSize="xs" color="gray.600" mb={1}>
                     이름
                   </Text>
-
                   <Controller
                     control={control}
                     name="username"
-                    render={({ field, fieldState }) => (
+                    render={({ field }) => (
                       <Input
                         {...field}
                         value={field.value ?? ""}
@@ -211,11 +202,10 @@ export default function AdminLessonReservationForm({
                   <Text fontSize="xs" color="gray.600" mb={1}>
                     연락처
                   </Text>
-
                   <Controller
                     control={control}
                     name="contact"
-                    render={({ field, fieldState }) => (
+                    render={({ field }) => (
                       <Input
                         {...field}
                         value={field.value ?? ""}
@@ -276,7 +266,7 @@ export default function AdminLessonReservationForm({
           </Button>
           <Button
             type="submit"
-            colorScheme="brand"
+            colorScheme="blue"
             loading={isSaving}
             loadingText="예약 중"
             size="sm"
