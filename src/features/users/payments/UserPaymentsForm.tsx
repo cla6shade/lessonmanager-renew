@@ -5,28 +5,25 @@ import {
   Textarea,
   Input,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useUpdatePayments } from "./useUpdatePayments";
 import { formatDate } from "@/utils/date";
+import DateInput from "@/features/inputs/DateInput";
 import { UpdatePaymentsRequestSchema } from "@/app/(payments)/api/payments/schema";
 import { UserPaymentsResponse } from "@/app/(users)/api/users/[id]/payments/schema";
 import { useEffect } from "react";
 
-// 클라이언트 폼 타입 (년/월/일 분리)
 type PaymentFormData = {
   id: string;
   refunded?: boolean;
   refundedAmount?: string;
   memo?: string;
-  startDateYear?: string;
-  startDateMonth?: string;
-  startDateDay?: string;
-  endDateYear?: string;
-  endDateMonth?: string;
-  endDateDay?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 type UpdatePaymentsFormData = {
@@ -42,20 +39,13 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
 
   const defaultPayments: UpdatePaymentsFormData["payments"] = payments.map(
     (payment) => {
-      const startDate = payment.startDate ? new Date(payment.startDate) : null;
-      const endDate = payment.endDate ? new Date(payment.endDate) : null;
-
       return {
         id: payment.id.toString(),
         refunded: payment.refunded,
         refundedAmount: payment.refundedAmount.toString(),
         memo: payment.memo ?? "",
-        startDateYear: startDate ? startDate.getFullYear().toString() : "",
-        startDateMonth: startDate ? (startDate.getMonth() + 1).toString() : "",
-        startDateDay: startDate ? startDate.getDate().toString() : "",
-        endDateYear: endDate ? endDate.getFullYear().toString() : "",
-        endDateMonth: endDate ? (endDate.getMonth() + 1).toString() : "",
-        endDateDay: endDate ? endDate.getDate().toString() : "",
+        startDate: payment.startDate?.toISOString() || "",
+        endDate: payment.endDate?.toISOString() || "",
       };
     }
   );
@@ -72,33 +62,13 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
   const onSubmit = async (data: UpdatePaymentsFormData) => {
     const serverData = {
       payments: data.payments.map((payment) => {
-        const startDate =
-          payment.startDateYear &&
-          payment.startDateMonth &&
-          payment.startDateDay
-            ? new Date(
-                parseInt(payment.startDateYear),
-                parseInt(payment.startDateMonth) - 1,
-                parseInt(payment.startDateDay)
-              ).toISOString()
-            : undefined;
-
-        const endDate =
-          payment.endDateYear && payment.endDateMonth && payment.endDateDay
-            ? new Date(
-                parseInt(payment.endDateYear),
-                parseInt(payment.endDateMonth) - 1,
-                parseInt(payment.endDateDay)
-              ).toISOString()
-            : undefined;
-
         return {
           id: payment.id,
           refunded: payment.refunded,
           refundedAmount: payment.refundedAmount,
           memo: payment.memo,
-          startDate,
-          endDate,
+          startDate: payment.startDate,
+          endDate: payment.endDate,
         };
       }),
     };
@@ -139,54 +109,18 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
                 <Table.Cell>{payment.months}개월</Table.Cell>
                 <Table.Cell>{payment.lessonCount}회</Table.Cell>
                 <Table.Cell>
-                  <HStack gap={1}>
-                    <Input
-                      {...register(`payments.${index}.startDateYear`)}
-                      placeholder="년"
-                      size="sm"
-                      maxW="60px"
-                      maxLength={4}
-                    />
-                    <Input
-                      {...register(`payments.${index}.startDateMonth`)}
-                      placeholder="월"
-                      size="sm"
-                      maxW="50px"
-                      maxLength={2}
-                    />
-                    <Input
-                      {...register(`payments.${index}.startDateDay`)}
-                      placeholder="일"
-                      size="sm"
-                      maxW="50px"
-                      maxLength={2}
-                    />
-                  </HStack>
+                  <Controller
+                    control={control}
+                    name={`payments.${index}.startDate`}
+                    render={({ field }) => <DateInput {...field} />}
+                  />
                 </Table.Cell>
                 <Table.Cell>
-                  <HStack gap={1}>
-                    <Input
-                      {...register(`payments.${index}.endDateYear`)}
-                      placeholder="년"
-                      size="sm"
-                      maxW="60px"
-                      maxLength={4}
-                    />
-                    <Input
-                      {...register(`payments.${index}.endDateMonth`)}
-                      placeholder="월"
-                      size="sm"
-                      maxW="50px"
-                      maxLength={2}
-                    />
-                    <Input
-                      {...register(`payments.${index}.endDateDay`)}
-                      placeholder="일"
-                      size="sm"
-                      maxW="50px"
-                      maxLength={2}
-                    />
-                  </HStack>
+                  <Controller
+                    control={control}
+                    name={`payments.${index}.endDate`}
+                    render={({ field }) => <DateInput {...field} />}
+                  />
                 </Table.Cell>
                 <Table.Cell>
                   <Controller

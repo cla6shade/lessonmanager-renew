@@ -10,14 +10,14 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateUserRequestSchema } from "@/app/(users)/api/users/schema";
 import { useCreateUser } from "@/features/users/creation/useCreateUser";
 import { useUserTable } from "@/features/users/table/UserTableProvider";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import LocationSelector from "@/features/selectors/LocationSelector";
-import { buildDate } from "@/utils/date";
+import DateInput from "@/features/inputs/DateInput";
 
 interface CreateUserDialogProps {
   isOpen: boolean;
@@ -25,11 +25,7 @@ interface CreateUserDialogProps {
 }
 
 const CreateUserFormSchema = CreateUserRequestSchema.extend({
-  birthYear: z.string().optional(),
-  birthMonth: z.string().optional(),
-  birthDay: z.string().optional(),
-}).omit({
-  birth: true,
+  birth: z.string(),
 });
 
 export default function CreateUserDialog({
@@ -45,6 +41,7 @@ export default function CreateUserDialog({
     setValue,
     watch,
     reset,
+    control,
     formState: { errors },
   } = useForm<z.input<typeof CreateUserFormSchema>>({
     resolver: zodResolver(CreateUserFormSchema),
@@ -61,38 +58,16 @@ export default function CreateUserDialog({
       genre: "",
       howto: 1,
       address: "",
-      birthYear: "",
-      birthMonth: "",
-      birthDay: "",
+      birth: "",
     },
   });
 
   const { createUser, isSaving } = useCreateUser();
 
-  const onSubmit = async (data: z.output<typeof CreateUserFormSchema>) => {
-    const birth: Date | undefined = buildDate(
-      data.birthYear,
-      data.birthMonth,
-      data.birthDay
-    );
-
-    const createData = {
-      locationId: data.locationId,
-      name: data.name,
-      gender: data.gender,
-      birth: birth?.toISOString(),
-      contact: data.contact,
-      loginId: data.loginId,
-      password: data.password,
-      passwordConfirm: data.passwordConfirm,
-      email: data.email,
-      ability: data.ability,
-      genre: data.genre,
-      howto: data.howto,
-      address: data.address,
-    };
-
-    const result = await createUser(createData as any);
+  const onSubmit = async (
+    createData: z.output<typeof CreateUserFormSchema>
+  ) => {
+    const result = await createUser(createData);
 
     if (result.success) {
       refetchUsers();
@@ -205,29 +180,21 @@ export default function CreateUserDialog({
                     <Text fontWeight="bold" mb={2}>
                       생년월일
                     </Text>
-                    <HStack gap={2}>
-                      <Input
-                        {...register("birthYear")}
-                        placeholder="연도"
-                        type="number"
-                        min="1900"
-                        max="2030"
-                      />
-                      <Input
-                        {...register("birthMonth")}
-                        placeholder="월"
-                        type="number"
-                        min="1"
-                        max="12"
-                      />
-                      <Input
-                        {...register("birthDay")}
-                        placeholder="일"
-                        type="number"
-                        min="1"
-                        max="31"
-                      />
-                    </HStack>
+                    <Controller
+                      control={control}
+                      name="birth"
+                      render={({ field }) => (
+                        <DateInput
+                          borderColor={errors.birth ? "red.500" : undefined}
+                          {...field}
+                        />
+                      )}
+                    />
+                    {errors.birth && (
+                      <Text color="red.500" fontSize="sm" mt={1}>
+                        {errors.birth.message}
+                      </Text>
+                    )}
                   </Box>
 
                   {/* 연락처 */}

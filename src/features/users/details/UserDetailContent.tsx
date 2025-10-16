@@ -14,19 +14,16 @@ import { formatDate } from "@/utils/date";
 import { useUpdateUser } from "./useUpdateUser";
 import { UpdateUserRequestSchema } from "@/app/(users)/api/users/[id]/schema";
 import { useUserTable } from "../table/UserTableProvider";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import LocationSelector from "@/features/selectors/LocationSelector";
 import z from "zod";
 import { UserSearchResult } from "@/app/(users)/api/users/schema";
 import UserStartdateSetDialog from "../payments/UserStartdateSetDialog";
+import DateInput from "@/features/inputs/DateInput";
 
-const UpdateUserFormSchema = UpdateUserRequestSchema.omit({
-  birth: true,
-}).extend({
-  birthYear: z.string().optional(),
-  birthMonth: z.string().optional(),
-  birthDay: z.string().optional(),
+const UpdateUserFormSchema = UpdateUserRequestSchema.extend({
+  birth: z.string(),
 });
 
 interface UserDetailContentProps {
@@ -49,21 +46,12 @@ export default function UserDetailContent({
   const { locations } = useUserTable();
   const [isStartDateSetDialogOpen, setIsStartDateSetDialogOpen] =
     useState(false);
-  const form = useForm<
-    z.input<typeof UpdateUserFormSchema>,
-    z.output<typeof UpdateUserFormSchema>
-  >({
+  const form = useForm<z.input<typeof UpdateUserFormSchema>>({
     resolver: zodResolver(UpdateUserFormSchema),
     defaultValues: {
       name: user?.name || "",
       contact: user?.contact || "",
-      birthYear: user?.birth
-        ? new Date(user.birth).getFullYear().toString()
-        : "",
-      birthMonth: user?.birth
-        ? (new Date(user.birth).getMonth() + 1).toString()
-        : "",
-      birthDay: user?.birth ? new Date(user.birth).getDate().toString() : "",
+      birth: user?.birth ? new Date(user.birth).toISOString() : "",
       address: user?.address || "",
       email: user?.email || "",
       ability: user?.ability || "",
@@ -81,30 +69,7 @@ export default function UserDetailContent({
     async (data: z.output<typeof UpdateUserFormSchema>) => {
       if (!user) return;
 
-      let birthISO: string | undefined;
-      if (data.birthYear && data.birthMonth && data.birthDay) {
-        const year = parseInt(data.birthYear, 10);
-        const month = parseInt(data.birthMonth, 10);
-        const day = parseInt(data.birthDay, 10);
-
-        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-          const date = new Date(year, month - 1, day);
-          birthISO = date.toISOString();
-        }
-      }
-
-      const updateData: z.input<typeof UpdateUserRequestSchema> = {
-        name: data.name,
-        contact: data.contact,
-        birth: birthISO,
-        address: data.address,
-        email: data.email,
-        ability: data.ability,
-        genre: data.genre,
-        locationId: data.locationId,
-      };
-
-      const { success, data: updatedUser } = await update(updateData, {
+      const { success, data: updatedUser } = await update(data, {
         endpoint: `/api/users/${user.id}`,
         method: "PUT",
         successMessage: "사용자 정보가 수정되었습니다.",
@@ -124,13 +89,7 @@ export default function UserDetailContent({
       form.reset({
         name: user.name || "",
         contact: user.contact || "",
-        birthYear: user.birth
-          ? new Date(user.birth).getFullYear().toString()
-          : "",
-        birthMonth: user.birth
-          ? (new Date(user.birth).getMonth() + 1).toString()
-          : "",
-        birthDay: user.birth ? new Date(user.birth).getDate().toString() : "",
+        birth: user.birth?.toISOString() || "",
         address: user.address || "",
         email: user.email || "",
         ability: user.ability || "",
@@ -298,50 +257,23 @@ export default function UserDetailContent({
               <Text fontWeight="bold" mb={2}>
                 생년월일
               </Text>
-              <HStack gap={2}>
-                <Box flex={1}>
-                  <Input
-                    placeholder="년도"
-                    {...form.register("birthYear")}
+              <Controller
+                control={form.control}
+                name="birth"
+                render={({ field }) => (
+                  <DateInput
                     borderColor={
-                      form.formState.errors.birthYear ? "red.500" : undefined
+                      form.formState.errors.birth ? "red.500" : undefined
                     }
+                    {...field}
                   />
-                  {form.formState.errors.birthYear && (
-                    <Text color="red.500" fontSize="xs" mt={1}>
-                      {form.formState.errors.birthYear.message}
-                    </Text>
-                  )}
-                </Box>
-                <Box flex={1}>
-                  <Input
-                    placeholder="월"
-                    {...form.register("birthMonth")}
-                    borderColor={
-                      form.formState.errors.birthMonth ? "red.500" : undefined
-                    }
-                  />
-                  {form.formState.errors.birthMonth && (
-                    <Text color="red.500" fontSize="xs" mt={1}>
-                      {form.formState.errors.birthMonth.message}
-                    </Text>
-                  )}
-                </Box>
-                <Box flex={1}>
-                  <Input
-                    placeholder="일"
-                    {...form.register("birthDay")}
-                    borderColor={
-                      form.formState.errors.birthDay ? "red.500" : undefined
-                    }
-                  />
-                  {form.formState.errors.birthDay && (
-                    <Text color="red.500" fontSize="xs" mt={1}>
-                      {form.formState.errors.birthDay.message}
-                    </Text>
-                  )}
-                </Box>
-              </HStack>
+                )}
+              />
+              {form.formState.errors.birth && (
+                <Text color="red.500" fontSize="sm" mt={1}>
+                  {form.formState.errors.birth.message}
+                </Text>
+              )}
             </Box>
 
             <Box>

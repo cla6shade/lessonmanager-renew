@@ -8,11 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserSearchResult } from "@/app/(users)/api/users/schema";
 import { useUpdatePayments } from "./useUpdatePayments";
-import { buildDate } from "@/utils/date";
+import DateInput from "@/features/inputs/DateInput";
 
 interface UserStartdateSetDialogProps {
   isOpen: boolean;
@@ -23,12 +23,8 @@ interface UserStartdateSetDialogProps {
 }
 
 const StartdateSetFormSchema = z.object({
-  startDateYear: z.string(),
-  startDateMonth: z.string(),
-  startDateDay: z.string(),
-  endDateYear: z.string(),
-  endDateMonth: z.string(),
-  endDateDay: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
 });
 
 export default function UserStartdateSetDialog({
@@ -38,18 +34,14 @@ export default function UserStartdateSetDialog({
   user,
   onUserUpdate,
 }: UserStartdateSetDialogProps) {
-  const { handleSubmit, register } = useForm<
+  const { handleSubmit, control } = useForm<
     z.input<typeof StartdateSetFormSchema>,
     z.output<typeof StartdateSetFormSchema>
   >({
     resolver: zodResolver(StartdateSetFormSchema),
     defaultValues: {
-      startDateYear: "",
-      startDateMonth: "",
-      startDateDay: "",
-      endDateYear: "",
-      endDateMonth: "",
-      endDateDay: "",
+      startDate: "",
+      endDate: "",
     },
   });
   const { updatePayments } = useUpdatePayments();
@@ -57,16 +49,8 @@ export default function UserStartdateSetDialog({
   const onSubmit = async (data: z.output<typeof StartdateSetFormSchema>) => {
     const updateData = {
       id: paymentId,
-      startDate: buildDate(
-        data.startDateYear,
-        data.startDateMonth,
-        data.startDateDay
-      )?.toISOString(),
-      endDate: buildDate(
-        data.endDateYear,
-        data.endDateMonth,
-        data.endDateDay
-      )?.toISOString(),
+      startDate: data.startDate,
+      endDate: data.endDate,
       isStartDateNonSet: false,
     };
     const { data: updatedPayments, success } = await updatePayments({
@@ -107,19 +91,19 @@ export default function UserStartdateSetDialog({
                   <Text fontSize="sm" fontWeight="semibold" color="gray.600">
                     시작일
                   </Text>
-                  <HStack gap={2} align="center">
-                    <Input {...register("startDateYear")} placeholder="연" />
-                    <Input {...register("startDateMonth")} placeholder="월" />
-                    <Input {...register("startDateDay")} placeholder="일" />
-                  </HStack>
+                  <Controller
+                    control={control}
+                    name="startDate"
+                    render={({ field }) => <DateInput {...field} />}
+                  />
                   <Text fontSize="sm" fontWeight="semibold" color="gray.600">
                     종료일
                   </Text>
-                  <HStack gap={2} align="center">
-                    <Input {...register("endDateYear")} placeholder="연" />
-                    <Input {...register("endDateMonth")} placeholder="월" />
-                    <Input {...register("endDateDay")} placeholder="일" />
-                  </HStack>
+                  <Controller
+                    control={control}
+                    name="endDate"
+                    render={({ field }) => <DateInput {...field} />}
+                  />
                   <Button type="submit">저장</Button>
                 </VStack>
               </form>

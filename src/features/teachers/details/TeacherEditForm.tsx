@@ -8,7 +8,7 @@ import {
   Box,
   RadioGroup,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import z from "zod";
@@ -17,21 +17,20 @@ import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
 import LocationSelector from "@/features/selectors/LocationSelector";
 import MajorSelector from "@/features/selectors/MajorSelector";
 import { useUpdateTeacher } from "./useUpdateTeacher";
+import { Major, Location } from "@prisma/client";
+import DateInput from "@/features/inputs/DateInput";
 
 const UpdateTeacherFormSchema = UpdateTeacherRequestSchema.omit({
-  birth: true,
   isManager: true,
   isLeaved: true,
 }).extend({
-  birthYear: z.string().optional(),
-  birthMonth: z.string().optional(),
-  birthDay: z.string().optional(),
+  birth: z.string(),
 });
 
 interface TeacherEditFormProps {
   teacher: TeacherSearchResult;
-  locations: any[];
-  majors: any[];
+  locations: Location[];
+  majors: Major[];
   onTeacherUpdate: (updatedTeacher: TeacherSearchResult) => void;
   refetchTeachers: () => void;
   onCancel: () => void;
@@ -47,23 +46,12 @@ export default function TeacherEditForm({
 }: TeacherEditFormProps) {
   const { updateTeacher, isSaving } = useUpdateTeacher();
 
-  const form = useForm<
-    z.input<typeof UpdateTeacherFormSchema>,
-    z.output<typeof UpdateTeacherFormSchema>
-  >({
+  const form = useForm<z.input<typeof UpdateTeacherFormSchema>>({
     resolver: zodResolver(UpdateTeacherFormSchema),
     defaultValues: {
       name: teacher?.name || "",
       contact: teacher?.contact || "",
-      birthYear: teacher?.birth
-        ? new Date(teacher.birth).getFullYear().toString()
-        : "",
-      birthMonth: teacher?.birth
-        ? (new Date(teacher.birth).getMonth() + 1).toString()
-        : "",
-      birthDay: teacher?.birth
-        ? new Date(teacher.birth).getDate().toString()
-        : "",
+      birth: teacher?.birth ? new Date(teacher.birth).toISOString() : "",
       address: teacher?.address || "",
       email: teacher?.email || "",
       locationId: teacher?.locationId === undefined ? 0 : teacher.locationId,
@@ -74,33 +62,8 @@ export default function TeacherEditForm({
   });
 
   const handleSave = useCallback(
-    async (data: z.output<typeof UpdateTeacherFormSchema>) => {
+    async (updateData: z.output<typeof UpdateTeacherFormSchema>) => {
       if (!teacher) return;
-
-      let birthISO: string | undefined;
-      if (data.birthYear && data.birthMonth && data.birthDay) {
-        const year = parseInt(data.birthYear, 10);
-        const month = parseInt(data.birthMonth, 10);
-        const day = parseInt(data.birthDay, 10);
-
-        if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-          const date = new Date(year, month - 1, day);
-          birthISO = date.toISOString();
-        }
-      }
-
-      const updateData: z.input<typeof UpdateTeacherRequestSchema> = {
-        name: data.name || "",
-        contact: data.contact || "",
-        birth: birthISO,
-        address: data.address || "",
-        email: data.email || "",
-        locationId: data.locationId || 0,
-        majorId: data.majorId || 0,
-        gender: data.gender || false,
-        isManager: data.majorId === 2,
-        workingDays: data.workingDays || 0,
-      };
 
       const { success, data: updatedTeacher } = await updateTeacher(
         teacher.id,
@@ -157,50 +120,23 @@ export default function TeacherEditForm({
           <Text fontWeight="bold" mb={2}>
             생년월일
           </Text>
-          <HStack gap={2}>
-            <Box flex={1}>
-              <Input
-                placeholder="년도"
-                {...form.register("birthYear")}
+          <Controller
+            control={form.control}
+            name="birth"
+            render={({ field }) => (
+              <DateInput
                 borderColor={
-                  form.formState.errors.birthYear ? "red.500" : undefined
+                  form.formState.errors.birth ? "red.500" : undefined
                 }
+                {...field}
               />
-              {form.formState.errors.birthYear && (
-                <Text color="red.500" fontSize="xs" mt={1}>
-                  {form.formState.errors.birthYear.message}
-                </Text>
-              )}
-            </Box>
-            <Box flex={1}>
-              <Input
-                placeholder="월"
-                {...form.register("birthMonth")}
-                borderColor={
-                  form.formState.errors.birthMonth ? "red.500" : undefined
-                }
-              />
-              {form.formState.errors.birthMonth && (
-                <Text color="red.500" fontSize="xs" mt={1}>
-                  {form.formState.errors.birthMonth.message}
-                </Text>
-              )}
-            </Box>
-            <Box flex={1}>
-              <Input
-                placeholder="일"
-                {...form.register("birthDay")}
-                borderColor={
-                  form.formState.errors.birthDay ? "red.500" : undefined
-                }
-              />
-              {form.formState.errors.birthDay && (
-                <Text color="red.500" fontSize="xs" mt={1}>
-                  {form.formState.errors.birthDay.message}
-                </Text>
-              )}
-            </Box>
-          </HStack>
+            )}
+          />
+          {form.formState.errors.birth && (
+            <Text color="red.500" fontSize="sm" mt={1}>
+              {form.formState.errors.birth.message}
+            </Text>
+          )}
         </Box>
 
         <Box>
