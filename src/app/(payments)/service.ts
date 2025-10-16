@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { toKstDate } from "@/utils/date";
+import { CreatePaymentRequest } from "./api/payments/schema";
 
 export async function isLessonDueInPayment(lessonDue: Date, userId: number) {
   const payments = await prisma.payment.findMany({
@@ -27,4 +28,10 @@ export async function isUserInPayment(userId: number) {
     },
   });
   return payments.length > 0;
+}
+
+export function createPayment(data: CreatePaymentRequest) {
+  return prisma.payment.create({
+    data,
+  });
 }
