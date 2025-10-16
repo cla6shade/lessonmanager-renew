@@ -6,7 +6,7 @@ interface LessonCancelDialogProps {
   isOpen: boolean;
   onClose: () => void;
   lessonId: number;
-  onSuccess?: (cancelledLesson: any) => void;
+  onSuccess?: (cancelledLesson: CancelLessonResponse["data"]) => void;
 }
 
 export default function LessonCancelDialog({

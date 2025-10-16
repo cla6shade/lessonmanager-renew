@@ -12,19 +12,21 @@ import { CenteredSpinner } from "@/components/Spinner";
 import { formatDate, formatHour } from "@/utils/date";
 import { useUpdate } from "@/hooks/useUpdate";
 import {
+  CancelLessonResponse,
   UpdateLessonRequest,
   UpdateLessonResponse,
 } from "@/app/(lessons)/api/lessons/[id]/schema";
 import LessonCancelDialog from "./LessonCancelDialog";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
+import { GetLessonDetailResponse } from "@/app/(lessons)/api/lessons/[id]/schema";
 
 interface LessonDetailContentProps {
-  lesson: any;
+  lesson?: GetLessonDetailResponse["data"];
   loading: boolean;
   error: string | null;
   onUserLessonsClick: () => void;
-  onLessonUpdate: (updatedLesson: any) => void;
-  onLessonCancel?: (cancelledLesson: any) => void;
+  onLessonUpdate: (updatedLesson: GetLessonDetailResponse["data"]) => void;
+  onLessonCancel: (cancelledLesson: CancelLessonResponse["data"]) => void;
 }
 
 export default function LessonDetailContent({
