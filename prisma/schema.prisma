@@ -99,7 +99,7 @@ model Payment {
   startDate         DateTime? @map("start") @db.Date
   endDate           DateTime? @map("end") @db.Date
   memo              String?   @map("etc") @db.VarChar(180)
-  createdAt         DateTime  @map("payment_date") @db.Date
+  createdAt         DateTime  @default(now()) @map("payment_date") @db.Date
   paymentAmount     Int       @map("payment_amount")
   refunded          Boolean   @default(false)
   refundedAmount    Int       @default(0) @map("refunded_amount")
@@ -126,7 +126,7 @@ model Teacher {
   loginId             String?               @map("loginid") @db.VarChar(40)
   password            String?               @db.VarChar(88)
   majorId             Int                   @map("major") @db.SmallInt
-  registeredAt        DateTime?             @map("registration") @db.Date
+  registeredAt        DateTime?             @default(now()) @map("registration") @db.Date
   address             String?               @db.VarChar(255)
   workingDays         Int?                  @map("working_days") @db.SmallInt
   isLeaved            Boolean?              @default(false) @map("leaved")
@@ -215,6 +215,7 @@ model OpenHours {
 model Location {
   id       Int       @id @map("locationid") @db.SmallInt
   name     String    @db.VarChar(20)
+  phone    String    @db.VarChar(20) @default("")
   teachers Teacher[]
   users    User[]
   lessons  Lesson[]
