@@ -3,9 +3,9 @@ import { GET } from "./route";
 import { NextRequest } from "next/server";
 import { mockLessons } from "@mocks/lessons";
 import prisma from "@/lib/prisma";
+import { Lesson } from "@/generated/prisma";
 
-// 배열 데이터의 ID만 비교하기 위한 헬퍼 함수
-const extractIds = (lessons: any[]) =>
+const extractIds = (lessons: Lesson[]) =>
   lessons.map((lesson) => lesson.id).sort();
 
 describe("GET /api/lessons", () => {
