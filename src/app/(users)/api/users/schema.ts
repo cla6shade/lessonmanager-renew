@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  DataResponseSchema,
-  PaginatedDataResponseSchema,
-  PublicUserSchema,
-} from "@/app/schema";
+import { DataResponseSchema, PaginatedDataResponseSchema } from "@/app/schema";
 
 import {
   LocationSchema,
@@ -15,6 +11,10 @@ import {
 } from "@/generated/zod";
 import { Prisma } from "@/generated/prisma";
 import { toKstDate } from "@/utils/date";
+
+export const PublicUserSchema = UserSchema.omit({
+  password: true,
+});
 
 export const SingleUserResponseSchema = DataResponseSchema(PublicUserSchema);
 

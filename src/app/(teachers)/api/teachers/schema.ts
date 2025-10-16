@@ -5,11 +5,11 @@ import { LocationSchema, TeacherSchema, MajorSchema } from "@/generated/zod";
 import { Prisma } from "@/generated/prisma";
 import { toKstDate } from "@/utils/date";
 
-export const SingleTeacherResponseSchema = DataResponseSchema(
-  TeacherSchema.omit({
-    password: true,
-  })
-);
+export const PublicTeacherSchema = TeacherSchema.omit({
+  password: true,
+})
+
+export const SingleTeacherResponseSchema = DataResponseSchema(PublicTeacherSchema);
 
 export type SingleTeacherResponse = z.infer<typeof SingleTeacherResponseSchema>;
 
@@ -66,26 +66,23 @@ export const TeacherSearchResponseSchema = PaginatedDataResponseSchema(
 
 export type TeacherSearchResponse = z.infer<typeof TeacherSearchResponseSchema>;
 
-export const CreateTeacherRequestSchema = TeacherSchema.pick({
-  locationId: true,
-  name: true,
-  gender: true,
-  birth: true,
-  contact: true,
-  loginId: true,
-  password: true,
-  email: true,
-  majorId: true,
-  address: true,
-  isManager: true,
-  workingDays: true,
-})
-  .extend({
-    passwordConfirm: z.string(),
+export const CreateTeacherRequestSchema = z
+  .object({
+    locationId: z.number().min(1),
+    majorId: z.number().min(1),
     birth: z.iso
       .datetime()
-      .transform((val) => (val ? toKstDate(val) : undefined))
-      .optional(),
+      .transform((val) => (val ? toKstDate(val) : undefined)),
+    name: z.string().min(1).min(2),
+    gender: z.boolean(),
+    contact: z.string().min(1),
+    loginId: z.string().min(1).min(3),
+    password: z.string().min(1).min(8),
+    passwordConfirm: z.string().min(1),
+    email: z.email().min(1),
+    address: z.string().min(1),
+    isManager: z.boolean(),
+    workingDays: z.number().min(0),
   })
   .strict();
 
