@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     const { password, passwordConfirm } = requestData;
     if (password !== passwordConfirm) {
       return NextResponse.json(
-        { error: "Password and password confirm do not match" },
+        { error: "패스워드가 일치하지 않습니다." },
         { status: 400 }
       );
     }
