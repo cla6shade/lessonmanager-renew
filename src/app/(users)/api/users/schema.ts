@@ -9,7 +9,6 @@ import {
   UserSchema,
   MajorSchema,
 } from "@/generated/zod";
-import { Prisma } from "@/generated/prisma";
 import { toKstDate } from "@/utils/date";
 
 export const PublicUserSchema = UserSchema.omit({
@@ -41,77 +40,72 @@ export const UserSearchRequestSchema = z.object({
     .datetime()
     .transform((val) => (val ? toKstDate(val) : undefined))
     .optional(),
-  page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(100).default(20),
+  page: z.coerce.number().min(1).optional(),
+  limit: z.coerce.number().min(1).max(100).optional(),
+  lookup: z
+    .transform((val) => val === "true")
+    .pipe(z.boolean())
+    .optional(),
 });
 
 export type UserSearchRequest = z.infer<typeof UserSearchRequestSchema>;
 
-export type UserSearchSelectInput = {
-  include: {
-    location: true;
-    teacherInCharge: {
-      select: {
-        id: true;
-        name: true;
-        major: true;
-        location: true;
-      };
-    };
-    latestLesson: true;
-    payments: Prisma.PaymentFindManyArgs;
-  };
-  skip: number;
-  take: number;
-  omit: { password: true };
-  orderBy: Prisma.UserFindManyArgs["orderBy"];
-};
-export type RawUserSearchResult = Prisma.UserGetPayload<UserSearchSelectInput>;
-
-export const UserSearchResultSchema = UserSchema.omit({
-  password: true,
-}).extend({
-  location: LocationSchema,
-  teacherInCharge: TeacherSchema.pick({
+export const UserSearchResultSchema = {
+  Base: PublicUserSchema.extend({
+    location: LocationSchema,
+    teacherInCharge: TeacherSchema.pick({
+      id: true,
+      name: true,
+      major: true,
+      location: true,
+    })
+      .extend({
+        major: MajorSchema,
+      })
+      .nullable(),
+    latestLesson: LessonSchema.nullable(),
+    payments: z.array(PaymentSchema),
+  }),
+  Lookup: PublicUserSchema.pick({
     id: true,
     name: true,
-    major: true,
-    location: true,
-  })
-    .extend({
-      major: MajorSchema,
-    })
-    .nullable(),
-  latestLesson: LessonSchema.nullable(),
-  payments: z.array(PaymentSchema),
-});
-export type UserSearchResult = z.infer<typeof UserSearchResultSchema>;
+    contact: true,
+  }),
+};
+
+export type UserSearchResult = z.infer<typeof UserSearchResultSchema.Base>;
+export type UserLookupResult = z.infer<typeof UserSearchResultSchema.Lookup>;
 
 export const UserSearchResponseSchema = PaginatedDataResponseSchema(
-  z.array(UserSearchResultSchema)
+  z.array(
+    z.discriminatedUnion("lookup", [
+      UserSearchResultSchema.Base,
+      UserSearchResultSchema.Lookup,
+    ])
+  )
 );
 
 export type UserSearchResponse = z.infer<typeof UserSearchResponseSchema>;
 
-export const CreateUserRequestSchema = UserSchema.pick({
-  locationId: true,
-  name: true,
-  gender: true,
-  birth: true,
-  contact: true,
-  loginId: true,
-  password: true,
-  email: true,
-  ability: true,
-  genre: true,
-  howto: true,
-  address: true,
-}).extend({
-  passwordConfirm: z.string(),
-  birth: z.iso
-    .datetime()
-    .transform((val) => (val ? toKstDate(val) : undefined)),
-});
+export const CreateUserRequestSchema = z
+  .object({
+    locationId: z.number().min(1),
+    name: z.string().min(1),
+    birth: z.iso
+      .datetime()
+      .transform((val) => (val ? toKstDate(val) : undefined)),
+    gender: z.boolean(),
+    contact: z.string().min(1),
+    loginId: z.string().min(1),
+    password: z.string().min(1).min(8),
+    passwordConfirm: z.string().min(1),
+    email: z.email().min(1),
+    ability: z.string().optional(),
+    genre: z.string().optional(),
+    howto: z.number(),
+    address: z.string().min(1),
+  })
+  .strict();
 
 export const CreateUserResponseSchema = DataResponseSchema(
   UserSchema.pick({
