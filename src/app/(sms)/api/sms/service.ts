@@ -1,7 +1,8 @@
 import brand from "@/brand/baseInfo";
 import { getSMSLengthType, phoneNumberToSplitted } from "./utils";
 import { SendSMSRequest } from "./schema";
-import { SMSFormats } from "./formats";
+import { searchUsers } from "@/app/(users)/service";
+import { UserSearchFilter } from "@/app/(users)/api/users/schema";
 
 type SourcePhoneNumber = {
   sphone1: string;
@@ -9,35 +10,37 @@ type SourcePhoneNumber = {
   sphone3: string;
 };
 
-export async function sendMessage({
+export async function getTargetUsers({
   receiverType,
-  message,
-  selectAll,
-  targets,
-  excludes,
-}: SendSMSRequest) {
-  message = getMessageFormat({ receiverType, message });
-}
-
-export function getTargets({
-  receiverType,
-  targets,
-  excludes,
-  selectAll,
+  isTotalSelected,
+  selectedLocationId,
 }: Pick<
   SendSMSRequest,
-  "receiverType" | "targets" | "excludes" | "selectAll"
+  "receiverType" | "targets" | "isTotalSelected" | "selectedLocationId"
 >) {
-  const targetSet = new Set(targets);
-  const excludeSet = new Set(excludes);
+  if (isTotalSelected) {
+    return (
+      await searchUsers({
+        filter: receiverType as UserSearchFilter,
+        lookup: true,
+        locationId: selectedLocationId,
+      })
+    )[0];
+  }
+  return searchUsers({
+    filter: receiverType,
+  });
 }
 
-export function getMessageFormat({
-  receiverType,
-  message,
-}: Pick<SendSMSRequest, "receiverType" | "message">) {
-  if (receiverType === "DEFAULT") return message;
-  return SMSFormats[receiverType];
+export function sendAll(
+  source: SourcePhoneNumber | string,
+  messageMap: Record<string, string>
+) {
+  return Promise.all(
+    Object.entries(messageMap).map(([contact, message]) =>
+      requestMessageSend(source, contact, message)
+    )
+  );
 }
 
 export function requestMessageSend(
@@ -61,7 +64,7 @@ export function requestMessageSend(
     rdate: "",
     rtime: "",
     mode: "1",
-    testflag: "Y",
+    testflag: process.env.NODE_ENV === "production" ? "" : "Y",
     destination: "",
     repeatFlag: "",
     repeatNum: "",
