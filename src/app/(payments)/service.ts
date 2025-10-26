@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { toKstDate } from "@/utils/date";
+import { getYesterdayEnd, toKstDate } from "@/utils/date";
 import { CreatePaymentRequest } from "./api/payments/schema";
 
 export async function isLessonDueInPayment(lessonDue: Date, userId: number) {
@@ -33,5 +33,12 @@ export async function isUserInPayment(userId: number) {
 export function createPayment(data: CreatePaymentRequest) {
   return prisma.payment.create({
     data,
+  });
+}
+
+export function getLatestUserPayment(userId: number) {
+  const yesterdayEnd = getYesterdayEnd();
+  return prisma.payment.findFirst({
+    where: { endDate: { gte: toKstDate(yesterdayEnd) } },
   });
 }
