@@ -7,7 +7,7 @@ import {
 } from "./features/navigation/menu/menus";
 import { buildErrorResponse } from "./app/utils";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   try {
     const session = await getSession();
     if (!session.isLoggedIn) {
