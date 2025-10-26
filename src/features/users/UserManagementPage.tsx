@@ -11,37 +11,42 @@ import { useState } from "react";
 
 export default function UserManagementPage() {
   const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false);
-
-  const handleCreateUserClick = () => {
-    setIsCreateUserDialogOpen(true);
-  };
-
-  const handleCreateUserDialogClose = () => {
-    setIsCreateUserDialogOpen(false);
-  };
+  const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
   return (
     <FilterProvider>
       <UserTableProvider>
         <Flex py={4} flexGrow={1} direction="column" height="100%">
-          <Flex justifyContent="space-between">
+          <Flex gap={4}>
             <FilterSection />
-            <Button
-              size="2xl"
-              colorScheme="brand"
-              variant="outline"
-              onClick={handleCreateUserClick}
-            >
-              <Plus size={20} />
-              수강생 등록
-            </Button>
+            <Flex grow={1} gap={4} justify="end">
+              <Button
+                size="2xl"
+                colorScheme="brand"
+                variant="outline"
+                onClick={() => setIsCreateUserDialogOpen(true)}
+              >
+                <Plus size={20} />
+                수강생 등록
+              </Button>
+
+              <Button
+                size="2xl"
+                colorScheme="brand"
+                variant="outline"
+                onClick={() => setIsMessageDialogOpen(true)}
+              >
+                <Plus size={20} />
+                문자 전송
+              </Button>
+            </Flex>
           </Flex>
           <UserTable />
         </Flex>
 
         <CreateUserDialog
           isOpen={isCreateUserDialogOpen}
-          onClose={handleCreateUserDialogClose}
+          onClose={() => setIsCreateUserDialogOpen(false)}
         />
       </UserTableProvider>
     </FilterProvider>
