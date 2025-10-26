@@ -10,6 +10,7 @@ import {
   createListCollection,
   Portal,
   Checkbox,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { formatDate } from "@/utils/date";
@@ -43,6 +44,7 @@ export default function UserTable() {
     new Set()
   );
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
+  const [isTotalSelected, setIsTotalSelected] = useState<boolean>(false);
   const [openDialogType, setOpenDialogType] = useState<
     "detail" | "lessons" | "payments" | null
   >(null);
@@ -73,9 +75,25 @@ export default function UserTable() {
 
   const handleSelectUser = (user: UserSearchResult, isChecked: boolean) => {
     setSelectedUsers((prevState) => {
-      prevState.delete(user);
-      return prevState;
+      const next = new Set(prevState);
+      if (isChecked) {
+        next.add(user);
+      } else {
+        next.delete(user);
+        setIsAllSelected(false);
+      }
+      return next;
     });
+  };
+
+  const handleSelectAll = (isChecked: boolean) => {
+    if (isChecked) {
+      setIsAllSelected(true);
+      setSelectedUsers(new Set(users));
+    } else {
+      setIsAllSelected(false);
+      setSelectedUsers(new Set());
+    }
   };
 
   return (
@@ -103,7 +121,7 @@ export default function UserTable() {
                 <Table.ColumnHeader width="30px">
                   <Checkbox.Root
                     checked={isAllSelected}
-                    onCheckedChange={(e) => setIsAllSelected(!!e.checked)}
+                    onCheckedChange={(e) => handleSelectAll(!!e.checked)}
                     size="sm"
                     pt={1}
                   >
@@ -239,6 +257,20 @@ export default function UserTable() {
           itemsPerPage={20}
           onPageChange={setPage}
         />
+        <Flex gap={2}>
+          <Checkbox.Root
+            checked={isTotalSelected}
+            onCheckedChange={(e) => {
+              setIsTotalSelected(!!e.checked);
+              handleSelectAll(!!e.checked);
+            }}
+            size="sm"
+          >
+            <Checkbox.HiddenInput />
+            <Checkbox.Control />
+            <Checkbox.Label>전체 항목 선택</Checkbox.Label>
+          </Checkbox.Root>
+        </Flex>
       </Box>
 
       {selectedUser && (
