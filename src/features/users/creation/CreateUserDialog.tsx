@@ -23,10 +23,32 @@ interface CreateUserDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const CreateUserFormSchema = CreateUserRequestSchema.extend({
-  birth: z.string(),
-});
+export const CreateUserFormSchema = z
+  .object({
+    locationId: z.number().min(1, "지점을 선택해주세요"),
+    name: z.string().min(1, "이름을 입력해주세요"),
+    birth: z.string().min(1, "생년월일을 입력하세요"),
+    gender: z.boolean(),
+    contact: z.string().min(1, "연락처를 입력해주세요"),
+    loginId: z.string().min(1, "로그인 ID를 입력해주세요"),
+    password: z
+      .string()
+      .min(1, "비밀번호를 입력해주세요")
+      .min(8, "비밀번호는 최소 8자 이상이어야 합니다"),
+    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요"),
+    email: z
+      .email("올바른 이메일 형식이 아닙니다")
+      .min(1, "이메일을 입력해주세요"),
+    ability: z.string().optional(),
+    genre: z.string().optional(),
+    howto: z.number(),
+    address: z.string().min(1, "주소를 입력해주세요"),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "비밀번호가 일치하지 않습니다",
+    path: ["passwordConfirm"],
+  })
+  .strict();
 
 export default function CreateUserDialog({
   isOpen,
@@ -108,7 +130,6 @@ export default function CreateUserDialog({
             <Dialog.Body>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack gap={4} align="stretch">
-                  {/* 지점 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       지점{" "}
@@ -129,7 +150,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 기본 정보 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       이름{" "}
@@ -149,7 +169,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 성별 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       성별
@@ -175,7 +194,6 @@ export default function CreateUserDialog({
                     </RadioGroup.Root>
                   </Box>
 
-                  {/* 생년월일 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       생년월일
@@ -197,7 +215,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 연락처 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       연락처
@@ -214,7 +231,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 주소 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       주소
@@ -231,7 +247,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 로그인 정보 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       로그인 ID{" "}
@@ -293,7 +308,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 이메일 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       이메일
@@ -311,7 +325,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 경력 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       경력
@@ -328,7 +341,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 장르 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       장르
@@ -345,7 +357,6 @@ export default function CreateUserDialog({
                     )}
                   </Box>
 
-                  {/* 버튼 */}
                   <HStack gap={2} pt={4}>
                     <Button
                       variant="outline"
