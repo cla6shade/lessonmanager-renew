@@ -12,6 +12,7 @@ export const UserLookupResponseSchema = DataResponseSchema(
     id: true,
     name: true,
     contact: true,
+    birth: true,
   }).array()
 );
 

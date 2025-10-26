@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
         id: true,
         name: true,
         contact: true,
+        birth: true,
       },
     });
     return NextResponse.json<UserLookupResponse>({
