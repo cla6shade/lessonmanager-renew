@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { DataResponseSchema } from "../../../schema";
-import { WorkingTimeSchema } from "@/generated/zod";
+import {
+  LocationSchema,
+  MajorSchema,
+  OpenHoursSchema,
+  TeacherSchema,
+  WorkingTimeSchema,
+} from "@/generated/zod";
 
 export const WorkingTimeDataSchema = z.object({
   mon: z.array(z.number().min(0).max(23)),
@@ -32,9 +38,19 @@ export type UpdateWorkingTimeResponse = z.infer<
 >;
 
 export const GetWorkingTimesResponseSchema = DataResponseSchema(
-  WorkingTimeSchema.extend({
-    times: WorkingTimeDataSchema,
-  }).array()
+  z.object({
+    times: WorkingTimeSchema.extend({
+      times: WorkingTimeDataSchema,
+      teacher: TeacherSchema.pick({
+        id: true,
+        name: true,
+      }).extend({
+        major: MajorSchema,
+        location: LocationSchema,
+      }),
+    }).array(),
+    openHours: OpenHoursSchema,
+  })
 );
 
 export type GetWorkingTimesResponse = z.infer<

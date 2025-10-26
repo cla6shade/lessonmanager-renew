@@ -3,7 +3,7 @@
 import { Button, Flex, HStack } from "@chakra-ui/react";
 import TeacherTable from "./table/TeacherTable";
 import CreateTeacherDialog from "@/features/teachers/creation/CreateTeacherDialog";
-import TeacherTableDialog from "./workingTimes/TeacherTableDialog";
+import TeacherTableDialog from "./workingTimes/TeacherWorkingTimeDialog";
 import { Plus, Clock } from "lucide-react";
 import { useState } from "react";
 import { TeacherManagmentProvider } from "./TeacherManagmentProvider";
@@ -11,26 +11,8 @@ import { TeacherFilterProvider } from "./search/TeacherFilterProvider";
 import TeacherFilterSection from "./search/TeacherFilterSection";
 
 export default function TeacherManagementPage() {
-  const [isCreateTeacherDialogOpen, setIsCreateTeacherDialogOpen] =
-    useState(false);
-  const [isTeacherTableDialogOpen, setIsTeacherTableDialogOpen] =
-    useState(false);
-
-  const handleCreateTeacherClick = () => {
-    setIsCreateTeacherDialogOpen(true);
-  };
-
-  const handleCreateTeacherDialogClose = () => {
-    setIsCreateTeacherDialogOpen(false);
-  };
-
-  const handleTeacherTableClick = () => {
-    setIsTeacherTableDialogOpen(true);
-  };
-
-  const handleTeacherTableDialogClose = () => {
-    setIsTeacherTableDialogOpen(false);
-  };
+  const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
+  const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
 
   return (
     <TeacherFilterProvider>
@@ -43,7 +25,7 @@ export default function TeacherManagementPage() {
                 size="2xl"
                 colorScheme="brand"
                 variant="outline"
-                onClick={handleTeacherTableClick}
+                onClick={() => setIsTableDialogOpen(true)}
               >
                 <Clock size={20} />
                 근무시간 관리
@@ -52,7 +34,7 @@ export default function TeacherManagementPage() {
                 size="2xl"
                 colorScheme="brand"
                 variant="outline"
-                onClick={handleCreateTeacherClick}
+                onClick={() => setIsCreationDialogOpen(true)}
               >
                 <Plus size={20} />
                 선생님 등록
@@ -63,13 +45,13 @@ export default function TeacherManagementPage() {
         </Flex>
 
         <CreateTeacherDialog
-          isOpen={isCreateTeacherDialogOpen}
-          onClose={handleCreateTeacherDialogClose}
+          isOpen={isCreationDialogOpen}
+          onClose={() => setIsCreationDialogOpen(false)}
         />
 
         <TeacherTableDialog
-          isOpen={isTeacherTableDialogOpen}
-          onClose={handleTeacherTableDialogClose}
+          isOpen={isTableDialogOpen}
+          onClose={() => setIsTableDialogOpen(false)}
         />
       </TeacherManagmentProvider>
     </TeacherFilterProvider>

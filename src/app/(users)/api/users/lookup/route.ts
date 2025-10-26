@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { query: q } = UserLookupRequestSchema.parse({ query });
     const users = await prisma.user.findMany({
       where: {
-        OR: [{ name: { contains: q } }, { contact: { contains: q } }],
+        OR: q ? [{ name: { contains: q } }, { contact: { contains: q } }] : [],
       },
       select: {
         id: true,

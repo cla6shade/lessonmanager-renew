@@ -152,14 +152,41 @@ export function toKstDate(val: string | Date): Date {
 }
 
 export function buildDate(
-  year?: string | number,
-  month?: string | number,
-  day?: string | number
-): Date | undefined {
-  if (!year || !month || !day) return undefined;
+  year: string | number,
+  month: string | number,
+  day: string | number
+): Date {
   return new Date(
     parseInt(year.toString()),
     parseInt(month.toString()) - 1,
     parseInt(day.toString())
   );
+}
+
+export function getYesterdayEnd() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  d.setHours(23, 59, 59, 0);
+  return d;
+}
+
+export function getTomorrowStart() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+export function getOneWeekAfterStart() {
+  const d = new Date();
+  d.setDate(d.getDate() + 7);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+export function getBirthdayCouponDeadline() {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 3);
+  d.setHours(0, 0, 0, 0);
+  return d;
 }

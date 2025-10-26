@@ -7,6 +7,7 @@ import {
 import { buildErrorResponse } from "@/app/utils";
 import { getSession } from "@/lib/session";
 import { getWorkingTimes, updateWorkingTime } from "../../service";
+import prisma from "@/lib/prisma";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -30,8 +31,11 @@ export async function PUT(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const times = await getWorkingTimes();
+    const openHours = await prisma.openHours.findFirst();
 
-    return NextResponse.json<GetWorkingTimesResponse>({ data: times });
+    return NextResponse.json<GetWorkingTimesResponse>({
+      data: { times, openHours: openHours! },
+    });
   } catch (error) {
     return buildErrorResponse(error);
   }

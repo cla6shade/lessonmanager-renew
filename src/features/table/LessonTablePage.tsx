@@ -5,7 +5,7 @@ import LessonTable from "./LessonTable";
 import MobileTable from "./MobileTable";
 import { Flex, Box } from "@chakra-ui/react";
 import DateSelector from "./selectors/DateSelector";
-import TeacherSelector from "./selectors/TeacherSelector";
+import TableTeacherSelector from "./selectors/TableTeacherSelector";
 import { use } from "react";
 import { ExtendedTeacher } from "./types";
 import TableProvider from "./providers/TableProvider";
@@ -44,7 +44,7 @@ export default function LessonTablePage({
             }}
           >
             <DateSelector />
-            <TeacherSelector />
+            <TableTeacherSelector />
           </Flex>
 
           <Box display={{ base: "none", lg: "flex" }} flexGrow={1}>

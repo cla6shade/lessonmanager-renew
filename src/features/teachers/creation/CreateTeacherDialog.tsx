@@ -10,14 +10,14 @@ import {
   RadioGroup,
 } from "@chakra-ui/react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateTeacherRequestSchema } from "@/app/(teachers)/api/teachers/schema";
 import { useCreateTeacher } from "@/features/teachers/creation/useCreateTeacher";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import LocationSelector from "@/features/selectors/LocationSelector";
 import MajorSelector from "@/features/selectors/MajorSelector";
-import { buildDate } from "@/utils/date";
+import DateInput from "@/features/inputs/DateInput";
 import { useTeacherManagement } from "../TeacherManagmentProvider";
 
 interface CreateTeacherDialogProps {
@@ -25,13 +25,38 @@ interface CreateTeacherDialogProps {
   onClose: () => void;
 }
 
-const CreateTeacherFormSchema = CreateTeacherRequestSchema.extend({
-  birthYear: z.string().optional(),
-  birthMonth: z.string().optional(),
-  birthDay: z.string().optional(),
-}).omit({
-  birth: true,
-});
+const CreateTeacherFormSchema = z
+  .object({
+    locationId: z.number().min(1, "지점을 선택해주세요"),
+    majorId: z.number().min(1, "전공을 선택해주세요"),
+    birth: z.string().min(1, "생년월일을 입력하세요"),
+    name: z
+      .string()
+      .min(1, "이름을 입력해주세요")
+      .min(2, "이름은 최소 2글자 이상이어야 합니다"),
+    gender: z.boolean(),
+    contact: z.string().min(1, "연락처를 입력해주세요"),
+    loginId: z
+      .string()
+      .min(1, "로그인 ID를 입력해주세요")
+      .min(3, "로그인 ID는 최소 3글자 이상이어야 합니다"),
+    password: z
+      .string()
+      .min(1, "비밀번호를 입력해주세요")
+      .min(8, "비밀번호는 최소 8자 이상이어야 합니다"),
+    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요"),
+    email: z
+      .email("올바른 이메일 형식이 아닙니다")
+      .min(1, "이메일을 입력해주세요"),
+    address: z.string().min(1, "주소를 입력해주세요"),
+    isManager: z.boolean(),
+    workingDays: z.number().min(0, "근무일수는 0 이상이어야 합니다"),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "비밀번호가 일치하지 않습니다",
+    path: ["passwordConfirm"],
+  })
+  .strict();
 
 export default function CreateTeacherDialog({
   isOpen,
@@ -46,14 +71,17 @@ export default function CreateTeacherDialog({
     setValue,
     watch,
     reset,
+    control,
     formState: { errors },
   } = useForm<z.input<typeof CreateTeacherFormSchema>>({
+    mode: "onChange",
     resolver: zodResolver(CreateTeacherFormSchema),
     defaultValues: {
       locationId: 0,
       majorId: 0,
       name: "",
       gender: false,
+      birth: "",
       contact: "",
       loginId: "",
       password: "",
@@ -62,38 +90,15 @@ export default function CreateTeacherDialog({
       address: "",
       isManager: false,
       workingDays: 0,
-      birthYear: "",
-      birthMonth: "",
-      birthDay: "",
     },
   });
 
   const { createTeacher, isSaving } = useCreateTeacher();
 
-  const onSubmit = async (data: z.output<typeof CreateTeacherFormSchema>) => {
-    const birth: Date | undefined = buildDate(
-      data.birthYear,
-      data.birthMonth,
-      data.birthDay
-    );
-
-    const createData = {
-      locationId: data.locationId,
-      majorId: data.majorId,
-      name: data.name,
-      gender: data.gender,
-      birth: birth?.toISOString(),
-      contact: data.contact,
-      loginId: data.loginId,
-      password: data.password,
-      passwordConfirm: data.passwordConfirm,
-      email: data.email,
-      address: data.address,
-      isManager: data.isManager,
-      workingDays: data.workingDays,
-    };
-
-    const result = await createTeacher(createData as any);
+  const onSubmit = async (
+    createData: z.output<typeof CreateTeacherFormSchema>
+  ) => {
+    const result = await createTeacher(createData);
 
     if (result.success) {
       refetchTeachers();
@@ -227,34 +232,25 @@ export default function CreateTeacherDialog({
                     </RadioGroup.Root>
                   </Box>
 
-                  {/* 생년월일 */}
                   <Box>
                     <Text fontWeight="bold" mb={2}>
                       생년월일
                     </Text>
-                    <HStack gap={2}>
-                      <Input
-                        {...register("birthYear")}
-                        placeholder="연도"
-                        type="number"
-                        min="1900"
-                        max="2030"
-                      />
-                      <Input
-                        {...register("birthMonth")}
-                        placeholder="월"
-                        type="number"
-                        min="1"
-                        max="12"
-                      />
-                      <Input
-                        {...register("birthDay")}
-                        placeholder="일"
-                        type="number"
-                        min="1"
-                        max="31"
-                      />
-                    </HStack>
+                    <Controller
+                      control={control}
+                      name="birth"
+                      render={({ field }) => (
+                        <DateInput
+                          borderColor={errors.birth ? "red.500" : undefined}
+                          {...field}
+                        />
+                      )}
+                    />
+                    {errors.birth && (
+                      <Text color="red.500" fontSize="sm" mt={1}>
+                        {errors.birth.message}
+                      </Text>
+                    )}
                   </Box>
 
                   {/* 연락처 */}
@@ -390,7 +386,6 @@ export default function CreateTeacherDialog({
                     </Text>
                     <Input
                       {...register("workingDays", { valueAsNumber: true })}
-                      type="number"
                       placeholder="근무일수를 입력하세요"
                       borderColor={errors.workingDays ? "red.500" : undefined}
                     />

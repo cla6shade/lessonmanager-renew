@@ -1,133 +1,88 @@
-import { Box, HStack, Input, Text, VStack } from "@chakra-ui/react";
-import { useForm, useWatch } from "react-hook-form";
-import { useEffect } from "react";
-
-interface DateInputValues {
-  year?: number;
-  month?: number;
-  day?: number;
-}
+import { buildDate } from "@/utils/date";
+import { Flex, Input } from "@chakra-ui/react";
+import { useState } from "react";
+import z from "zod";
 
 interface DateInputProps {
-  date?: Date;
-  isOptional?: boolean;
-  onDateChange: (date: Date | undefined) => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
+  name: string;
+  value?: string;
+  onChange: (date: string) => void;
+  borderColor?: string;
 }
-
+type DateData = { year: string; month: string; day: string };
+const dateDataSchema = z.object({
+  year: z.preprocess(
+    (val) => parseInt(val as string),
+    z.number().min(1900).max(2100)
+  ),
+  month: z.preprocess(
+    (val) => parseInt(val as string),
+    z.number().min(1).max(12)
+  ),
+  day: z.preprocess(
+    (val) => parseInt(val as string),
+    z.number().min(1).max(31)
+  ),
+});
 export default function DateInput({
-  date,
-  isOptional = false,
-  onDateChange,
-  onKeyDown,
+  name,
+  value,
+  onChange,
+  borderColor,
 }: DateInputProps) {
-  const form = useForm<DateInputValues>({
-    defaultValues: {
-      year: date ? date.getFullYear() : undefined,
-      month: date ? date.getMonth() + 1 : undefined,
-      day: date ? date.getDate() : undefined,
-    },
-    mode: "onChange",
+  const date = value ? new Date(value) : undefined;
+  const [dateData, setDateData] = useState<DateData>({
+    year: date?.getFullYear().toString() ?? "",
+    month: date ? (date.getMonth() + 1).toString() : "",
+    day: date?.getDate().toString() ?? "",
   });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name: inputName } = e.target;
+    const modifiedDateData = { ...dateData, [inputName]: value };
+    setDateData(modifiedDateData);
 
-  const watchedValues = useWatch({
-    control: form.control,
-    name: ["year", "month", "day"],
-  });
-
-  useEffect(() => {
-    const [year, month, day] = watchedValues;
-
-    if (year && month && day) {
-      const newDate = new Date(year, month - 1, day);
-      if (
-        newDate.getFullYear() === year &&
-        newDate.getMonth() === month - 1 &&
-        newDate.getDate() === day
-      ) {
-        onDateChange(newDate);
-        return;
-      }
+    const { success, data } = dateDataSchema.safeParse(modifiedDateData);
+    if (!success) {
+      onChange("");
+      return;
     }
-    onDateChange(undefined);
-  }, [watchedValues, onDateChange]);
-
-  const hasError =
-    !!form.formState.errors.year ||
-    !!form.formState.errors.month ||
-    !!form.formState.errors.day;
-
+    const date = buildDate(data.year, data.month, data.day);
+    if (
+      date.getFullYear() !== data.year ||
+      date.getMonth() + 1 !== data.month ||
+      date.getDate() !== data.day
+    ) {
+      onChange("");
+      return;
+    }
+    console.log("date", date.toISOString());
+    onChange(date.toISOString());
+  };
   return (
-    <Box>
-      <Text fontWeight="bold" mb={2}>
-        생년월일
-      </Text>
-
-      <VStack align="stretch" gap={1}>
-        <HStack gap={2}>
-          <Box flex={1}>
-            <Input
-              type="number"
-              placeholder="연도"
-              {...form.register("year", {
-                required: isOptional ? false : "연도는 필수입니다",
-                valueAsNumber: true,
-                min: isOptional
-                  ? undefined
-                  : { value: 1900, message: "연도는 1900년 이상이어야 합니다" },
-              })}
-              onKeyDown={onKeyDown}
-              borderColor={form.formState.errors.year ? "red.500" : undefined}
-            />
-          </Box>
-
-          <Box flex={1}>
-            <Input
-              type="number"
-              placeholder="월"
-              {...form.register("month", {
-                required: isOptional ? false : "월은 필수입니다",
-                valueAsNumber: true,
-                min: isOptional
-                  ? undefined
-                  : { value: 1, message: "월은 1월 이상이어야 합니다" },
-                max: isOptional
-                  ? undefined
-                  : { value: 12, message: "월은 12월 이하여야 합니다" },
-              })}
-              onKeyDown={onKeyDown}
-              borderColor={form.formState.errors.month ? "red.500" : undefined}
-            />
-          </Box>
-
-          <Box flex={1}>
-            <Input
-              type="number"
-              placeholder="일"
-              {...form.register("day", {
-                required: isOptional ? false : "일은 필수입니다",
-                valueAsNumber: true,
-                min: isOptional
-                  ? undefined
-                  : { value: 1, message: "일은 1일 이상이어야 합니다" },
-                max: isOptional
-                  ? undefined
-                  : { value: 31, message: "일은 31일 이하여야 합니다" },
-              })}
-              onKeyDown={onKeyDown}
-              borderColor={form.formState.errors.day ? "red.500" : undefined}
-            />
-          </Box>
-        </HStack>
-
-        <Box minH="16px">
-          {hasError && (
-            <Text color="red.500" fontSize="xs">
-              잘못된 날짜입니다.
-            </Text>
-          )}
-        </Box>
-      </VStack>
-    </Box>
+    <Flex gap={1} direction="column">
+      <Flex gap={1}>
+        <Input
+          name="year"
+          placeholder="연"
+          value={dateData.year}
+          onChange={handleChange}
+          borderColor={borderColor}
+        />
+        <Input
+          name="month"
+          placeholder="월"
+          value={dateData.month}
+          onChange={handleChange}
+          borderColor={borderColor}
+        />
+        <Input
+          name="day"
+          placeholder="일"
+          value={dateData.day}
+          onChange={handleChange}
+          borderColor={borderColor}
+        />
+      </Flex>
+    </Flex>
   );
 }

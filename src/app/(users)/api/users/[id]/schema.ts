@@ -1,12 +1,9 @@
-import {
-  PublicUserSchema,
-  PublicTeacherSchema,
-  DataResponseSchema,
-} from "@/app/schema";
-import { LocationSchema, LessonSchema } from "@/generated/zod";
+import { DataResponseSchema } from "@/app/schema";
+import { LocationSchema, LessonSchema, UserSchema } from "@/generated/zod";
 import { toKstDate } from "@/utils/date";
 import z from "zod";
-import { UserSearchResultSchema } from "../schema";
+import { PublicUserSchema, UserSearchResultSchema } from "../schema";
+import { PublicTeacherSchema } from "@/app/(teachers)/api/teachers/schema";
 
 export const PublicUserDetailSchema = PublicUserSchema.extend({
   location: LocationSchema,

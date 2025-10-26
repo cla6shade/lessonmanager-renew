@@ -8,24 +8,38 @@ interface SkeletonTableProps {
 }
 
 export function SkeletonTable({ rows = 10, columns = 7 }: SkeletonTableProps) {
+  const getColumnWidth = (index: number) => {
+    if (index === 0) return "50px";
+    if (index === columns - 1) return "80px";
+    return undefined;
+  };
+
+  const getColumnStyles = (index: number) => {
+    const isLastColumn = index === columns - 1;
+    return {
+      width: getColumnWidth(index),
+      display: isLastColumn ? ("flex" as const) : undefined,
+      justifyContent: isLastColumn ? ("center" as const) : undefined,
+    };
+  };
+
+  const getSkeletonProps = (colIndex: number) => {
+    if (colIndex === columns - 1) {
+      return { height: "32px", width: "100%", borderRadius: "md" };
+    }
+    if (colIndex === 0) {
+      return { height: "16px", width: "16px", borderRadius: "sm" };
+    }
+    return { height: "20px", width: "100%" };
+  };
+
   return (
     <Table.Root variant="outline" size="lg">
       <Table.Header>
         <Table.Row>
           {Array.from({ length: columns }).map((_, index) => (
-            <Table.ColumnHeader
-              key={index}
-              width={
-                index === columns - 1
-                  ? "100px" // 마지막 컬럼(비고)
-                  : index === 0
-                  ? "50px" // 첫 번째 컬럼(체크박스)
-                  : undefined
-              }
-              display={index === columns - 1 ? "flex" : undefined}
-              justifyContent={index === columns - 1 ? "center" : undefined}
-            >
-              <Skeleton height="20px" width={index === 0 ? "20px" : "80px"} />
+            <Table.ColumnHeader key={index} {...getColumnStyles(index)}>
+              <Skeleton height="20px" width="100%" />
             </Table.ColumnHeader>
           ))}
         </Table.Row>
@@ -34,25 +48,8 @@ export function SkeletonTable({ rows = 10, columns = 7 }: SkeletonTableProps) {
         {Array.from({ length: rows }).map((_, rowIndex) => (
           <Table.Row key={rowIndex}>
             {Array.from({ length: columns }).map((_, colIndex) => (
-              <Table.Cell
-                key={colIndex}
-                width={
-                  colIndex === columns - 1
-                    ? "100px" // 마지막 컬럼(비고)
-                    : colIndex === 0
-                    ? "50px" // 첫 번째 컬럼(체크박스)
-                    : undefined
-                }
-                display={colIndex === columns - 1 ? "flex" : undefined}
-                justifyContent={colIndex === columns - 1 ? "center" : undefined}
-              >
-                {colIndex === columns - 1 ? (
-                  <Skeleton height="32px" width="240px" borderRadius="md" />
-                ) : colIndex === 0 ? (
-                  <Skeleton height="16px" width="16px" borderRadius="sm" />
-                ) : (
-                  <Skeleton height="20px" width={`${colIndex * 20}px`} />
-                )}
+              <Table.Cell key={colIndex} {...getColumnStyles(colIndex)}>
+                <Skeleton {...getSkeletonProps(colIndex)} />
               </Table.Cell>
             ))}
           </Table.Row>

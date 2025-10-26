@@ -94,7 +94,7 @@ export async function updateWorkingTime(
     throw new Error("존재하지 않는 선생님입니다.");
   }
 
-  const workingTime = await prisma.workingTime.update({
+  await prisma.workingTime.update({
     where: {
       teacherId,
     },
@@ -130,6 +130,7 @@ export async function getWorkingTimes() {
     return {
       teacherId: time.teacherId,
       times: JSON.parse(time.times) as WorkingTimeData,
+      teacher: time.teacher,
     };
   });
 }

@@ -19,7 +19,7 @@ export const CreateLessonByAdminInputSchema = LessonSchema.pick({
   username: true,
 }).extend({
   dueDate: z.iso.datetime().transform(toKstDate),
-  userId: z.coerce.number().optional(),
+  userId: z.number().optional(),
   username: z.string().optional(),
   contact: z.string().optional(),
 });

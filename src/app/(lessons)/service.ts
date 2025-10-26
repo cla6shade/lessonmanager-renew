@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { getWorkingDayOfWeek } from "@/utils/date";
+import { getTomorrowStart, getWorkingDayOfWeek } from "@/utils/date";
 import { LessonSearchParams, LessonSearchResult } from "./schema";
 import {
   CreateLessonByAdminInput,
@@ -181,4 +181,17 @@ export async function isTeacherAvailableAt(
   return workingTimeData[
     getWorkingDayOfWeek(date) as keyof WorkingTimeData
   ]?.includes(hour);
+}
+
+export async function getTomorowLesson(userId: number) {
+  const date = getTomorrowStart();
+  return prisma.lesson.findFirst({
+    where: {
+      dueDate: date,
+      userId,
+    },
+    orderBy: {
+      dueHour: "asc",
+    },
+  });
 }

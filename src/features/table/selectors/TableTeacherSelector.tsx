@@ -15,13 +15,13 @@ import { ExtendedTeacher } from "../types";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import { useTable } from "../providers/TableProvider";
 
-interface TeacherSelectorProps {
+interface TableTeacherSelectorProps {
   displayAllLocations?: boolean;
 }
 
-export default function TeacherSelector({
+export default function TableTeacherSelector({
   displayAllLocations = false,
-}: TeacherSelectorProps) {
+}: TableTeacherSelectorProps) {
   const { teachers, selectedTeacher, setSelectedTeacher } = useTable();
   const { selectedLocation } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);

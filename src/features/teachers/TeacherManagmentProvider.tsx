@@ -4,12 +4,13 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useTeacherFilter } from "./search/TeacherFilterProvider";
 import useFetchTeachers from "./hooks/useFetchTeachers";
 import { toaster } from "@/components/ui/toaster";
+import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
 
 interface TeacherManagmentContextType {
   page: number;
   setPage: (page: number) => void;
 
-  teachers: any[];
+  teachers: TeacherSearchResult[];
   total: number;
   totalPages: number;
   isTeacherLoading: boolean;

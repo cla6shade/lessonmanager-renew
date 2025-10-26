@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Error in middleware:", error);
     return buildErrorResponse(error as Error);
   }

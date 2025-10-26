@@ -4,26 +4,18 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigation } from "../../navigation/provider/NavigationContext";
 import { useFilter } from "../search/FilterProvider";
 import useFetchUsers from "../search/useFetchUsers";
-import { toaster } from "@/components/ui/toaster";
+import { UserSearchResult } from "@/app/(users)/api/users/schema";
+import { Location } from "@/generated/prisma";
 
 interface UserTableContextType {
-  selectedLocation: { id: number; name: string };
-  setSelectedLocation: (location: { id: number; name: string }) => void;
-  locations: { id: number; name: string }[];
+  selectedLocation: Location;
+  setSelectedLocation: (location: Location) => void;
+  locations: Location[];
 
   page: number;
   setPage: (page: number) => void;
 
-  selectedUsers: Set<number>;
-  setSelectedUsers: (users: Set<number>) => void;
-  isAllSelected: boolean;
-  setIsAllSelected: (selected: boolean) => void;
-
-  handleSelectAll: (checked: boolean) => void;
-  handleSelectUser: (userId: number, checked: boolean) => void;
-
-  // User store data
-  users: any[];
+  users: UserSearchResult[];
   total: number;
   totalPages: number;
   isUserLoading: boolean;
@@ -57,8 +49,6 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
     defaultSelectedLocation
   );
   const [page, setPage] = useState(1);
-  const [selectedUsers, setSelectedUsers] = useState<Set<number>>(new Set());
-  const [isAllSelected, setIsAllSelected] = useState(false);
 
   const { users, total, totalPages, loading, error, refetch } = useFetchUsers({
     locationId: selectedLocation.id,
@@ -70,39 +60,13 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
     limit: 20,
   });
 
-  // 지점 변경 시 페이지 초기화
   useEffect(() => {
     setPage(1);
-    setSelectedUsers(new Set());
-    setIsAllSelected(false);
   }, [selectedLocation.id]);
 
-  // 필터 변경 시 페이지 초기화
   useEffect(() => {
     setPage(1);
-    setSelectedUsers(new Set());
-    setIsAllSelected(false);
   }, [currentFilter, searchName, searchContact, searchBirthDate]);
-
-  const handleSelectAll = (checked: boolean) => {
-    setIsAllSelected(checked);
-    if (checked) {
-      setSelectedUsers(new Set(users.map((user) => user.id)));
-    } else {
-      setSelectedUsers(new Set());
-    }
-  };
-
-  const handleSelectUser = (userId: number, checked: boolean) => {
-    const newSelected = new Set(selectedUsers);
-    if (checked) {
-      newSelected.add(userId);
-    } else {
-      newSelected.delete(userId);
-    }
-    setSelectedUsers(newSelected);
-    setIsAllSelected(newSelected.size === users.length && users.length > 0);
-  };
 
   const contextValue: UserTableContextType = {
     selectedLocation,
@@ -110,12 +74,6 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
     locations,
     page,
     setPage,
-    selectedUsers,
-    setSelectedUsers,
-    isAllSelected,
-    setIsAllSelected,
-    handleSelectAll,
-    handleSelectUser,
 
     users,
     total,

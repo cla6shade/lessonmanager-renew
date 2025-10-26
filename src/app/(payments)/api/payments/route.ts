@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { buildErrorResponse } from "@/app/utils";
-import { UpdatePaymentsRequestSchema, UpdatePaymentsResponse } from "./schema";
+import { CreatePaymentRequestSchema, CreatePaymentResponse, UpdatePaymentsRequestSchema, UpdatePaymentsResponse } from "./schema";
 import { getSession } from "@/lib/session";
+import { createPayment } from "../../service";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -34,6 +35,22 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json<UpdatePaymentsResponse>({
       data: updatedPayments,
     });
+  } catch (error) {
+    return buildErrorResponse(error);
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { isAdmin } = await getSession();
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const data = CreatePaymentRequestSchema.parse(request.body);
+    const payment = await createPayment(data);
+    return NextResponse.json<CreatePaymentResponse>({
+      data: payment
+    })
   } catch (error) {
     return buildErrorResponse(error);
   }
