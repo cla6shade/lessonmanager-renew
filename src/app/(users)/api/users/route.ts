@@ -27,8 +27,8 @@ export async function GET(request: NextRequest) {
           ? undefined
           : searchParams.get("locationId"),
       filter: searchParams.get("filter") || "ALL",
-      page: searchParams.get("page") || "1",
-      limit: searchParams.get("limit") || "20",
+      page: searchParams.get("page"),
+      limit: searchParams.get("limit"),
     };
 
     const validatedParams = UserSearchRequestSchema.parse(queryParams);
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       limit,
     });
 
-    const totalPages = Math.ceil(total / limit);
+    const totalPages = Math.ceil(limit ? total / limit : 1);
 
     return NextResponse.json<UserSearchResponse>({
       data: users,
