@@ -3,7 +3,7 @@ import z from "zod";
 import { PublicUserSchema } from "../schema";
 
 export const UserLookupRequestSchema = z.object({
-  query: z.string(),
+  query: z.string().nullable(),
 });
 
 export type UserLookupRequest = z.infer<typeof UserLookupRequestSchema>;
