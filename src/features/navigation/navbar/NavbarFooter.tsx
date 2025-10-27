@@ -1,19 +1,17 @@
 import { logoutAction } from "@/app/(auth)/login/loginAction";
 import { Box, Button, Text } from "@chakra-ui/react";
-import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from 'react';
 
 export default function NavbarFooter() {
   const [state, formAction] = useActionState(logoutAction, {
     success: false,
   });
-  const router = useRouter();
 
   useEffect(() => {
     if (state.success) {
-      router.push("/login");
+      location.href = '/login';
     }
-  }, [state, router]);
+  }, [state]);
   return (
     <Box>
       <form action={formAction}>
