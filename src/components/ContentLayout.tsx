@@ -2,11 +2,12 @@
 
 import useMenu from "@/features/navigation/menu/useMenu";
 import { Box, Heading } from "@chakra-ui/react";
+import { ReactNode } from 'react';
 
 export default function ContentLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const { currentMenu } = useMenu();
   return (

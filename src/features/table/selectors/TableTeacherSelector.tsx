@@ -10,7 +10,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { ChevronDown, User } from "lucide-react";
-import { useState } from "react";
+import { ReactNode, useState } from 'react';
 import { ExtendedTeacher } from "../types";
 import { useNavigation } from "@/features/navigation/provider/NavigationContext";
 import { useTable } from "../providers/TableProvider";
@@ -111,7 +111,7 @@ export default function TableTeacherSelector({
   );
 }
 
-function TeacherSelectorContainer({ children }: { children: React.ReactNode }) {
+function TeacherSelectorContainer({ children }: { children: ReactNode }) {
   return (
     <Box
       border="1px solid"

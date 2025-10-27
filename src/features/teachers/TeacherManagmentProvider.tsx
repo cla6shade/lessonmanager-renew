@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useTeacherFilter } from "./search/TeacherFilterProvider";
 import useFetchTeachers from "./hooks/useFetchTeachers";
 import { toaster } from "@/components/ui/toaster";
@@ -33,7 +33,7 @@ export function useTeacherManagement() {
 }
 
 interface TeacherManagmentProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function TeacherManagmentProvider({

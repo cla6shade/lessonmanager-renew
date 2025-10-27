@@ -1,6 +1,6 @@
 import { buildDate } from "@/utils/date";
 import { Flex, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import z from "zod";
 
 interface DateInputProps {
@@ -36,7 +36,7 @@ export default function DateInput({
     month: date ? (date.getMonth() + 1).toString() : "",
     day: date?.getDate().toString() ?? "",
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name: inputName } = e.target;
     const modifiedDateData = { ...dateData, [inputName]: value };
     setDateData(modifiedDateData);

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from 'react';
 import { UserSearchFilter } from "@/app/(users)/api/users/schema";
 
 interface FilterContextType {
@@ -25,7 +25,7 @@ export function useFilter() {
 }
 
 interface FilterProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function FilterProvider({ children }: FilterProviderProps) {

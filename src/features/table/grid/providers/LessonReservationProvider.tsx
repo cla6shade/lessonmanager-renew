@@ -1,8 +1,8 @@
-import { createContext, use, useRef } from "react";
+import { createContext, ReactNode, use, useRef } from 'react';
 import { ExtendedTeacher } from "../../types";
 
 interface LessonReservationContextProps {
-  children: React.ReactNode;
+  children: ReactNode;
   selectedDate: Date;
   selectedTeacher: ExtendedTeacher;
   dueHour: number;

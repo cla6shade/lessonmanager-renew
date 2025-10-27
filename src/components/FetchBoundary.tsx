@@ -1,13 +1,14 @@
 import { Box, Text, Spinner } from "@chakra-ui/react";
+import { ReactNode } from 'react';
 
 interface FetchBoundaryProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isLoading: boolean;
   error: string | null;
   isEmpty?: boolean;
-  loadingFallback?: React.ReactNode;
-  errorFallback?: React.ReactNode;
-  emptyFallback?: React.ReactNode;
+  loadingFallback?: ReactNode;
+  errorFallback?: ReactNode;
+  emptyFallback?: ReactNode;
 }
 
 export default function FetchBoundary({
@@ -32,7 +33,7 @@ export default function FetchBoundary({
 }
 
 interface DefaultFetchBoundaryProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isLoading: boolean;
   error: string | null;
   isEmpty?: boolean;

@@ -1,16 +1,17 @@
 import { Box } from "@chakra-ui/react";
 import { SkeletonTable } from "./ui/skeleton";
 import FetchBoundary from "./FetchBoundary";
+import { ReactNode } from 'react';
 
 interface SkeletonFetchBoundaryProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isLoading: boolean;
   error: string | null;
   isEmpty?: boolean;
   rows?: number;
   columns?: number;
-  errorFallback?: React.ReactNode;
-  emptyFallback?: React.ReactNode;
+  errorFallback?: ReactNode;
+  emptyFallback?: ReactNode;
   useFlexHeight?: boolean;
 }
 

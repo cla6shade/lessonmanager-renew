@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigation } from "../../navigation/provider/NavigationContext";
 import { useFilter } from "../search/FilterProvider";
 import useFetchUsers from "../search/useFetchUsers";
@@ -36,7 +36,7 @@ export function useUserTable() {
 }
 
 interface UserTableProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function UserTableProvider({ children }: UserTableProviderProps) {

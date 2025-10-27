@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import type { Metadata } from "next";
 import { Lato, Roboto } from "next/font/google";
+import { ReactNode } from 'react';
 
 const latoSans = Lato({
   variable: "--font-lato",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const locations = await prisma.location.findMany();
   const majors = await prisma.major.findMany();

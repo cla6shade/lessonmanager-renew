@@ -5,7 +5,7 @@ import FilterSelector from "./FilterSelector";
 import { useUserTable } from "../table/UserTableProvider";
 import { useFilter } from "./FilterProvider";
 import { Filter } from "lucide-react";
-import { useRef } from "react";
+import { useRef, KeyboardEvent } from "react";
 
 export default function FilterSection() {
   const { setSearchName, setSearchContact, setSearchBirthDate } = useFilter();
@@ -42,7 +42,7 @@ export default function FilterSection() {
     setIsAllSelected(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext, use } from "react";
+import { useEffect, useState, createContext, use, ReactNode } from 'react';
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import { useFetchWeeklyLesson } from "../../hooks/useFetchLesson";
@@ -13,7 +13,7 @@ import useFetchBannedTimes from "../../hooks/useFetchBannedTimes";
 const LessonStoreContext = createContext<LessonStore | null>(null);
 
 interface LessonProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function LessonProvider({ children }: LessonProviderProps) {

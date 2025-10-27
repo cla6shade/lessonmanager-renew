@@ -2,7 +2,7 @@
 
 import { Flex, Button, HStack, VStack, Input } from "@chakra-ui/react";
 import { Calendar } from "lucide-react";
-import { useRef } from "react";
+import { useRef, KeyboardEvent } from "react";
 import { useTeacherFilter } from "./TeacherFilterProvider";
 import { useTeacherManagement } from "../TeacherManagmentProvider";
 
@@ -38,7 +38,7 @@ export default function TeacherFilterSection() {
     setPage(1);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }

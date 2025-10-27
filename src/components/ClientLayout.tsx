@@ -5,9 +5,10 @@ import Navbar from "@/features/navigation/navbar/Navbar";
 import { Location, Major } from "@/generated/prisma";
 import { Box, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
+import { ReactNode } from 'react';
 
 interface ClientLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   locations: Location[];
   majors: Major[];
   isAdmin: boolean;

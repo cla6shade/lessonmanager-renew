@@ -1,9 +1,10 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
+import { ReactNode } from 'react';
 
 interface LoginFormCardProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export default function LoginFormCard({ children }: LoginFormCardProps) {
