@@ -77,12 +77,7 @@ export type UserSearchResult = z.infer<typeof UserSearchResultSchema.Base>;
 export type UserLookupResult = z.infer<typeof UserSearchResultSchema.Lookup>;
 
 export const UserSearchResponseSchema = PaginatedDataResponseSchema(
-  z.array(
-    z.discriminatedUnion("lookup", [
-      UserSearchResultSchema.Base,
-      UserSearchResultSchema.Lookup,
-    ])
-  )
+  UserSearchResultSchema.Base.array()
 );
 
 export type UserSearchResponse = z.infer<typeof UserSearchResponseSchema>;
