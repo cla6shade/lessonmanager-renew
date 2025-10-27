@@ -8,7 +8,7 @@ import {
 import { Prisma } from "@/generated/prisma";
 import { getPaginationQuery } from "../utils";
 import { getLessons } from "../(lessons)/service";
-import { getUserPaymentsInRange as getUserWithPayementsInRange } from "../(users)/service";
+import { getUserPaymentsInRange } from "../(users)/service";
 
 export async function searchTeachers({
   startDate,
@@ -123,7 +123,7 @@ export async function getReregisterFraction(
     (user) => user.id
   );
   const payments = (
-    await getUserWithPayementsInRange(startDate, endDate, userIds)
+    await getUserPaymentsInRange(startDate, endDate, userIds)
   ).flatMap((user) => (user.payments[0] ? [user.payments[0]] : []));
 
   let [numerator, denominator] = [0, payments.length];
