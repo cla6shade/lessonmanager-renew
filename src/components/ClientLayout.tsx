@@ -3,7 +3,8 @@
 import { NavigationProvider } from "@/features/navigation/provider/NavigationContext";
 import Navbar from "@/features/navigation/navbar/Navbar";
 import { Location, Major } from "@/generated/prisma";
-import { Box, ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
+import { system } from '@/brand/colors';
 import { Toaster } from "@/components/ui/toaster";
 import { ReactNode } from 'react';
 
@@ -27,7 +28,7 @@ export default function ClientLayout({
   teacherId,
 }: ClientLayoutProps) {
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={system}>
       <NavigationProvider
         locations={locations}
         majors={majors}
