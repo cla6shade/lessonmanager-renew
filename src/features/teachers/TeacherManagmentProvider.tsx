@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode, use } from 'react';
 import { useTeacherFilter } from "./search/TeacherFilterProvider";
 import useFetchTeachers from "./hooks/useFetchTeachers";
 import { toaster } from "@/components/ui/toaster";
@@ -23,7 +23,7 @@ const TeacherManagmentContext = createContext<
 >(undefined);
 
 export function useTeacherManagement() {
-  const context = useContext(TeacherManagmentContext);
+  const context = use(TeacherManagmentContext);
   if (!context) {
     throw new Error(
       "useTeacherManagement must be used within TeacherManagmentProvider"

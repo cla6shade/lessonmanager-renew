@@ -1,16 +1,9 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useActionState,
-  useEffect,
-  ReactNode,
-  use,
-} from "react";
-import { useRouter } from "next/navigation";
-import { loginAction } from "@/app/(auth)/login/loginAction";
-import { ActionState } from "@/app/types";
-import { LoginSchema } from "@/app/(auth)/login/schema";
+import { createContext, useActionState, ReactNode, use } from 'react';
+import { loginAction } from '@/app/(auth)/login/loginAction';
+import { ActionState } from '@/app/types';
+import { LoginSchema } from '@/app/(auth)/login/schema';
 
 const initialState: ActionState<typeof LoginSchema> = {
   success: false,
@@ -29,17 +22,13 @@ interface LoginProviderProps {
 }
 
 export function LoginProvider({ children }: LoginProviderProps) {
-  const [loginState, formAction, pending] = useActionState(
-    loginAction,
-    initialState
-  );
-  const router = useRouter();
+  const [loginState, formAction, pending] = useActionState(loginAction, initialState);
 
   useEffect(() => {
     if (loginState.success) {
-      router.push("/");
+      location.href = '/';
     }
-  }, [loginState, router]);
+  }, [loginState]);
 
   const value: LoginContextValue = {
     loginState,
@@ -47,15 +36,13 @@ export function LoginProvider({ children }: LoginProviderProps) {
     pending,
   };
 
-  return (
-    <LoginContext.Provider value={value}>{children}</LoginContext.Provider>
-  );
+  return <LoginContext.Provider value={value}>{children}</LoginContext.Provider>;
 }
 
 export function useLogin() {
   const context = use(LoginContext);
   if (context === undefined) {
-    throw new Error("useLogin must be used within a LoginProvider");
+    throw new Error('useLogin must be used within a LoginProvider');
   }
   return context;
 }

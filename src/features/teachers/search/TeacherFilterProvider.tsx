@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useState, ReactNode, use } from 'react';
 
 interface DateFragment {
   year: string;
@@ -85,7 +85,7 @@ export function TeacherFilterProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTeacherFilter() {
-  const context = useContext(TeacherFilterContext);
+  const context = use(TeacherFilterContext);
   if (context === undefined) {
     throw new Error(
       "useTeacherFilter must be used within a TeacherFilterProvider"

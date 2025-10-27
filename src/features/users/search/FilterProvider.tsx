@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, use, useState } from 'react';
 import { UserSearchFilter } from "@/app/(users)/api/users/schema";
 
 interface FilterContextType {
@@ -17,7 +17,7 @@ interface FilterContextType {
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export function useFilter() {
-  const context = useContext(FilterContext);
+  const context = use(FilterContext);
   if (!context) {
     throw new Error("useFilter must be used within FilterProvider");
   }

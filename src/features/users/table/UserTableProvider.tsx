@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, ReactNode, use } from 'react';
 import { useNavigation } from "../../navigation/provider/NavigationContext";
 import { useFilter } from "../search/FilterProvider";
 import useFetchUsers from "../search/useFetchUsers";
@@ -28,7 +28,7 @@ const UserTableContext = createContext<UserTableContextType | undefined>(
 );
 
 export function useUserTable() {
-  const context = useContext(UserTableContext);
+  const context = use(UserTableContext);
   if (!context) {
     throw new Error("useUserTable must be used within UserTableProvider");
   }
@@ -45,13 +45,13 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
   const { currentFilter, searchName, searchContact, searchBirthDate } =
     useFilter();
 
-  const [selectedLocation, setSelectedLocation] = useState(
+  const [location, setLocation] = useState(
     defaultSelectedLocation
   );
   const [page, setPage] = useState(1);
 
   const { users, total, totalPages, loading, error, refetch } = useFetchUsers({
-    locationId: selectedLocation.id,
+    locationId: location.id,
     filter: currentFilter,
     name: searchName || undefined,
     contact: searchContact || undefined,
@@ -60,16 +60,13 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
     limit: 20,
   });
 
-  useEffect(() => {
+  const setSelectedLocation = (location: Location) => {
+    setLocation(location);
     setPage(1);
-  }, [selectedLocation.id]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [currentFilter, searchName, searchContact, searchBirthDate]);
+  }
 
   const contextValue: UserTableContextType = {
-    selectedLocation,
+    selectedLocation: location,
     setSelectedLocation,
     locations,
     page,
