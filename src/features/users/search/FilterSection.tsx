@@ -10,7 +10,7 @@ import { useRef, KeyboardEvent } from "react";
 export default function FilterSection() {
   const { setSearchName, setSearchContact, setSearchBirthDate } = useFilter();
 
-  const { setPage, setSelectedUsers, setIsAllSelected } = useUserTable();
+  const { setPage } = useUserTable();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const contactInputRef = useRef<HTMLInputElement>(null);
@@ -38,8 +38,6 @@ export default function FilterSection() {
     setSearchContact(contactValue);
     setSearchBirthDate(birthDateValue);
     setPage(1);
-    setSelectedUsers(new Set());
-    setIsAllSelected(false);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
