@@ -21,7 +21,7 @@ import {
   updateLesson,
   isTeacherAvailableAt,
 } from "../../service";
-import { hasLessonCount, useLessonCount } from "@/app/(users)/service";
+import { hasLessonCount, consumeLessonCount } from "@/app/(users)/service";
 import { Lesson, PrismaPromise, User } from "@/generated/prisma";
 import { isLessonDueInPayment } from "@/app/(payments)/service";
 import { createModifyHistory } from "@/app/(history)/service";
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
         }) as PrismaPromise<Lesson>,
       ];
       if (targetUser) {
-        tx.push(useLessonCount(targetUser.id, 1) as PrismaPromise<User>);
+        tx.push(consumeLessonCount(targetUser.id, 1) as PrismaPromise<User>);
       }
       const [lessonCreation, lessonCountUpdate] = await prisma.$transaction(tx);
       await createModifyHistory({
@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
         sessionUserId,
         sessionUser.name
       ) as PrismaPromise<Lesson>,
-      useLessonCount(sessionUserId, 1) as PrismaPromise<User>,
+      consumeLessonCount(sessionUserId, 1) as PrismaPromise<User>,
     ];
     const [lessonCreation, lessonCountUpdate] = await prisma.$transaction(tx);
     await createModifyHistory({
