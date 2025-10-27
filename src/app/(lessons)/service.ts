@@ -1,12 +1,9 @@
-import prisma from "@/lib/prisma";
-import { getTomorrowStart, getWorkingDayOfWeek } from "@/utils/date";
-import { LessonSearchParams, LessonSearchResult } from "./schema";
-import {
-  CreateLessonByAdminInput,
-  CreateLessonByUserInput,
-} from "./api/lessons/schema";
-import { Lesson } from "@/generated/prisma";
-import { WorkingTimeData } from "../(table)/api/working-times/schema";
+import prisma from '@/lib/prisma';
+import { getTomorrowStart, getWorkingDayOfWeek } from '@/utils/date';
+import { LessonSearchParams, LessonSearchResult } from './schema';
+import { CreateLessonByAdminInput, CreateLessonByUserInput } from './api/lessons/schema';
+import { Lesson } from '@/generated/prisma';
+import { WorkingTimeData } from '../(table)/api/working-times/schema';
 
 export function cancelLesson(lessonId: number) {
   return prisma.lesson.delete({
@@ -14,13 +11,7 @@ export function cancelLesson(lessonId: number) {
   });
 }
 
-export function isOwnLesson({
-  lesson,
-  userId,
-}: {
-  lesson: Lesson;
-  userId: number;
-}) {
+export function isOwnLesson({ lesson, userId }: { lesson: Lesson; userId: number }) {
   return lesson.userId === userId;
 }
 
@@ -95,7 +86,7 @@ export function createLessonByAdmin({
 export function createLessonByUser(
   { dueDate, dueHour, teacherId, locationId, isGrand }: CreateLessonByUserInput,
   userId: number,
-  username: string
+  username: string,
 ) {
   return prisma.lesson.create({
     data: {
@@ -110,10 +101,46 @@ export function createLessonByUser(
   });
 }
 
-export function updateLesson(
+export async function updateUserLessonInfo(lessonId: number, isDone?: boolean) {
+  const lesson = await prisma.lesson.findUniqueOrThrow({
+    where: { id: lessonId },
+    include: { user: true },
+  });
+  if (!lesson.user) return;
+
+  if (isDone) {
+    return prisma.user.update({
+      where: {
+        id: lesson.user.id,
+      },
+      data: {
+        latestLessonId: lessonId,
+        teacherInChargeId: lesson.teacherId,
+      },
+    });
+  }
+
+  const latestLesson = await prisma.lesson.findFirst({
+    where: { userId: lesson.user.id, isDone: true },
+    orderBy: { dueDate: 'desc', dueHour: 'desc' },
+  });
+  if (!latestLesson) return;
+  return prisma.user.update({
+    where: {
+      id: lesson.user.id,
+    },
+    data: {
+      latestLessonId: latestLesson.id,
+      teacherInChargeId: latestLesson.teacherId,
+    },
+  });
+}
+
+export async function updateLesson(
   lessonId: number,
-  { note, isDone }: { note?: string; isDone?: boolean }
+  { note, isDone }: { note?: string; isDone?: boolean },
 ) {
+  await updateUserLessonInfo(lessonId, isDone);
   return prisma.lesson.update({
     where: { id: lessonId },
     data: { note, isDone },
@@ -145,7 +172,7 @@ export async function isAvailableAt(
   hour: number,
   locationId: number,
   teacherId: number,
-  isGrand: boolean
+  isGrand: boolean,
 ) {
   const overlap = await prisma.lesson.findFirst({
     where: {
@@ -164,11 +191,7 @@ export async function isAvailableAt(
   return !overlap;
 }
 
-export async function isTeacherAvailableAt(
-  teacherId: number,
-  date: Date,
-  hour: number
-) {
+export async function isTeacherAvailableAt(teacherId: number, date: Date, hour: number) {
   const workingTime = await prisma.workingTime.findUnique({
     where: {
       teacherId: teacherId,
@@ -178,9 +201,7 @@ export async function isTeacherAvailableAt(
     return false;
   }
   const workingTimeData = JSON.parse(workingTime.times) as WorkingTimeData;
-  return workingTimeData[
-    getWorkingDayOfWeek(date) as keyof WorkingTimeData
-  ]?.includes(hour);
+  return workingTimeData[getWorkingDayOfWeek(date) as keyof WorkingTimeData]?.includes(hour);
 }
 
 export async function getTomorowLesson(userId: number) {
@@ -191,7 +212,7 @@ export async function getTomorowLesson(userId: number) {
       userId,
     },
     orderBy: {
-      dueHour: "asc",
+      dueHour: 'asc',
     },
   });
 }

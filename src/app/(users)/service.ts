@@ -149,3 +149,113 @@ export function getUserWhereInput({
   if (birthDate) where.birth = birthDate;
   return where;
 }
+
+
+export function setUserLatestLesson(userId: number, lessonId: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      latestLessonId: lessonId,
+    },
+  });
+}
+
+export function setTeacherInCharge(userId: number, teacherId: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      teacherInChargeId: teacherId,
+    },
+  });
+}
+
+export async function hasLessonCount(userId: number) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  return user && user.lessonCount > 0;
+}
+
+export function addLessonCount(userId: number, count: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      lessonCount: {
+        increment: count,
+      },
+    },
+  });
+}
+
+export function restoreLessonCount(userId: number, count: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      lessonCount: {
+        increment: count,
+      },
+      usedLessonCount: {
+        decrement: count,
+      },
+    },
+  });
+}
+
+export function consumeLessonCount(userId: number, count: number) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      lessonCount: {
+        decrement: count,
+      },
+      usedLessonCount: {
+        increment: count,
+      },
+    },
+  });
+}
+
+export function getUserPaymentsInRange(
+  startDate: Date,
+  endDate: Date,
+  userIds?: number[]
+) {
+  return prisma.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+      payments: {
+        some: getRangedPaymentWhereInput(startDate, endDate),
+      },
+    },
+    include: {
+      payments: {
+        where: getRangedPaymentWhereInput(startDate, endDate),
+        orderBy: {
+          endDate: "desc",
+        },
+        take: 1,
+      },
+    },
+  });
+}
+function getRangedPaymentWhereInput(startDate: Date, endDate: Date) {
+  return {
+    refunded: false,
+    OR: [
+      {
+        AND: [
+          { startDate: { gte: startDate } },
+          { startDate: { lte: endDate } },
+        ],
+      },
+      {
+        AND: [{ endDate: { gte: startDate } }, { endDate: { lte: endDate } }],
+      },
+      {
+        AND: [{ startDate: { lte: startDate } }, { endDate: { gte: endDate } }],
+      },
+    ],
+  };
+}
