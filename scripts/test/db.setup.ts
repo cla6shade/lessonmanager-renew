@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { beforeAll } from "vitest";
+import prisma from '@/lib/prisma';
+import { beforeAll } from 'vitest';
 import {
   mockMajors,
   mockLocations,
@@ -11,7 +11,7 @@ import {
   mockLessonBannedTimes,
   mockWorkingTimes,
   mockOpenHours,
-} from "./mocks";
+} from './mocks';
 
 beforeAll(async () => {
   // 기본 데이터 생성

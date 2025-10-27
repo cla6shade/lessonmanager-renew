@@ -1,6 +1,6 @@
-import { Text, Dialog, Portal, Button } from "@chakra-ui/react";
-import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
-import TeacherDetailContent from "./TeacherDetailContent";
+import { Text, Dialog, Portal, Button } from '@chakra-ui/react';
+import { TeacherSearchResult } from '@/app/(teachers)/api/teachers/schema';
+import TeacherDetailContent from './TeacherDetailContent';
 
 interface TeacherDetailDialogProps {
   teacher: TeacherSearchResult;
@@ -22,10 +22,7 @@ export default function TeacherDetailDialog({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            maxW={{ base: "full", md: "lg" }}
-            mx={{ base: 4, md: "auto" }}
-          >
+          <Dialog.Content maxW={{ base: 'full', md: 'lg' }} mx={{ base: 4, md: 'auto' }}>
             <Dialog.Header>
               <Text fontSize="lg" fontWeight="bold">
                 선생님 상세 정보

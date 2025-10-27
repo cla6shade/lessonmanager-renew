@@ -1,10 +1,6 @@
-import { PaginatedDataResponseSchema } from "@/app/schema";
-import {
-  LessonModifyHistorySchema,
-  TeacherSchema,
-  UserSchema,
-} from "@/generated/zod";
-import { z } from "zod";
+import { PaginatedDataResponseSchema } from '@/app/schema';
+import { LessonModifyHistorySchema, TeacherSchema, UserSchema } from '@/generated/zod';
+import { z } from 'zod';
 
 export const GetHistoryQuerySchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -28,8 +24,8 @@ export const GetHistoryResponseSchema = PaginatedDataResponseSchema(
         id: true,
         name: true,
       }).nullable(),
-    })
-  )
+    }),
+  ),
 );
 
 export type GetHistoryResponse = z.infer<typeof GetHistoryResponseSchema>;

@@ -1,31 +1,27 @@
-"use client";
+'use client';
 
-import useMenu from "@/features/navigation/menu/useMenu";
-import { Box, Heading } from "@chakra-ui/react";
+import useMenu from '@/features/navigation/menu/useMenu';
+import { Box, Heading } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-export default function ContentLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function ContentLayout({ children }: { children: ReactNode }) {
   const { currentMenu } = useMenu();
   return (
     <Box
       py={{
-        base: "60px",
-        lg: "40px",
+        base: '60px',
+        lg: '40px',
       }}
       px={{
-        base: "20px",
-        lg: "40px",
+        base: '20px',
+        lg: '40px',
       }}
       width="100%"
       height="100%"
       display="flex"
       flexDirection="column"
     >
-      <Heading fontSize={{ base: "20px", lg: "28px" }} fontWeight="bold">
+      <Heading fontSize={{ base: '20px', lg: '28px' }} fontWeight="bold">
         {currentMenu?.name}
       </Heading>
       {children}

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Box } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Box } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 interface TimeHeaderCellProps {
   children: ReactNode;

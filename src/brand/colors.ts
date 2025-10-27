@@ -1,24 +1,24 @@
-import { defineConfig, createSystem, defaultConfig } from "@chakra-ui/react";
+import { defineConfig, createSystem, defaultConfig } from '@chakra-ui/react';
 
 const colors = {
-  brandDark: "#ae895d",
-  brand: "#cdb97e",
-  brandPanel: "#1c252c",
-  brandPanelDark: "#151d23",
+  brandDark: '#ae895d',
+  brand: '#cdb97e',
+  brandPanel: '#1c252c',
+  brandPanelDark: '#151d23',
 };
 
 export const brandPalette = {
-  50: "#faf9f7",
-  100: "#f4f1eb",
-  200: "#e8e0d4",
-  300: "#dac8b3",
+  50: '#faf9f7',
+  100: '#f4f1eb',
+  200: '#e8e0d4',
+  300: '#dac8b3',
   400: colors.brand,
   500: colors.brand,
   600: colors.brandDark,
-  700: "#9a7952",
-  800: "#7d6142",
-  900: "#5f4932",
-  950: "#3d2f20",
+  700: '#9a7952',
+  800: '#7d6142',
+  900: '#5f4932',
+  950: '#3d2f20',
 };
 
 export const themeConfig = defineConfig({

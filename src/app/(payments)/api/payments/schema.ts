@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { DataResponseSchema } from "@/app/schema";
-import { PaymentSchema } from "@/generated/zod";
-import { toKstDate } from "@/utils/date";
+import { z } from 'zod';
+import { DataResponseSchema } from '@/app/schema';
+import { PaymentSchema } from '@/generated/zod';
+import { toKstDate } from '@/utils/date';
 
 export const UpdatePaymentRequestSchema = z.object({
   id: z.coerce.number().int().positive(),
@@ -24,16 +24,12 @@ export const UpdatePaymentsRequestSchema = z.object({
 });
 
 export const UpdatePaymentResponseSchema = DataResponseSchema(PaymentSchema);
-export const UpdatePaymentsResponseSchema = DataResponseSchema(
-  z.array(PaymentSchema)
-);
+export const UpdatePaymentsResponseSchema = DataResponseSchema(z.array(PaymentSchema));
 
 export type UpdatePaymentRequest = z.infer<typeof UpdatePaymentRequestSchema>;
 export type UpdatePaymentsRequest = z.infer<typeof UpdatePaymentsRequestSchema>;
 export type UpdatePaymentResponse = z.infer<typeof UpdatePaymentResponseSchema>;
-export type UpdatePaymentsResponse = z.infer<
-  typeof UpdatePaymentsResponseSchema
->;
+export type UpdatePaymentsResponse = z.infer<typeof UpdatePaymentsResponseSchema>;
 
 export const CreatePaymentRequestSchema = z.object({
   userId: z.coerce.number().int().positive(),

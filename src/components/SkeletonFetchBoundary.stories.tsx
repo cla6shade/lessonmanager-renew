@@ -1,35 +1,35 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import React, { useState, useEffect } from "react";
-import SkeletonFetchBoundary from "./SkeletonFetchBoundary";
-import { Box, Text, Table } from "@chakra-ui/react";
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import React, { useState, useEffect } from 'react';
+import SkeletonFetchBoundary from './SkeletonFetchBoundary';
+import { Box, Text, Table } from '@chakra-ui/react';
 
 const meta: Meta<typeof SkeletonFetchBoundary> = {
-  title: "Components/SkeletonFetchBoundary",
+  title: 'Components/SkeletonFetchBoundary',
   component: SkeletonFetchBoundary,
   parameters: {
-    layout: "padded",
+    layout: 'padded',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     isLoading: {
-      control: "boolean",
-      description: "로딩 상태",
+      control: 'boolean',
+      description: '로딩 상태',
     },
     error: {
-      control: "text",
-      description: "에러 메시지",
+      control: 'text',
+      description: '에러 메시지',
     },
     isEmpty: {
-      control: "boolean",
-      description: "빈 데이터 상태",
+      control: 'boolean',
+      description: '빈 데이터 상태',
     },
     rows: {
-      control: "number",
-      description: "스켈레톤 테이블 행 수",
+      control: 'number',
+      description: '스켈레톤 테이블 행 수',
     },
     columns: {
-      control: "number",
-      description: "스켈레톤 테이블 열 수",
+      control: 'number',
+      description: '스켈레톤 테이블 열 수',
     },
   },
 };
@@ -46,13 +46,7 @@ export const Default: Story = {
     rows: 10,
     columns: 7,
     children: (
-      <Box
-        width="100%"
-        minHeight="400px"
-        border="1px solid"
-        borderColor="border"
-        borderRadius="md"
-      >
+      <Box width="100%" minHeight="400px" border="1px solid" borderColor="border" borderRadius="md">
         <Table.Root variant="outline" size="lg">
           <Table.Header>
             <Table.Row>
@@ -102,7 +96,7 @@ export const Loading: Story = {
 export const Error: Story = {
   args: {
     isLoading: false,
-    error: "서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    error: '서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.',
     isEmpty: false,
     rows: 10,
     columns: 7,
@@ -143,13 +137,7 @@ export const UserTableSimulation: Story = {
     rows: 20,
     columns: 7,
     children: (
-      <Box
-        width="100%"
-        minHeight="500px"
-        border="1px solid"
-        borderColor="border"
-        borderRadius="md"
-      >
+      <Box width="100%" minHeight="500px" border="1px solid" borderColor="border" borderRadius="md">
         <Table.Root variant="outline" size="lg">
           <Table.Header>
             <Table.Row>
@@ -192,13 +180,7 @@ export const TeacherTableSimulation: Story = {
     rows: 15,
     columns: 9,
     children: (
-      <Box
-        width="100%"
-        minHeight="500px"
-        border="1px solid"
-        borderColor="border"
-        borderRadius="md"
-      >
+      <Box width="100%" minHeight="500px" border="1px solid" borderColor="border" borderRadius="md">
         <Table.Root variant="outline" size="lg">
           <Table.Header>
             <Table.Row>
@@ -256,9 +238,9 @@ export const ApiCallSimulation: Story = {
           isLoading: false,
           error: null,
           data: [
-            { id: 1, name: "김학생", location: "강남점" },
-            { id: 2, name: "이학생", location: "서초점" },
-            { id: 3, name: "박학생", location: "강남점" },
+            { id: 1, name: '김학생', location: '강남점' },
+            { id: 2, name: '이학생', location: '서초점' },
+            { id: 3, name: '박학생', location: '강남점' },
           ],
         });
       }, 3000);

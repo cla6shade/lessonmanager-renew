@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import z, { ZodError } from "zod";
+import { NextResponse } from 'next/server';
+import z, { ZodError } from 'zod';
 
 export function getPaginationQuery(page: number, limit: number) {
   const skip = (page - 1) * limit;
@@ -12,13 +12,13 @@ export function buildErrorResponse(error: Error | unknown) {
       {
         errors: z.flattenError(error),
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
   return NextResponse.json(
     {
-      error: "Internal Server Error",
+      error: 'Internal Server Error',
     },
-    { status: 500 }
+    { status: 500 },
   );
 }

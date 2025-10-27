@@ -1,7 +1,7 @@
-import { LessonBannedTimesSchema, TeacherSchema } from "@/generated/zod";
-import { z } from "zod";
-import { DataResponseSchema } from "../../../schema";
-import { toKstDate } from "@/utils/date";
+import { LessonBannedTimesSchema, TeacherSchema } from '@/generated/zod';
+import { z } from 'zod';
+import { DataResponseSchema } from '../../../schema';
+import { toKstDate } from '@/utils/date';
 
 export const GetBannedTimesQuerySchema = z.object({
   startDate: z.iso.datetime().transform(toKstDate),
@@ -18,13 +18,11 @@ export const GetBannedTimesResponseSchema = DataResponseSchema(
         id: true,
         name: true,
       }),
-    })
-  )
+    }),
+  ),
 );
 
-export type GetBannedTimesResponse = z.infer<
-  typeof GetBannedTimesResponseSchema
->;
+export type GetBannedTimesResponse = z.infer<typeof GetBannedTimesResponseSchema>;
 
 export const CreateBannedTimeRequestSchema = LessonBannedTimesSchema.pick({
   teacherId: true,
@@ -36,9 +34,7 @@ export const CreateBannedTimeRequestSchema = LessonBannedTimesSchema.pick({
   hour: z.coerce.number(),
 });
 
-export type CreateBannedTimeRequest = z.infer<
-  typeof CreateBannedTimeRequestSchema
->;
+export type CreateBannedTimeRequest = z.infer<typeof CreateBannedTimeRequestSchema>;
 
 export const CreateBannedTimeResponseSchema = DataResponseSchema(
   LessonBannedTimesSchema.extend({
@@ -46,12 +42,10 @@ export const CreateBannedTimeResponseSchema = DataResponseSchema(
       id: true,
       name: true,
     }),
-  })
+  }),
 );
 
-export type CreateBannedTimeResponse = z.infer<
-  typeof CreateBannedTimeResponseSchema
->;
+export type CreateBannedTimeResponse = z.infer<typeof CreateBannedTimeResponseSchema>;
 
 export const UpdateBannedTimesRequestSchema = z.object({
   deleteIds: z.array(z.number()),
@@ -62,13 +56,11 @@ export const UpdateBannedTimesRequestSchema = z.object({
       hour: true,
     }).extend({
       date: z.iso.datetime().transform(toKstDate),
-    })
+    }),
   ),
 });
 
-export type UpdateBannedTimesRequest = z.infer<
-  typeof UpdateBannedTimesRequestSchema
->;
+export type UpdateBannedTimesRequest = z.infer<typeof UpdateBannedTimesRequestSchema>;
 
 export const UpdateBannedTimesResponseSchema = DataResponseSchema(
   z.array(
@@ -77,10 +69,8 @@ export const UpdateBannedTimesResponseSchema = DataResponseSchema(
         id: true,
         name: true,
       }),
-    })
-  )
+    }),
+  ),
 );
 
-export type UpdateBannedTimesResponse = z.infer<
-  typeof UpdateBannedTimesResponseSchema
->;
+export type UpdateBannedTimesResponse = z.infer<typeof UpdateBannedTimesResponseSchema>;

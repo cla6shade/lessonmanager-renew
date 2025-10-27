@@ -1,31 +1,28 @@
-import { VStack, Table, Checkbox, Textarea } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { VStack, Table, Checkbox, Textarea } from '@chakra-ui/react';
+import { Controller, useForm } from 'react-hook-form';
 
-import { useUpdateLessons } from "@/features/users/lessons/useUpdateLessons";
-import { formatDate, formatHour } from "@/utils/date";
-import { UpdateLessonsRequest } from "@/app/(lessons)/api/lessons/schema";
-import { UserLessonsResponse } from "@/app/(users)/api/users/[id]/lessons/schema";
-import { useEffect } from "react";
+import { useUpdateLessons } from '@/features/users/lessons/useUpdateLessons';
+import { formatDate, formatHour } from '@/utils/date';
+import { UpdateLessonsRequest } from '@/app/(lessons)/api/lessons/schema';
+import { UserLessonsResponse } from '@/app/(users)/api/users/[id]/lessons/schema';
+import { useEffect } from 'react';
 
 interface UserLessonsFormProps {
-  lessons: UserLessonsResponse["data"];
+  lessons: UserLessonsResponse['data'];
 }
 
 export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
   const { updateLessons } = useUpdateLessons();
 
-  const defaultLessons: UpdateLessonsRequest["lessons"] = lessons.map(
-    (lesson) => ({
-      id: lesson.id,
-      isDone: lesson.isDone,
-      note: lesson.note ?? "",
-    })
-  );
+  const defaultLessons: UpdateLessonsRequest['lessons'] = lessons.map((lesson) => ({
+    id: lesson.id,
+    isDone: lesson.isDone,
+    note: lesson.note ?? '',
+  }));
 
-  const { control, handleSubmit, register, reset } =
-    useForm<UpdateLessonsRequest>({
-      defaultValues: { lessons: defaultLessons },
-    });
+  const { control, handleSubmit, register, reset } = useForm<UpdateLessonsRequest>({
+    defaultValues: { lessons: defaultLessons },
+  });
 
   useEffect(() => {
     reset({ lessons: defaultLessons });
@@ -60,9 +57,7 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
                     render={({ field: { onChange, value } }) => (
                       <Checkbox.Root
                         checked={value}
-                        onCheckedChange={(details) =>
-                          onChange(!!details.checked)
-                        }
+                        onCheckedChange={(details) => onChange(!!details.checked)}
                       >
                         <Checkbox.HiddenInput />
                         <Checkbox.Control>
@@ -71,11 +66,7 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
                       </Checkbox.Root>
                     )}
                   />
-                  <input
-                    type="hidden"
-                    {...register(`lessons.${index}.id`)}
-                    value={lesson.id}
-                  />
+                  <input type="hidden" {...register(`lessons.${index}.id`)} value={lesson.id} />
                 </Table.Cell>
                 <Table.Cell>{formatDate(new Date(lesson.dueDate))}</Table.Cell>
                 <Table.Cell>{formatHour(lesson.dueHour)}</Table.Cell>
@@ -83,9 +74,7 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
                   {lesson.teacher.major.symbol} {lesson.teacher.name}
                 </Table.Cell>
                 <Table.Cell>{lesson.location.name}</Table.Cell>
-                <Table.Cell>
-                  {lesson.isGrand ? "그랜드 레슨" : "일반 레슨"}
-                </Table.Cell>
+                <Table.Cell>{lesson.isGrand ? '그랜드 레슨' : '일반 레슨'}</Table.Cell>
                 <Table.Cell>
                   <Textarea
                     {...register(`lessons.${index}.note`)}

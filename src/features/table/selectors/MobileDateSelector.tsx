@@ -1,18 +1,13 @@
-"use client";
+'use client';
 
-import { Box, Flex, Button, IconButton } from "@chakra-ui/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { isSameDate } from "@/utils/date";
-import { useTable } from "../providers/TableProvider";
+import { Box, Flex, Button, IconButton } from '@chakra-ui/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { isSameDate } from '@/utils/date';
+import { useTable } from '../providers/TableProvider';
 
 export default function MobileDateSelector() {
-  const {
-    datePeriod,
-    selectedDate,
-    setSelectedDate,
-    setPeriodToPrevious,
-    setPeriodToNext,
-  } = useTable();
+  const { datePeriod, selectedDate, setSelectedDate, setPeriodToPrevious, setPeriodToNext } =
+    useTable();
 
   const weekDays = [];
   const startDate = new Date(datePeriod.startDate);
@@ -23,7 +18,7 @@ export default function MobileDateSelector() {
     weekDays.push(currentDate);
   }
 
-  const dayNames = ["월", "화", "수", "목", "금", "토", "일"];
+  const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -37,7 +32,7 @@ export default function MobileDateSelector() {
           variant="ghost"
           size="sm"
           rounded="full"
-          _hover={{ bg: "gray.100" }}
+          _hover={{ bg: 'gray.100' }}
           aria-label="이전 주"
         >
           <ChevronLeft size={16} />
@@ -51,13 +46,13 @@ export default function MobileDateSelector() {
             return (
               <Button
                 key={index}
-                variant={isSelected ? "solid" : "ghost"}
+                variant={isSelected ? 'solid' : 'ghost'}
                 size="sm"
                 onClick={() => handleDateSelect(date)}
-                bg={isSelected ? "gray.800" : "transparent"}
-                color={isSelected ? "white" : "gray.900"}
+                bg={isSelected ? 'gray.800' : 'transparent'}
+                color={isSelected ? 'white' : 'gray.900'}
                 _hover={{
-                  bg: isSelected ? "gray.700" : "gray.100",
+                  bg: isSelected ? 'gray.700' : 'gray.100',
                 }}
                 borderRadius="md"
                 minW="0"
@@ -71,8 +66,8 @@ export default function MobileDateSelector() {
                 </Box>
                 <Box
                   fontSize="sm"
-                  fontWeight={isToday ? "bold" : "medium"}
-                  color={isToday && !isSelected ? "brand.500" : undefined}
+                  fontWeight={isToday ? 'bold' : 'medium'}
+                  color={isToday && !isSelected ? 'brand.500' : undefined}
                 >
                   {date.getDate()}
                 </Box>
@@ -86,7 +81,7 @@ export default function MobileDateSelector() {
           variant="ghost"
           size="sm"
           rounded="full"
-          _hover={{ bg: "gray.100" }}
+          _hover={{ bg: 'gray.100' }}
           aria-label="다음 주"
         >
           <ChevronRight size={16} />

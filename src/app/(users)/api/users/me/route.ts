@@ -1,15 +1,15 @@
-import prisma from "@/lib/prisma";
-import { getSession } from "@/lib/session";
-import { NextRequest, NextResponse } from "next/server";
-import { SingleUserResponse } from "../schema";
-import { buildErrorResponse } from "@/app/utils";
+import prisma from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import { NextRequest, NextResponse } from 'next/server';
+import { SingleUserResponse } from '../schema';
+import { buildErrorResponse } from '@/app/utils';
 
 export async function GET(request: NextRequest) {
   try {
     const { userId } = await getSession();
 
     if (!userId) {
-      return NextResponse.json({ error: "Bad Request" }, { status: 400 });
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     return NextResponse.json<SingleUserResponse>({

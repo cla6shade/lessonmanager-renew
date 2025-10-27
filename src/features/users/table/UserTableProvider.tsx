@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import { createContext, useState, ReactNode, use } from 'react';
-import { useNavigation } from "../../navigation/provider/NavigationContext";
-import { useFilter } from "../search/FilterProvider";
-import useFetchUsers from "../search/useFetchUsers";
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import { Location } from "@/generated/prisma";
+import { useNavigation } from '../../navigation/provider/NavigationContext';
+import { useFilter } from '../search/FilterProvider';
+import useFetchUsers from '../search/useFetchUsers';
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
+import { Location } from '@/generated/prisma';
 
 interface UserTableContextType {
   selectedLocation: Location;
@@ -23,14 +23,12 @@ interface UserTableContextType {
   refetchUsers: () => void;
 }
 
-const UserTableContext = createContext<UserTableContextType | undefined>(
-  undefined
-);
+const UserTableContext = createContext<UserTableContextType | undefined>(undefined);
 
 export function useUserTable() {
   const context = use(UserTableContext);
   if (!context) {
-    throw new Error("useUserTable must be used within UserTableProvider");
+    throw new Error('useUserTable must be used within UserTableProvider');
   }
   return context;
 }
@@ -40,14 +38,10 @@ interface UserTableProviderProps {
 }
 
 export function UserTableProvider({ children }: UserTableProviderProps) {
-  const { selectedLocation: defaultSelectedLocation, locations } =
-    useNavigation();
-  const { currentFilter, searchName, searchContact, searchBirthDate } =
-    useFilter();
+  const { selectedLocation: defaultSelectedLocation, locations } = useNavigation();
+  const { currentFilter, searchName, searchContact, searchBirthDate } = useFilter();
 
-  const [location, setLocation] = useState(
-    defaultSelectedLocation
-  );
+  const [location, setLocation] = useState(defaultSelectedLocation);
   const [page, setPage] = useState(1);
 
   const { users, total, totalPages, loading, error, refetch } = useFetchUsers({
@@ -63,7 +57,7 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
   const setSelectedLocation = (location: Location) => {
     setLocation(location);
     setPage(1);
-  }
+  };
 
   const contextValue: UserTableContextType = {
     selectedLocation: location,
@@ -80,9 +74,5 @@ export function UserTableProvider({ children }: UserTableProviderProps) {
     refetchUsers: refetch,
   };
 
-  return (
-    <UserTableContext.Provider value={contextValue}>
-      {children}
-    </UserTableContext.Provider>
-  );
+  return <UserTableContext.Provider value={contextValue}>{children}</UserTableContext.Provider>;
 }

@@ -1,6 +1,6 @@
-import brand from "@/brand/baseInfo";
-import colors from "@/brand/colors";
-import { Box, Button, Text } from "@chakra-ui/react";
+import brand from '@/brand/baseInfo';
+import colors from '@/brand/colors';
+import { Box, Button, Text } from '@chakra-ui/react';
 
 interface PageHeaderProps {
   onOpen: () => void;
@@ -15,7 +15,7 @@ export default function PageHeader({ onOpen }: PageHeaderProps) {
       bg={colors.brandPanel}
       top={0}
       left={0}
-      display={{ base: "flex", lg: "none" }}
+      display={{ base: 'flex', lg: 'none' }}
       alignItems="center"
     >
       <Button

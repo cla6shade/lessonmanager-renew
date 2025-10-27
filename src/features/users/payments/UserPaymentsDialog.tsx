@@ -1,6 +1,6 @@
-import { Text, VStack, Dialog, Portal, Button } from "@chakra-ui/react";
+import { Text, VStack, Dialog, Portal, Button } from '@chakra-ui/react';
 
-import UserPaymentsTable from "./UserPaymentsTable";
+import UserPaymentsTable from './UserPaymentsTable';
 
 interface UserPaymentsDialogProps {
   userId: number;

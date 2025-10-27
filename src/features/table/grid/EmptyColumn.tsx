@@ -1,4 +1,4 @@
-import { Grid, Box } from "@chakra-ui/react";
+import { Grid, Box } from '@chakra-ui/react';
 
 interface EmptyColumnProps {
   allTimes: number[];
@@ -17,9 +17,7 @@ export default function EmptyColumn({ allTimes, date }: EmptyColumnProps) {
         <Box
           key={`empty-${date.toDateString()}-${hour}`}
           borderBottom="1px solid"
-          borderBottomColor={
-            hourIndex < allTimes.length - 1 ? "gray.200" : "transparent"
-          }
+          borderBottomColor={hourIndex < allTimes.length - 1 ? 'gray.200' : 'transparent'}
         />
       ))}
     </Grid>

@@ -1,29 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
   CreateTeacherRequestSchema,
   CreateTeacherResponse,
   TeacherSearchRequestSchema,
   TeacherSearchResponse,
-} from "./schema";
-import { searchTeachers, createTeacher } from "../../service";
-import { buildErrorResponse } from "@/app/utils";
-import { getSession } from "@/lib/session";
-import { encryptPassword } from "@/app/(auth)/login/service";
-import { initWorkingTime } from "@/app/(table)/service";
+} from './schema';
+import { searchTeachers, createTeacher } from '../../service';
+import { buildErrorResponse } from '@/app/utils';
+import { getSession } from '@/lib/session';
+import { encryptPassword } from '@/app/(auth)/login/service';
+import { initWorkingTime } from '@/app/(table)/service';
 
 export async function GET(request: NextRequest) {
   try {
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
     const queryParams = {
-      startDate: searchParams.get("startDate") || undefined,
-      endDate: searchParams.get("endDate") || undefined,
-      page: searchParams.get("page") || "1",
-      limit: searchParams.get("limit") || "20",
+      startDate: searchParams.get('startDate') || undefined,
+      endDate: searchParams.get('endDate') || undefined,
+      page: searchParams.get('page') || '1',
+      limit: searchParams.get('limit') || '20',
     };
 
     const validatedParams = TeacherSearchRequestSchema.parse(queryParams);
@@ -53,25 +53,17 @@ export async function POST(request: NextRequest) {
   try {
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     let requestData = CreateTeacherRequestSchema.parse(await request.json());
     const { password, passwordConfirm } = requestData;
 
     if (password !== passwordConfirm) {
-      return NextResponse.json(
-        { error: "비밀번호가 일치하지 않습니다." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '비밀번호가 일치하지 않습니다.' }, { status: 400 });
     }
 
-    const {
-      locationId,
-      majorId,
-      passwordConfirm: _,
-      ...otherData
-    } = requestData;
+    const { locationId, majorId, passwordConfirm: _, ...otherData } = requestData;
 
     const creationData = {
       ...otherData,

@@ -1,14 +1,14 @@
-import prisma from "@/lib/prisma";
+import prisma from '@/lib/prisma';
 import {
   RawTeacherSearchResult,
   TeacherSearchRequest,
   TeacherSearchResult,
   TeacherSearchSelectInput,
-} from "./api/teachers/schema";
-import { Prisma } from "@/generated/prisma";
-import { getPaginationQuery } from "../utils";
-import { getLessons } from "../(lessons)/service";
-import { getUserPaymentsInRange } from "../(users)/service";
+} from './api/teachers/schema';
+import { Prisma } from '@/generated/prisma';
+import { getPaginationQuery } from '../utils';
+import { getLessons } from '../(lessons)/service';
+import { getUserPaymentsInRange } from '../(users)/service';
 
 export async function searchTeachers({
   startDate,
@@ -21,32 +21,22 @@ export async function searchTeachers({
   const teacherSelectInput = getTeacherSelectInput();
   const paginationInput = getPaginationInput({ page, limit });
 
-  return findTeachers(
-    where,
-    teacherSelectInput,
-    paginationInput,
-    startDate,
-    endDate
-  );
+  return findTeachers(where, teacherSelectInput, paginationInput, startDate, endDate);
 }
 
 async function findTeachers(
   where: Prisma.TeacherWhereInput,
-  selectInput: Omit<TeacherSearchSelectInput, "skip" | "take">,
+  selectInput: Omit<TeacherSearchSelectInput, 'skip' | 'take'>,
   paginationInput: { skip: number; take: number },
   startDate?: Date,
-  endDate?: Date
+  endDate?: Date,
 ): Promise<[TeacherSearchResult[], number]> {
   const [rawTeachers, total] = await Promise.all([
     prisma.teacher.findMany({ where, ...selectInput, ...paginationInput }),
     getTeacherTotalCount(where),
   ]);
 
-  const teachersWithReregisterRate = await combineFractions(
-    rawTeachers,
-    startDate,
-    endDate
-  );
+  const teachersWithReregisterRate = await combineFractions(rawTeachers, startDate, endDate);
 
   return [teachersWithReregisterRate, total];
 }
@@ -62,24 +52,18 @@ export function getTeacherTotalCount(where: Prisma.TeacherWhereInput) {
   return prisma.teacher.count({ where });
 }
 
-export function getTeacherSelectInput(): Omit<
-  TeacherSearchSelectInput,
-  "skip" | "take"
-> {
+export function getTeacherSelectInput(): Omit<TeacherSearchSelectInput, 'skip' | 'take'> {
   return {
     include: {
       location: true,
       major: true,
     },
     omit: { password: true },
-    orderBy: { registeredAt: "desc" as const },
+    orderBy: { registeredAt: 'desc' as const },
   };
 }
 
-export function getPaginationInput({
-  page,
-  limit,
-}: Pick<TeacherSearchRequest, "page" | "limit">) {
+export function getPaginationInput({ page, limit }: Pick<TeacherSearchRequest, 'page' | 'limit'>) {
   return getPaginationQuery(page, limit);
 }
 
@@ -89,10 +73,7 @@ export async function createTeacher(data: Prisma.TeacherCreateInput) {
   });
 }
 
-export async function updateTeacher(
-  id: number,
-  data: Prisma.TeacherUpdateInput
-) {
+export async function updateTeacher(id: number, data: Prisma.TeacherUpdateInput) {
   return prisma.teacher.update({
     where: { id },
     data,
@@ -117,14 +98,12 @@ export async function getUsersInCharge(teacherId: number) {
 export async function getReregisterFraction(
   startDate: Date,
   endDate: Date,
-  teacherId: number
+  teacherId: number,
 ): Promise<[number, number]> {
-  const userIds = (await getUsersInCharge(teacherId)).users.map(
-    (user) => user.id
+  const userIds = (await getUsersInCharge(teacherId)).users.map((user) => user.id);
+  const payments = (await getUserPaymentsInRange(startDate, endDate, userIds)).flatMap((user) =>
+    user.payments[0] ? [user.payments[0]] : [],
   );
-  const payments = (
-    await getUserPaymentsInRange(startDate, endDate, userIds)
-  ).flatMap((user) => (user.payments[0] ? [user.payments[0]] : []));
 
   let [numerator, denominator] = [0, payments.length];
   payments.forEach((payment) => {
@@ -140,7 +119,7 @@ export async function getReregisterFraction(
 export async function getLessonCompletionFraction(
   startDate: Date,
   endDate: Date,
-  teacherId: number
+  teacherId: number,
 ): Promise<[number, number]> {
   const lessons = await getLessons({
     startDate,
@@ -157,16 +136,15 @@ export async function getLessonCompletionFraction(
 async function combineFractions(
   teachers: RawTeacherSearchResult[],
   startDate?: Date,
-  endDate?: Date
+  endDate?: Date,
 ): Promise<TeacherSearchResult[]> {
   return Promise.all(
     teachers.map(async (teacher) => {
       if (startDate && endDate) {
-        const [reregisterFraction, lessonCompletionFraction] =
-          await Promise.all([
-            getReregisterFraction(startDate, endDate, teacher.id),
-            getLessonCompletionFraction(startDate, endDate, teacher.id),
-          ]);
+        const [reregisterFraction, lessonCompletionFraction] = await Promise.all([
+          getReregisterFraction(startDate, endDate, teacher.id),
+          getLessonCompletionFraction(startDate, endDate, teacher.id),
+        ]);
         return {
           ...teacher,
           reregisterFraction,
@@ -178,7 +156,7 @@ async function combineFractions(
         reregisterFraction: [0, 0],
         lessonCompletionFraction: [0, 0],
       };
-    })
+    }),
   );
 }
 

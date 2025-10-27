@@ -1,26 +1,17 @@
-import {
-  Text,
-  VStack,
-  HStack,
-  Separator,
-  Button,
-  Input,
-  Box,
-  Flex,
-} from "@chakra-ui/react";
-import { useState, useCallback } from "react";
-import { CenteredSpinner } from "@/components/Spinner";
-import { formatDate } from "@/utils/date";
-import { useUpdateUser } from "./useUpdateUser";
-import { UpdateUserRequestSchema } from "@/app/(users)/api/users/[id]/schema";
-import { useUserTable } from "../table/UserTableProvider";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import LocationSelector from "@/features/selectors/LocationSelector";
-import z from "zod";
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import UserStartdateSetDialog from "../payments/UserStartdateSetDialog";
-import DateInput from "@/features/inputs/DateInput";
+import { Text, VStack, HStack, Separator, Button, Input, Box, Flex } from '@chakra-ui/react';
+import { useState, useCallback } from 'react';
+import { CenteredSpinner } from '@/components/Spinner';
+import { formatDate } from '@/utils/date';
+import { useUpdateUser } from './useUpdateUser';
+import { UpdateUserRequestSchema } from '@/app/(users)/api/users/[id]/schema';
+import { useUserTable } from '../table/UserTableProvider';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import LocationSelector from '@/features/selectors/LocationSelector';
+import z from 'zod';
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
+import UserStartdateSetDialog from '../payments/UserStartdateSetDialog';
+import DateInput from '@/features/inputs/DateInput';
 
 const UpdateUserFormSchema = UpdateUserRequestSchema.extend({
   birth: z.string(),
@@ -44,24 +35,23 @@ export default function UserDetailContent({
 
   const { update, isSaving } = useUpdateUser();
   const { locations } = useUserTable();
-  const [isStartDateSetDialogOpen, setIsStartDateSetDialogOpen] =
-    useState(false);
+  const [isStartDateSetDialogOpen, setIsStartDateSetDialogOpen] = useState(false);
   const form = useForm<z.input<typeof UpdateUserFormSchema>>({
     resolver: zodResolver(UpdateUserFormSchema),
     defaultValues: {
-      name: user?.name || "",
-      contact: user?.contact || "",
-      birth: user?.birth ? new Date(user.birth).toISOString() : "",
-      address: user?.address || "",
-      email: user?.email || "",
-      ability: user?.ability || "",
-      genre: user?.genre || "",
+      name: user?.name || '',
+      contact: user?.contact || '',
+      birth: user?.birth ? new Date(user.birth).toISOString() : '',
+      address: user?.address || '',
+      email: user?.email || '',
+      ability: user?.ability || '',
+      genre: user?.genre || '',
       locationId: user?.locationId === undefined ? 0 : user.locationId,
     },
   });
 
   const formatText = (text: string | null | undefined) => {
-    if (!text || text.trim() === "") return "(없음)";
+    if (!text || text.trim() === '') return '(없음)';
     return text;
   };
 
@@ -71,8 +61,8 @@ export default function UserDetailContent({
 
       const { success, data: updatedUser } = await update(data, {
         endpoint: `/api/users/${user.id}`,
-        method: "PUT",
-        successMessage: "사용자 정보가 수정되었습니다.",
+        method: 'PUT',
+        successMessage: '사용자 정보가 수정되었습니다.',
       });
 
       if (success && updatedUser) {
@@ -81,19 +71,19 @@ export default function UserDetailContent({
         setIsEditMode(false);
       }
     },
-    [user, update, onUserUpdate]
+    [user, update, onUserUpdate],
   );
 
   const handleCancel = () => {
     if (user) {
       form.reset({
-        name: user.name || "",
-        contact: user.contact || "",
-        birth: user.birth?.toISOString() || "",
-        address: user.address || "",
-        email: user.email || "",
-        ability: user.ability || "",
-        genre: user.genre || "",
+        name: user.name || '',
+        contact: user.contact || '',
+        birth: user.birth?.toISOString() || '',
+        address: user.address || '',
+        email: user.email || '',
+        ability: user.ability || '',
+        genre: user.genre || '',
         locationId: user.locationId,
       });
     }
@@ -101,7 +91,7 @@ export default function UserDetailContent({
   };
 
   const handleLocationSelect = (locationId: number) => {
-    form.setValue("locationId", locationId);
+    form.setValue('locationId', locationId);
   };
 
   if (loading) {
@@ -126,11 +116,7 @@ export default function UserDetailContent({
 
           <HStack justify="space-between">
             <Text fontWeight="bold">생년월일:</Text>
-            <Text>
-              {user.birth
-                ? formatDate(new Date(user.birth), true, true)
-                : "(없음)"}
-            </Text>
+            <Text>{user.birth ? formatDate(new Date(user.birth), true, true) : '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
@@ -160,7 +146,7 @@ export default function UserDetailContent({
 
           <HStack justify="space-between">
             <Text fontWeight="bold">지점:</Text>
-            <Text>{user.location?.name || "(없음)"}</Text>
+            <Text>{user.location?.name || '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
@@ -168,20 +154,18 @@ export default function UserDetailContent({
             <Text>
               {user.teacherInCharge
                 ? `${user.teacherInCharge.major.symbol} ${user.teacherInCharge.name}`
-                : "(없음)"}
+                : '(없음)'}
             </Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">레슨 횟수:</Text>
-            <Text>{user.lessonCount ? `${user.lessonCount}회` : "(없음)"}</Text>
+            <Text>{user.lessonCount ? `${user.lessonCount}회` : '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">사용한 레슨 횟수:</Text>
-            <Text>
-              {user.usedLessonCount ? `${user.usedLessonCount}회` : "(없음)"}
-            </Text>
+            <Text>{user.usedLessonCount ? `${user.usedLessonCount}회` : '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
@@ -196,16 +180,12 @@ export default function UserDetailContent({
               <Text fontWeight="bold">결제 기간:</Text>
               <Flex gap={2} align="center">
                 {user.payments[0].startDate && user.payments[0].endDate
-                  ? `${formatDate(
-                      new Date(user.payments[0].startDate),
-                      true,
-                      true
-                    )} ~ ${formatDate(
+                  ? `${formatDate(new Date(user.payments[0].startDate), true, true)} ~ ${formatDate(
                       new Date(user.payments[0].endDate),
                       true,
-                      true
+                      true,
                     )}`
-                  : "시작일 미정"}
+                  : '시작일 미정'}
                 {user.payments[0].refunded && (
                   <Text as="span" color="red.500" ml={2}>
                     (환불됨)
@@ -236,15 +216,15 @@ export default function UserDetailContent({
           <VStack gap={4} align="stretch">
             <Box>
               <Text fontWeight="bold" mb={2}>
-                이름{" "}
+                이름{' '}
                 <Text as="span" color="red.500">
                   *
                 </Text>
               </Text>
               <Input
-                {...form.register("name")}
+                {...form.register('name')}
                 placeholder="이름을 입력하세요"
-                borderColor={form.formState.errors.name ? "red.500" : undefined}
+                borderColor={form.formState.errors.name ? 'red.500' : undefined}
               />
               {form.formState.errors.name && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -262,9 +242,7 @@ export default function UserDetailContent({
                 name="birth"
                 render={({ field }) => (
                   <DateInput
-                    borderColor={
-                      form.formState.errors.birth ? "red.500" : undefined
-                    }
+                    borderColor={form.formState.errors.birth ? 'red.500' : undefined}
                     {...field}
                   />
                 )}
@@ -281,11 +259,9 @@ export default function UserDetailContent({
                 연락처
               </Text>
               <Input
-                {...form.register("contact")}
+                {...form.register('contact')}
                 placeholder="연락처를 입력하세요"
-                borderColor={
-                  form.formState.errors.contact ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.contact ? 'red.500' : undefined}
               />
               {form.formState.errors.contact && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -299,11 +275,9 @@ export default function UserDetailContent({
                 주소
               </Text>
               <Input
-                {...form.register("address")}
+                {...form.register('address')}
                 placeholder="주소를 입력하세요"
-                borderColor={
-                  form.formState.errors.address ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.address ? 'red.500' : undefined}
               />
               {form.formState.errors.address && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -318,11 +292,9 @@ export default function UserDetailContent({
               </Text>
               <Input
                 type="email"
-                {...form.register("email")}
+                {...form.register('email')}
                 placeholder="이메일을 입력하세요"
-                borderColor={
-                  form.formState.errors.email ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.email ? 'red.500' : undefined}
               />
               {form.formState.errors.email && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -336,11 +308,9 @@ export default function UserDetailContent({
                 경력
               </Text>
               <Input
-                {...form.register("ability")}
+                {...form.register('ability')}
                 placeholder="경력을 입력하세요"
-                borderColor={
-                  form.formState.errors.ability ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.ability ? 'red.500' : undefined}
               />
               {form.formState.errors.ability && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -354,11 +324,9 @@ export default function UserDetailContent({
                 장르
               </Text>
               <Input
-                {...form.register("genre")}
+                {...form.register('genre')}
                 placeholder="선호 장르를 입력하세요"
-                borderColor={
-                  form.formState.errors.genre ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.genre ? 'red.500' : undefined}
               />
               {form.formState.errors.genre && (
                 <Text color="red.500" fontSize="sm" mt={1}>
@@ -369,14 +337,14 @@ export default function UserDetailContent({
 
             <Box>
               <Text fontWeight="bold" mb={2}>
-                지점{" "}
+                지점{' '}
                 <Text as="span" color="red.500">
                   *
                 </Text>
               </Text>
               <LocationSelector
                 locations={locations}
-                selectedLocationId={form.watch("locationId")}
+                selectedLocationId={form.watch('locationId')}
                 onLocationSelect={handleLocationSelect}
                 placeholder="지점을 선택하세요"
               />
@@ -395,7 +363,7 @@ export default function UserDetailContent({
                 value={
                   user.teacherInCharge
                     ? `${user.teacherInCharge.major.symbol} ${user.teacherInCharge.name}`
-                    : "(없음)"
+                    : '(없음)'
                 }
                 readOnly
                 bg="gray.50"

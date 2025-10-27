@@ -1,22 +1,11 @@
-"use client";
+'use client';
 
-import {
-  Text,
-  Box,
-  Popover,
-  Portal,
-  Flex,
-  Button,
-  VStack,
-} from "@chakra-ui/react";
-import { ChevronDown, User } from "lucide-react";
-import { useState } from "react";
-import { ExtendedTeacher } from "../table/types";
+import { Text, Box, Popover, Portal, Flex, Button, VStack } from '@chakra-ui/react';
+import { ChevronDown, User } from 'lucide-react';
+import { useState } from 'react';
+import { ExtendedTeacher } from '../table/types';
 
-type SelectableTeacher = Pick<
-  ExtendedTeacher,
-  "id" | "name" | "major" | "location"
->;
+type SelectableTeacher = Pick<ExtendedTeacher, 'id' | 'name' | 'major' | 'location'>;
 
 interface TeacherSelectorProps {
   teachers: SelectableTeacher[];
@@ -32,10 +21,10 @@ export default function TeacherSelector({
   teachers,
   selectedTeacher,
   onTeacherSelect,
-  placeholder = "선생님을 선택하세요",
+  placeholder = '선생님을 선택하세요',
   disabled = false,
   displayAllOption = true,
-  allOptionText = "전체",
+  allOptionText = '전체',
 }: TeacherSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,17 +38,11 @@ export default function TeacherSelector({
     : placeholder;
 
   return (
-    <Box
-      bg="white"
-      borderRadius="md"
-      border="1px"
-      borderColor="gray.200"
-      width="100%"
-    >
+    <Box bg="white" borderRadius="md" border="1px" borderColor="gray.200" width="100%">
       <Popover.Root
         open={isOpen}
         onOpenChange={({ open }) => setIsOpen(open)}
-        positioning={{ placement: "bottom" }}
+        positioning={{ placement: 'bottom' }}
       >
         <Popover.Trigger>
           <Box
@@ -68,8 +51,8 @@ export default function TeacherSelector({
             px={3}
             py={2}
             rounded="md"
-            cursor={disabled ? "not-allowed" : "pointer"}
-            _hover={disabled ? {} : { bg: "gray.50" }}
+            cursor={disabled ? 'not-allowed' : 'pointer'}
+            _hover={disabled ? {} : { bg: 'gray.50' }}
             minWidth="200px"
             width="100%"
             opacity={disabled ? 0.6 : 1}
@@ -102,9 +85,9 @@ export default function TeacherSelector({
                       size="sm"
                       justifyContent="flex-start"
                       onClick={() => handleTeacherSelect(null)}
-                      bg={!selectedTeacher ? "brand.50" : "transparent"}
-                      color={!selectedTeacher ? "brand.600" : "gray.700"}
-                      _hover={{ bg: "brand.100" }}
+                      bg={!selectedTeacher ? 'brand.50' : 'transparent'}
+                      color={!selectedTeacher ? 'brand.600' : 'gray.700'}
+                      _hover={{ bg: 'brand.100' }}
                     >
                       {allOptionText}
                     </Button>
@@ -116,17 +99,9 @@ export default function TeacherSelector({
                       size="sm"
                       justifyContent="flex-start"
                       onClick={() => handleTeacherSelect(teacher)}
-                      bg={
-                        selectedTeacher?.id === teacher.id
-                          ? "brand.50"
-                          : "transparent"
-                      }
-                      color={
-                        selectedTeacher?.id === teacher.id
-                          ? "brand.600"
-                          : "gray.700"
-                      }
-                      _hover={{ bg: "brand.100" }}
+                      bg={selectedTeacher?.id === teacher.id ? 'brand.50' : 'transparent'}
+                      color={selectedTeacher?.id === teacher.id ? 'brand.600' : 'gray.700'}
+                      _hover={{ bg: 'brand.100' }}
                     >
                       {teacher.major.symbol}
                       {teacher.name}

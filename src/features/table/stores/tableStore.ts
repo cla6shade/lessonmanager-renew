@@ -1,14 +1,14 @@
-import { createStore } from "zustand";
-import type { StoreApi } from "zustand";
-import { OpenHours, WorkingTime } from "@/generated/prisma";
+import { createStore } from 'zustand';
+import type { StoreApi } from 'zustand';
+import { OpenHours, WorkingTime } from '@/generated/prisma';
 import {
   DatePeriod,
   getCurrentDatePeriod,
   getNextDatePeriod,
   getPreviousDatePeriod,
   setDateToStartOfDay,
-} from "@/utils/date";
-import { ExtendedTeacher } from "../types";
+} from '@/utils/date';
+import { ExtendedTeacher } from '../types';
 
 export interface TableState {
   openHours: OpenHours;

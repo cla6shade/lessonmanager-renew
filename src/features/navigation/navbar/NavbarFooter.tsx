@@ -1,5 +1,5 @@
-import { logoutAction } from "@/app/(auth)/login/loginAction";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { logoutAction } from '@/app/(auth)/login/loginAction';
+import { Box, Button, Text } from '@chakra-ui/react';
 import { useActionState, useEffect } from 'react';
 
 export default function NavbarFooter() {

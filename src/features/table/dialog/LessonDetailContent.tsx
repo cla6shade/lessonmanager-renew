@@ -1,32 +1,25 @@
-import {
-  Text,
-  VStack,
-  HStack,
-  Separator,
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useCallback } from "react";
-import StatusBadge from "@/components/ui/status-badge";
-import { CenteredSpinner } from "@/components/Spinner";
-import { formatDate, formatHour } from "@/utils/date";
-import { useUpdate } from "@/hooks/useUpdate";
+import { Text, VStack, HStack, Separator, Button, useDisclosure } from '@chakra-ui/react';
+import { useCallback } from 'react';
+import StatusBadge from '@/components/ui/status-badge';
+import { CenteredSpinner } from '@/components/Spinner';
+import { formatDate, formatHour } from '@/utils/date';
+import { useUpdate } from '@/hooks/useUpdate';
 import {
   CancelLessonResponse,
   UpdateLessonRequest,
   UpdateLessonResponse,
-} from "@/app/(lessons)/api/lessons/[id]/schema";
-import LessonCancelDialog from "./LessonCancelDialog";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { GetLessonDetailResponse } from "@/app/(lessons)/api/lessons/[id]/schema";
+} from '@/app/(lessons)/api/lessons/[id]/schema';
+import LessonCancelDialog from './LessonCancelDialog';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import { GetLessonDetailResponse } from '@/app/(lessons)/api/lessons/[id]/schema';
 
 interface LessonDetailContentProps {
-  lesson?: GetLessonDetailResponse["data"];
+  lesson?: GetLessonDetailResponse['data'];
   loading: boolean;
   error: string | null;
   onUserLessonsClick: () => void;
-  onLessonUpdate: (updatedLesson: GetLessonDetailResponse["data"]) => void;
-  onLessonCancel: (cancelledLesson: CancelLessonResponse["data"]) => void;
+  onLessonUpdate: (updatedLesson: GetLessonDetailResponse['data']) => void;
+  onLessonCancel: (cancelledLesson: CancelLessonResponse['data']) => void;
 }
 
 export default function LessonDetailContent({
@@ -37,10 +30,7 @@ export default function LessonDetailContent({
   onLessonUpdate,
   onLessonCancel,
 }: LessonDetailContentProps) {
-  const { update, isSaving } = useUpdate<
-    UpdateLessonRequest,
-    UpdateLessonResponse
-  >();
+  const { update, isSaving } = useUpdate<UpdateLessonRequest, UpdateLessonResponse>();
   const { isAdmin } = useNavigation();
 
   const {
@@ -50,7 +40,7 @@ export default function LessonDetailContent({
   } = useDisclosure();
 
   const formatText = (text: string | null) => {
-    if (!text || text.trim() === "") return "(없음)";
+    if (!text || text.trim() === '') return '(없음)';
     return text;
   };
 
@@ -61,12 +51,12 @@ export default function LessonDetailContent({
       { isDone: !lesson.isDone },
       {
         endpoint: `/api/lessons/${lesson.id}`,
-        method: "PUT",
+        method: 'PUT',
         successMessage: lesson.isDone
-          ? "레슨이 미완료 처리되었습니다."
-          : "레슨이 완료 처리되었습니다.",
-        errorMessage: "레슨 상태 업데이트 중 오류가 발생했습니다.",
-      }
+          ? '레슨이 미완료 처리되었습니다.'
+          : '레슨이 완료 처리되었습니다.',
+        errorMessage: '레슨 상태 업데이트 중 오류가 발생했습니다.',
+      },
     );
 
     if (result.success && result.data) {
@@ -148,7 +138,7 @@ export default function LessonDetailContent({
 
       <HStack justify="space-between">
         <Text fontWeight="bold">레슨 분류:</Text>
-        <Text>{lesson.isGrand ? "그랜드 레슨" : "일반 레슨"}</Text>
+        <Text>{lesson.isGrand ? '그랜드 레슨' : '일반 레슨'}</Text>
       </HStack>
 
       {isAdmin && (
@@ -166,22 +156,12 @@ export default function LessonDetailContent({
       <Separator />
       <HStack gap={2} justify="stretch">
         {isAdmin && (
-          <Button
-            onClick={handleToggleDone}
-            loading={isSaving}
-            loadingText="처리 중..."
-            flex={1}
-          >
-            {lesson.isDone ? "미완료 처리" : "완료 처리"}
+          <Button onClick={handleToggleDone} loading={isSaving} loadingText="처리 중..." flex={1}>
+            {lesson.isDone ? '미완료 처리' : '완료 처리'}
           </Button>
         )}
 
-        <Button
-          colorPalette="red"
-          variant="outline"
-          onClick={onCancelDialogOpen}
-          flex={1}
-        >
+        <Button colorPalette="red" variant="outline" onClick={onCancelDialogOpen} flex={1}>
           레슨 취소
         </Button>
       </HStack>

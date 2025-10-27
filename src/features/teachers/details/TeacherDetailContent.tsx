@@ -1,19 +1,11 @@
-import {
-  Text,
-  VStack,
-  HStack,
-  Separator,
-  Button,
-  Alert,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useState, useCallback } from "react";
-import { CenteredSpinner } from "@/components/Spinner";
-import { formatDate } from "@/utils/date";
-import { useUpdateTeacher } from "./useUpdateTeacher";
-import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import TeacherEditForm from "@/features/teachers/details/TeacherEditForm";
+import { Text, VStack, HStack, Separator, Button, Alert, useDisclosure } from '@chakra-ui/react';
+import { useState, useCallback } from 'react';
+import { CenteredSpinner } from '@/components/Spinner';
+import { formatDate } from '@/utils/date';
+import { useUpdateTeacher } from './useUpdateTeacher';
+import { TeacherSearchResult } from '@/app/(teachers)/api/teachers/schema';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import TeacherEditForm from '@/features/teachers/details/TeacherEditForm';
 
 interface TeacherDetailContentProps {
   teacher: TeacherSearchResult;
@@ -35,14 +27,10 @@ export default function TeacherDetailContent({
 
   const { deleteTeacher } = useUpdateTeacher();
   const { locations, majors } = useNavigation();
-  const {
-    open: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onCloseAlert,
-  } = useDisclosure();
+  const { open: isAlertOpen, onOpen: onAlertOpen, onClose: onCloseAlert } = useDisclosure();
 
   const formatText = (text: string | null | undefined) => {
-    if (!text || text.trim() === "") return "(없음)";
+    if (!text || text.trim() === '') return '(없음)';
     return text;
   };
 
@@ -54,7 +42,7 @@ export default function TeacherDetailContent({
     if (!teacher) return;
 
     const { success, data: updatedTeacher } = await deleteTeacher(teacher.id, {
-      successMessage: "선생님 퇴사 처리가 완료되었습니다.",
+      successMessage: '선생님 퇴사 처리가 완료되었습니다.',
     });
 
     if (success) {
@@ -87,15 +75,13 @@ export default function TeacherDetailContent({
           <HStack justify="space-between">
             <Text fontWeight="bold">생년월일:</Text>
             <Text>
-              {teacher.birth
-                ? formatDate(new Date(teacher.birth), true, true)
-                : "(없음)"}
+              {teacher.birth ? formatDate(new Date(teacher.birth), true, true) : '(없음)'}
             </Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">성별:</Text>
-            <Text>{teacher.gender ? "여성" : "남성"}</Text>
+            <Text>{teacher.gender ? '여성' : '남성'}</Text>
           </HStack>
 
           <HStack justify="space-between">
@@ -116,33 +102,29 @@ export default function TeacherDetailContent({
           <HStack justify="space-between">
             <Text fontWeight="bold">전공:</Text>
             <Text>
-              {teacher.major
-                ? `${teacher.major.symbol} ${teacher.major.name}`
-                : "(없음)"}
+              {teacher.major ? `${teacher.major.symbol} ${teacher.major.name}` : '(없음)'}
             </Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">지점:</Text>
-            <Text>{teacher.location?.name || "(없음)"}</Text>
+            <Text>{teacher.location?.name || '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">관리자:</Text>
-            <Text>{teacher.isManager ? "예" : "아니오"}</Text>
+            <Text>{teacher.isManager ? '예' : '아니오'}</Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">근무일수:</Text>
-            <Text>
-              {teacher.workingDays ? `${teacher.workingDays}일` : "(없음)"}
-            </Text>
+            <Text>{teacher.workingDays ? `${teacher.workingDays}일` : '(없음)'}</Text>
           </HStack>
 
           <HStack justify="space-between">
             <Text fontWeight="bold">퇴사 상태:</Text>
-            <Text color={teacher.isLeaved ? "red.500" : "green.500"}>
-              {teacher.isLeaved ? "퇴사" : "재직"}
+            <Text color={teacher.isLeaved ? 'red.500' : 'green.500'}>
+              {teacher.isLeaved ? '퇴사' : '재직'}
             </Text>
           </HStack>
 
@@ -151,17 +133,13 @@ export default function TeacherDetailContent({
             <Text>
               {teacher.registeredAt
                 ? formatDate(new Date(teacher.registeredAt), true, true)
-                : "(없음)"}
+                : '(없음)'}
             </Text>
           </HStack>
 
           <Separator />
           <HStack gap={2} justify="stretch">
-            <Button
-              onClick={() => setIsEditMode(true)}
-              colorPalette="brand"
-              flex={1}
-            >
+            <Button onClick={() => setIsEditMode(true)} colorPalette="brand" flex={1}>
               수정하기
             </Button>
             <Button
@@ -192,8 +170,7 @@ export default function TeacherDetailContent({
           <Alert.Content>
             <Alert.Title>선생님 퇴사 처리</Alert.Title>
             <Alert.Description>
-              정말로 이 선생님을 퇴사 처리하시겠습니까? 이 작업은 되돌릴 수
-              없습니다.
+              정말로 이 선생님을 퇴사 처리하시겠습니까? 이 작업은 되돌릴 수 없습니다.
             </Alert.Description>
           </Alert.Content>
           <HStack gap={2} ml={4}>

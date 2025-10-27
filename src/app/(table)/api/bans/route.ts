@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
   GetBannedTimesQuerySchema,
   GetBannedTimesResponse,
@@ -6,21 +6,16 @@ import {
   CreateBannedTimeResponse,
   UpdateBannedTimesRequestSchema,
   UpdateBannedTimesResponse,
-} from "./schema";
-import { buildErrorResponse } from "@/app/utils";
-import { getSession } from "@/lib/session";
-import {
-  getBannedTimes,
-  createBannedTime,
-  updateBannedTimes,
-} from "../../service";
+} from './schema';
+import { buildErrorResponse } from '@/app/utils';
+import { getSession } from '@/lib/session';
+import { getBannedTimes, createBannedTime, updateBannedTimes } from '../../service';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const rawQuery = Object.fromEntries(searchParams.entries());
-    const { startDate, endDate, teacherId } =
-      GetBannedTimesQuerySchema.parse(rawQuery);
+    const { startDate, endDate, teacherId } = GetBannedTimesQuerySchema.parse(rawQuery);
 
     const bannedTimes = await getBannedTimes({
       startDate,
@@ -38,12 +33,10 @@ export async function POST(request: NextRequest) {
   try {
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const requestData = CreateBannedTimeRequestSchema.parse(
-      await request.json()
-    );
+    const requestData = CreateBannedTimeRequestSchema.parse(await request.json());
     const bannedTime = await createBannedTime(requestData);
 
     return NextResponse.json<CreateBannedTimeResponse>({ data: bannedTime });
@@ -56,12 +49,10 @@ export async function PUT(request: NextRequest) {
   try {
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const requestData = UpdateBannedTimesRequestSchema.parse(
-      await request.json()
-    );
+    const requestData = UpdateBannedTimesRequestSchema.parse(await request.json());
     const bannedTimes = await updateBannedTimes(requestData);
 
     return NextResponse.json<UpdateBannedTimesResponse>({ data: bannedTimes });

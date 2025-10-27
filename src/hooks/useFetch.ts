@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 interface UseFetchState<T> {
   data: T | null;
@@ -7,16 +7,13 @@ interface UseFetchState<T> {
   refetch: () => void;
 }
 
-export function useFetch<T>(
-  url: string | null,
-  options?: RequestInit
-): UseFetchState<T> {
+export function useFetch<T>(url: string | null, options?: RequestInit): UseFetchState<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fetchData = useCallback(async () => {
     try {
-      if (!url || url.trim() === "") {
+      if (!url || url.trim() === '') {
         return;
       }
       setLoading(true);
@@ -31,14 +28,14 @@ export function useFetch<T>(
       const result = await response.json();
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   }, [url, options]);
 
   useEffect(() => {
-    if (!url || url.trim() === "") {
+    if (!url || url.trim() === '') {
       setLoading(false);
       setError(null);
       return;

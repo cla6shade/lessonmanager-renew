@@ -1,9 +1,8 @@
-import { useFetch } from "@/hooks/useFetch";
-import { GetWorkingTimesResponse } from "@/app/(table)/api/working-times/schema";
+import { useFetch } from '@/hooks/useFetch';
+import { GetWorkingTimesResponse } from '@/app/(table)/api/working-times/schema';
 
 export function useFetchWorkingTimes() {
-  const { data, loading, error, refetch } =
-    useFetch<GetWorkingTimesResponse>("/api/working-times");
+  const { data, loading, error, refetch } = useFetch<GetWorkingTimesResponse>('/api/working-times');
 
   return {
     workingTimes: data?.data.times || [],

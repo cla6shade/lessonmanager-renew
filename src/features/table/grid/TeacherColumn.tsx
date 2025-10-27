@@ -1,17 +1,17 @@
-import { ExtendedTeacher } from "../types";
-import { getWorkingDayOfWeek } from "@/utils/date";
-import { Grid } from "@chakra-ui/react";
-import LessonCell from "./cell/LessonCell";
-import EmptyCell from "./cell/EmptyCell";
-import { getTeacherWorkingHours } from "./utils";
-import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
-import { useLesson } from "./providers/LessonProvider";
-import LessonReservationProvider from "./providers/LessonReservationProvider";
+import { ExtendedTeacher } from '../types';
+import { getWorkingDayOfWeek } from '@/utils/date';
+import { Grid } from '@chakra-ui/react';
+import LessonCell from './cell/LessonCell';
+import EmptyCell from './cell/EmptyCell';
+import { getTeacherWorkingHours } from './utils';
+import { GetLessonsResponse } from '@/app/(lessons)/api/lessons/schema';
+import { useLesson } from './providers/LessonProvider';
+import LessonReservationProvider from './providers/LessonReservationProvider';
 
 interface TeacherColumnProps {
   teacher: ExtendedTeacher;
   date: Date;
-  lessons: GetLessonsResponse["data"];
+  lessons: GetLessonsResponse['data'];
   allTimes: number[];
   teacherIndex: number;
   totalTeachers: number;
@@ -39,7 +39,7 @@ export default function TeacherColumn({
           (bannedTime) =>
             bannedTime.teacherId === teacher.id &&
             new Date(bannedTime.date).toDateString() === date.toDateString() &&
-            bannedTime.hour === hour
+            bannedTime.hour === hour,
         );
         const cellDateTime = new Date(date);
         cellDateTime.setHours(hour, 0, 0, 0);
@@ -78,9 +78,7 @@ export default function TeacherColumn({
             dueHour={hour}
           >
             <EmptyCell
-              showAddButton={
-                !isBanned && new Date().getTime() < cellDateTime.getTime()
-              }
+              showAddButton={!isBanned && new Date().getTime() < cellDateTime.getTime()}
               isLastRow={isLastRow}
               isLastColumn={isLastColumn}
             />

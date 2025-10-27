@@ -1,5 +1,5 @@
 import { createContext, ReactNode, use, useRef } from 'react';
-import { ExtendedTeacher } from "../../types";
+import { ExtendedTeacher } from '../../types';
 
 interface LessonReservationContextProps {
   children: ReactNode;
@@ -14,8 +14,7 @@ interface LessonReservationValue {
   selectedTeacher: ExtendedTeacher;
 }
 
-const LessonReservationStoreContext =
-  createContext<LessonReservationValue | null>(null);
+const LessonReservationStoreContext = createContext<LessonReservationValue | null>(null);
 
 export default function LessonReservationProvider({
   children,
@@ -31,8 +30,6 @@ export default function LessonReservationProvider({
 export function useLessonReservation() {
   const store = use(LessonReservationStoreContext);
   if (!store)
-    throw new Error(
-      "useLessonReservation must be used within a LessonReservationProvider"
-    );
+    throw new Error('useLessonReservation must be used within a LessonReservationProvider');
   return store;
 }

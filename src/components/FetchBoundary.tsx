@@ -1,4 +1,4 @@
-import { Box, Text, Spinner } from "@chakra-ui/react";
+import { Box, Text, Spinner } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 interface FetchBoundaryProps {
@@ -73,13 +73,7 @@ function DefaultLoadingFallback() {
 
 function DefaultErrorFallback({ error }: { error: string }) {
   return (
-    <Box
-      p={4}
-      bg="red.50"
-      border="1px solid"
-      borderColor="red.200"
-      borderRadius="md"
-    >
+    <Box p={4} bg="red.50" border="1px solid" borderColor="red.200" borderRadius="md">
       <Text color="red.600" fontSize="md" fontWeight="semibold" mb={2}>
         오류가 발생했습니다
       </Text>

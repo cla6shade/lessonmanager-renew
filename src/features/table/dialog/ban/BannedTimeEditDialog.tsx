@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { Dialog, Button, Box, Text, Portal } from "@chakra-ui/react";
-import { formatDate, getWorkingDayOfWeek } from "@/utils/date";
-import { useTable } from "../../providers/TableProvider";
-import { useLesson } from "../../grid/providers/LessonProvider";
-import { getWorkingTeachersOnDate } from "../../grid/utils";
-import { useNavigation } from "../../../navigation/provider/NavigationContext";
-import BannedTimeLegend from "./BannedTimeLegend";
-import BannedTimeGrid from "./BannedTimeGrid";
+import React, { useEffect, useState } from 'react';
+import { Dialog, Button, Box, Text, Portal } from '@chakra-ui/react';
+import { formatDate, getWorkingDayOfWeek } from '@/utils/date';
+import { useTable } from '../../providers/TableProvider';
+import { useLesson } from '../../grid/providers/LessonProvider';
+import { getWorkingTeachersOnDate } from '../../grid/utils';
+import { useNavigation } from '../../../navigation/provider/NavigationContext';
+import BannedTimeLegend from './BannedTimeLegend';
+import BannedTimeGrid from './BannedTimeGrid';
 import {
   CellType,
   BannedTimeGrid as BannedTimeGridType,
   getBannedTimeGrid,
   createUpdateBannedTimesRequest,
-} from "./utils";
-import { useUpdateBannedTimes } from "./useUpdateBannedTimes";
+} from './utils';
+import { useUpdateBannedTimes } from './useUpdateBannedTimes';
 
 interface BannedTimeEditDialogProps {
   isOpen: boolean;
@@ -34,24 +34,14 @@ export default function BannedTimeEditDialog({
   const { updateBannedTimes, isSaving, error } = useUpdateBannedTimes();
 
   const dayOfWeek = getWorkingDayOfWeek(selectedDate);
-  const workingTeachers = getWorkingTeachersOnDate(
-    selectedLocation,
-    teachers,
-    dayOfWeek
-  );
+  const workingTeachers = getWorkingTeachersOnDate(selectedLocation, teachers, dayOfWeek);
 
-  const [defaultTimeGrid, setDefaultTimeGrid] = useState<BannedTimeGridType>(
-    {}
-  );
+  const [defaultTimeGrid, setDefaultTimeGrid] = useState<BannedTimeGridType>({});
   const [timeGrid, setTimeGrid] = useState<BannedTimeGridType>({});
 
   useEffect(() => {
-    setTimeGrid(
-      getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers)
-    );
-    setDefaultTimeGrid(
-      getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers)
-    );
+    setTimeGrid(getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers));
+    setDefaultTimeGrid(getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers));
   }, [selectedDate]);
 
   const handleSubmit = async () => {
@@ -59,13 +49,10 @@ export default function BannedTimeEditDialog({
       defaultTimeGrid,
       timeGrid,
       selectedDate,
-      bannedTimes
+      bannedTimes,
     );
 
-    if (
-      updateRequest.deleteIds.length === 0 &&
-      updateRequest.bannedTimes.length === 0
-    ) {
+    if (updateRequest.deleteIds.length === 0 && updateRequest.bannedTimes.length === 0) {
       onClose();
       return;
     }
@@ -120,10 +107,7 @@ export default function BannedTimeEditDialog({
                         ...prev,
                         [teacherId]: {
                           ...prev[teacherId],
-                          [hour]:
-                            prev[teacherId]?.[hour] === "banned"
-                              ? "available"
-                              : "banned",
+                          [hour]: prev[teacherId]?.[hour] === 'banned' ? 'available' : 'banned',
                         },
                       }));
                     }}

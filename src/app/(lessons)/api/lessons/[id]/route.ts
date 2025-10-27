@@ -1,28 +1,25 @@
-import { buildErrorResponse } from "@/app/utils";
-import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { buildErrorResponse } from '@/app/utils';
+import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   CancelLessonResponse,
   GetLessonDetailResponse,
   UpdateLessonRequestSchema,
   UpdateLessonResponse,
-} from "./schema";
-import { getSession } from "@/lib/session";
+} from './schema';
+import { getSession } from '@/lib/session';
 import {
   cancelLesson,
   isBeforeCancelDeadline,
   isOwnLesson,
   updateLesson,
-} from "@/app/(lessons)/service";
-import { Lesson, PrismaPromise, User } from "@/generated/prisma";
-import { restoreLessonCount } from "@/app/(users)/service";
-import { LessonModifyType } from "@/utils/constants";
-import { createModifyHistory } from "@/app/(history)/service";
+} from '@/app/(lessons)/service';
+import { Lesson, PrismaPromise, User } from '@/generated/prisma';
+import { restoreLessonCount } from '@/app/(users)/service';
+import { LessonModifyType } from '@/utils/constants';
+import { createModifyHistory } from '@/app/(history)/service';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { isAdmin, userId } = await getSession();
@@ -40,10 +37,10 @@ export async function GET(
       },
     });
     if (!lesson) {
-      return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
     if (!isAdmin && lesson.userId !== userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     return NextResponse.json<GetLessonDetailResponse>({
       data: lesson,
@@ -54,22 +51,17 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const { note, isDone } = UpdateLessonRequestSchema.parse(
-      await request.json()
-    );
+    const { note, isDone } = UpdateLessonRequestSchema.parse(await request.json());
     const lesson = await updateLesson(Number(id), { note, isDone });
     if (!lesson) {
-      return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
     return NextResponse.json<UpdateLessonResponse>({
       data: lesson,
@@ -81,7 +73,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -91,20 +83,16 @@ export async function DELETE(
     });
     if (!lesson) {
       return NextResponse.json(
-        { error: "레슨을 찾을 수 없습니다. 이미 취소된 레슨인지 확인하세요" },
-        { status: 404 }
+        { error: '레슨을 찾을 수 없습니다. 이미 취소된 레슨인지 확인하세요' },
+        { status: 404 },
       );
     }
     if (isAdmin) {
-      const tx: PrismaPromise<any>[] = [
-        cancelLesson(Number(id)) as PrismaPromise<Lesson>,
-      ];
+      const tx: PrismaPromise<any>[] = [cancelLesson(Number(id)) as PrismaPromise<Lesson>];
       if (lesson.userId) {
         tx.push(restoreLessonCount(lesson.userId, 1) as PrismaPromise<User>);
       }
-      const [lessonCancellation, lessonCountUpdate] = await prisma.$transaction(
-        tx
-      );
+      const [lessonCancellation, lessonCountUpdate] = await prisma.$transaction(tx);
       await createModifyHistory({
         isAdmin,
         userId: lesson.userId || undefined,
@@ -125,8 +113,8 @@ export async function DELETE(
         })
       ) {
         return NextResponse.json(
-          { error: "다른 회원의 예약은 취소할 수 없습니다." },
-          { status: 401 }
+          { error: '다른 회원의 예약은 취소할 수 없습니다.' },
+          { status: 401 },
         );
       }
       if (
@@ -136,8 +124,8 @@ export async function DELETE(
         })
       ) {
         return NextResponse.json(
-          { error: "레슨 취소가 가능한 기한이 지났습니다 (전일 21시)" },
-          { status: 400 }
+          { error: '레슨 취소가 가능한 기한이 지났습니다 (전일 21시)' },
+          { status: 400 },
         );
       }
       const tx: PrismaPromise<any>[] = [

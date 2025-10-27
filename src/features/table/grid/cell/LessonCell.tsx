@@ -1,13 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import Cell from "./Cell";
-import { getLessonStatusColor } from "../utils";
-import LessonDetailDialog from "../../dialog/LessonDetailDialog";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
+import { Box, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import Cell from './Cell';
+import { getLessonStatusColor } from '../utils';
+import LessonDetailDialog from '../../dialog/LessonDetailDialog';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import { GetLessonsResponse } from '@/app/(lessons)/api/lessons/schema';
 
 interface LessonCellProps {
-  lesson: GetLessonsResponse["data"][number];
+  lesson: GetLessonsResponse['data'][number];
   isLastRow?: boolean;
   isLastColumn?: boolean;
 }
@@ -33,12 +33,7 @@ export default function LessonCell({
   return (
     <>
       <Cell isLastRow={isLastRow} isLastColumn={isLastColumn}>
-        <Box
-          display="flex"
-          height="100%"
-          width="100%"
-          onClick={handleOpenDialog}
-        >
+        <Box display="flex" height="100%" width="100%" onClick={handleOpenDialog}>
           <Box height="100%" width={1} backgroundColor={statusColor}></Box>
           <Box
             fontSize="sm"
@@ -50,7 +45,7 @@ export default function LessonCell({
             cursor="pointer"
             transition="background-color 0.2s ease-in-out"
             _hover={{
-              backgroundColor: "gray.50",
+              backgroundColor: 'gray.50',
             }}
           >
             <Text>{lesson.username}</Text>

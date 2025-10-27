@@ -1,6 +1,6 @@
-import { PaginatedDataResponseSchema } from "@/app/schema";
-import { LessonSchema, LocationSchema, MajorSchema } from "@/generated/zod";
-import { z } from "zod";
+import { PaginatedDataResponseSchema } from '@/app/schema';
+import { LessonSchema, LocationSchema, MajorSchema } from '@/generated/zod';
+import { z } from 'zod';
 
 export const UserLessonsQuerySchema = z.object({
   userId: z.string(),
@@ -18,8 +18,8 @@ export const UserLessonsResponseSchema = PaginatedDataResponseSchema(
         location: LocationSchema,
       }),
       location: LocationSchema,
-    })
-  )
+    }),
+  ),
 );
 
 export type UserLessonsResponse = z.infer<typeof UserLessonsResponseSchema>;

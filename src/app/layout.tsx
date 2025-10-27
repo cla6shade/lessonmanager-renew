@@ -1,25 +1,25 @@
-import ClientLayout from "@/components/ClientLayout";
-import prisma from "@/lib/prisma";
-import { getSession } from "@/lib/session";
-import type { Metadata } from "next";
-import { Lato, Roboto } from "next/font/google";
+import ClientLayout from '@/components/ClientLayout';
+import prisma from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import type { Metadata } from 'next';
+import { Lato, Roboto } from 'next/font/google';
 import { ReactNode } from 'react';
 
 const latoSans = Lato({
-  variable: "--font-lato",
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"],
+  variable: '--font-lato',
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '700', '900'],
 });
 
 const robotoSans = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
+  variable: '--font-roboto',
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '500', '700', '900'],
 });
 
 export const metadata: Metadata = {
-  title: "Piano Together",
-  description: "피아노투게더",
+  title: 'Piano Together',
+  description: '피아노투게더',
 };
 
 export default async function RootLayout({
@@ -33,9 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${latoSans.variable} ${robotoSans.variable} antialiased`}
-      >
+      <body className={`${latoSans.variable} ${robotoSans.variable} antialiased`}>
         <ClientLayout
           locations={locations}
           majors={majors}

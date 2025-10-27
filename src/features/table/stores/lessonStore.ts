@@ -1,11 +1,11 @@
-import { createStore } from "zustand";
-import type { StoreApi } from "zustand";
-import { GetLessonsResponse } from "@/app/(lessons)/api/lessons/schema";
-import { GetBannedTimesResponse } from "@/app/(table)/api/bans/schema";
+import { createStore } from 'zustand';
+import type { StoreApi } from 'zustand';
+import { GetLessonsResponse } from '@/app/(lessons)/api/lessons/schema';
+import { GetBannedTimesResponse } from '@/app/(table)/api/bans/schema';
 
 export interface LessonState {
-  lessons: GetLessonsResponse["data"];
-  bannedTimes: GetBannedTimesResponse["data"];
+  lessons: GetLessonsResponse['data'];
+  bannedTimes: GetBannedTimesResponse['data'];
   refetchBannedTimes: () => void;
   isLessonLoading: boolean;
   lessonFetchError: string | null;

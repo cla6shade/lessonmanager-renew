@@ -1,7 +1,7 @@
-import { Box, Text } from "@chakra-ui/react";
-import Cell from "./Cell";
-import { useState } from "react";
-import LessonReservationDialog from "@/features/table/dialog/lessons/reservation/LessonReservationDialog";
+import { Box, Text } from '@chakra-ui/react';
+import Cell from './Cell';
+import { useState } from 'react';
+import LessonReservationDialog from '@/features/table/dialog/lessons/reservation/LessonReservationDialog';
 
 interface EmptyCellProps {
   showAddButton?: boolean;
@@ -24,9 +24,9 @@ export default function EmptyCell({
         height="100%"
         width="100%"
         backgroundColor="gray.100"
-        cursor={showAddButton ? "pointer" : "default"}
+        cursor={showAddButton ? 'pointer' : 'default'}
         _hover={{
-          backgroundColor: showAddButton ? "gray.200" : "gray.100",
+          backgroundColor: showAddButton ? 'gray.200' : 'gray.100',
         }}
         onClick={() => {
           showAddButton && setIsDialogOpen(true);
@@ -34,7 +34,7 @@ export default function EmptyCell({
       >
         <Text
           fontSize="2xl"
-          color={showAddButton ? "gray.400" : "transparent"}
+          color={showAddButton ? 'gray.400' : 'transparent'}
           fontWeight="lighter"
         >
           +
@@ -42,10 +42,7 @@ export default function EmptyCell({
       </Box>
 
       {isDialogOpen && (
-        <LessonReservationDialog
-          isOpen={isDialogOpen}
-          onClose={() => setIsDialogOpen(false)}
-        />
+        <LessonReservationDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
       )}
     </Cell>
   );

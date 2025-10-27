@@ -1,6 +1,6 @@
-import { getTimesInPeriod } from "@/utils/date";
-import { Flex, Grid, Text } from "@chakra-ui/react";
-import { useTable } from "../providers/TableProvider";
+import { getTimesInPeriod } from '@/utils/date';
+import { Flex, Grid, Text } from '@chakra-ui/react';
+import { useTable } from '../providers/TableProvider';
 
 export default function TimeColumn() {
   const { openHours } = useTable();

@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { getYesterdayEnd, toKstDate } from "@/utils/date";
-import { CreatePaymentRequest } from "./api/payments/schema";
+import prisma from '@/lib/prisma';
+import { getYesterdayEnd, toKstDate } from '@/utils/date';
+import { CreatePaymentRequest } from './api/payments/schema';
 
 export async function isLessonDueInPayment(lessonDue: Date, userId: number) {
   const payments = await prisma.payment.findMany({

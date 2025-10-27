@@ -1,7 +1,7 @@
-import { Flex } from "@chakra-ui/react";
-import TooltipSection from "./TooltipSection";
-import MobileGridBody from "./grid/MobileGridBody";
-import MobileDateSelector from "./selectors/MobileDateSelector";
+import { Flex } from '@chakra-ui/react';
+import TooltipSection from './TooltipSection';
+import MobileGridBody from './grid/MobileGridBody';
+import MobileDateSelector from './selectors/MobileDateSelector';
 
 export default function MobileTable() {
   return (

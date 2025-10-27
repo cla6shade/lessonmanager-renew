@@ -1,6 +1,6 @@
-import { DataResponseSchema } from "@/app/schema";
-import z from "zod";
-import { PublicUserSchema } from "../schema";
+import { DataResponseSchema } from '@/app/schema';
+import z from 'zod';
+import { PublicUserSchema } from '../schema';
 
 export const UserLookupRequestSchema = z.object({
   query: z.string().nullable(),
@@ -14,7 +14,7 @@ export const UserLookupResponseSchema = DataResponseSchema(
     name: true,
     contact: true,
     birth: true,
-  }).array()
+  }).array(),
 );
 
 export type UserLookupResponse = z.infer<typeof UserLookupResponseSchema>;

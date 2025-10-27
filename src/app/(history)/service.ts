@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { LessonModifierType, LessonModifyType } from "@/utils/constants";
+import prisma from '@/lib/prisma';
+import { LessonModifierType, LessonModifyType } from '@/utils/constants';
 
 export async function createModifyHistory({
   isAdmin,
@@ -28,9 +28,7 @@ export async function createModifyHistory({
       lessondue: lesson.dueDate,
       lessonhour: lesson.dueHour,
       type,
-      createdByType: isAdmin
-        ? LessonModifierType.TEACHER
-        : LessonModifierType.USER,
+      createdByType: isAdmin ? LessonModifierType.TEACHER : LessonModifierType.USER,
       createdById,
     },
   });

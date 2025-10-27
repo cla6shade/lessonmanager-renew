@@ -1,8 +1,8 @@
-import { formatDate, getDatesInPeriod } from "@/utils/date";
-import { Box, Flex, Grid, Text, useDisclosure } from "@chakra-ui/react";
-import { useTable } from "../providers/TableProvider";
-import { useState } from "react";
-import BannedTimeEditDialog from "../dialog/ban/BannedTimeEditDialog";
+import { formatDate, getDatesInPeriod } from '@/utils/date';
+import { Box, Flex, Grid, Text, useDisclosure } from '@chakra-ui/react';
+import { useTable } from '../providers/TableProvider';
+import { useState } from 'react';
+import BannedTimeEditDialog from '../dialog/ban/BannedTimeEditDialog';
 
 export default function LessonGridDateHeader() {
   const { datePeriod } = useTable();
@@ -17,12 +17,7 @@ export default function LessonGridDateHeader() {
 
   return (
     <>
-      <Grid
-        templateColumns="88px repeat(7, 1fr)"
-        gap={0}
-        width="full"
-        height="52px"
-      >
+      <Grid templateColumns="88px repeat(7, 1fr)" gap={0} width="full" height="52px">
         <Box />
         {dates.map((date) => (
           <Flex
@@ -34,7 +29,7 @@ export default function LessonGridDateHeader() {
             borderColor="gray.200"
             cursor="pointer"
             _hover={{
-              bg: "brand.50",
+              bg: 'brand.50',
             }}
             onClick={() => handleDateClick(date)}
           >
@@ -44,11 +39,7 @@ export default function LessonGridDateHeader() {
       </Grid>
 
       {selectedDate && (
-        <BannedTimeEditDialog
-          isOpen={isOpen}
-          onClose={onClose}
-          selectedDate={selectedDate}
-        />
+        <BannedTimeEditDialog isOpen={isOpen} onClose={onClose} selectedDate={selectedDate} />
       )}
     </>
   );

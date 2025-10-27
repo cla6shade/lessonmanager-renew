@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Flex, Button, HStack, VStack, Input } from "@chakra-ui/react";
-import { Calendar } from "lucide-react";
-import { useRef, KeyboardEvent } from "react";
-import { useTeacherFilter } from "./TeacherFilterProvider";
-import { useTeacherManagement } from "../TeacherManagmentProvider";
+import { Flex, Button, HStack, VStack, Input } from '@chakra-ui/react';
+import { Calendar } from 'lucide-react';
+import { useRef, KeyboardEvent } from 'react';
+import { useTeacherFilter } from './TeacherFilterProvider';
+import { useTeacherManagement } from '../TeacherManagmentProvider';
 
 export default function TeacherFilterSection() {
   const { startDate, endDate, setStartDate, setEndDate } = useTeacherFilter();
@@ -18,12 +18,12 @@ export default function TeacherFilterSection() {
   const endDayRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = () => {
-    const startYearValue = startYearRef.current?.value || "";
-    const startMonthValue = startMonthRef.current?.value || "";
-    const startDayValue = startDayRef.current?.value || "";
-    const endYearValue = endYearRef.current?.value || "";
-    const endMonthValue = endMonthRef.current?.value || "";
-    const endDayValue = endDayRef.current?.value || "";
+    const startYearValue = startYearRef.current?.value || '';
+    const startMonthValue = startMonthRef.current?.value || '';
+    const startDayValue = startDayRef.current?.value || '';
+    const endYearValue = endYearRef.current?.value || '';
+    const endMonthValue = endMonthRef.current?.value || '';
+    const endDayValue = endDayRef.current?.value || '';
 
     setStartDate({
       year: startYearValue,
@@ -39,7 +39,7 @@ export default function TeacherFilterSection() {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSearch();
     }
   };
@@ -49,7 +49,7 @@ export default function TeacherFilterSection() {
       <Flex alignItems="center" gap={4}>
         <Flex alignItems="center" gap={2}>
           <Calendar size={20} />
-          <span style={{ fontSize: "14px", fontWeight: "500" }}>기간 필터</span>
+          <span style={{ fontSize: '14px', fontWeight: '500' }}>기간 필터</span>
         </Flex>
       </Flex>
 
@@ -84,7 +84,7 @@ export default function TeacherFilterSection() {
           />
         </HStack>
 
-        <span style={{ fontSize: "14px" }}>~</span>
+        <span style={{ fontSize: '14px' }}>~</span>
 
         <HStack gap={1}>
           <Input
@@ -116,12 +116,7 @@ export default function TeacherFilterSection() {
           />
         </HStack>
 
-        <Button
-          onClick={handleSearch}
-          size="sm"
-          colorScheme="brand"
-          variant="solid"
-        >
+        <Button onClick={handleSearch} size="sm" colorScheme="brand" variant="solid">
           검색
         </Button>
       </Flex>

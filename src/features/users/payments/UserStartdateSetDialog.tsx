@@ -1,18 +1,10 @@
-import {
-  Button,
-  Dialog,
-  HStack,
-  Input,
-  Portal,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import z from "zod";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import { useUpdatePayments } from "./useUpdatePayments";
-import DateInput from "@/features/inputs/DateInput";
+import { Button, Dialog, HStack, Input, Portal, Text, VStack } from '@chakra-ui/react';
+import z from 'zod';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
+import { useUpdatePayments } from './useUpdatePayments';
+import DateInput from '@/features/inputs/DateInput';
 
 interface UserStartdateSetDialogProps {
   isOpen: boolean;
@@ -40,8 +32,8 @@ export default function UserStartdateSetDialog({
   >({
     resolver: zodResolver(StartdateSetFormSchema),
     defaultValues: {
-      startDate: "",
-      endDate: "",
+      startDate: '',
+      endDate: '',
     },
   });
   const { updatePayments } = useUpdatePayments();
@@ -66,11 +58,7 @@ export default function UserStartdateSetDialog({
   };
 
   return (
-    <Dialog.Root
-      open={isOpen}
-      onOpenChange={(e) => !e.open && onClose()}
-      size="sm"
-    >
+    <Dialog.Root open={isOpen} onOpenChange={(e) => !e.open && onClose()} size="sm">
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>

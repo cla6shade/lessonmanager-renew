@@ -1,38 +1,38 @@
 export const adminMenus = [
   {
-    name: "레슨 시간표",
-    href: "/",
+    name: '레슨 시간표',
+    href: '/',
   },
   {
-    name: "수강생 관리",
-    href: "/teacher/user-management",
+    name: '수강생 관리',
+    href: '/teacher/user-management',
   },
   {
-    name: "선생님 관리",
-    href: "/teacher/teacher-management",
+    name: '선생님 관리',
+    href: '/teacher/teacher-management',
   },
   {
-    name: "결제 정보 추가",
-    href: "/teacher/payment-management",
+    name: '결제 정보 추가',
+    href: '/teacher/payment-management',
   },
 ];
 
 export const userMenus = [
   {
-    name: "레슨 시간표",
-    href: "/",
+    name: '레슨 시간표',
+    href: '/',
   },
   {
-    name: "내 정보",
-    href: "/user/my-info",
+    name: '내 정보',
+    href: '/user/my-info',
   },
   {
-    name: "레슨 내역",
-    href: "/user/lesson-history",
+    name: '레슨 내역',
+    href: '/user/lesson-history',
   },
   {
-    name: "결제 내역",
-    href: "/user/payment-history",
+    name: '결제 내역',
+    href: '/user/payment-history',
   },
 ];
 

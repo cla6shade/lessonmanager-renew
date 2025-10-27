@@ -1,11 +1,11 @@
-import { DataResponseSchema } from "@/app/schema";
-import z from "zod";
+import { DataResponseSchema } from '@/app/schema';
+import z from 'zod';
 
 export const SMSReceiverTypeSchema = z.enum([
-  "ONE_DAY_BEFORE_LESSON",
-  "ONE_WEEK_BEFORE_REREGISTER",
-  "BIRTHDAY",
-  "ALL",
+  'ONE_DAY_BEFORE_LESSON',
+  'ONE_WEEK_BEFORE_REREGISTER',
+  'BIRTHDAY',
+  'ALL',
 ]);
 
 export type SMSReceiverType = z.infer<typeof SMSReceiverTypeSchema>;

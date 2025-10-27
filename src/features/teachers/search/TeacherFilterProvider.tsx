@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { createContext, useState, ReactNode, use } from 'react';
 
@@ -17,9 +17,7 @@ interface TeacherFilterContextType {
   getEndDateISO: () => string;
 }
 
-const TeacherFilterContext = createContext<
-  TeacherFilterContextType | undefined
->(undefined);
+const TeacherFilterContext = createContext<TeacherFilterContextType | undefined>(undefined);
 
 export function TeacherFilterProvider({ children }: { children: ReactNode }) {
   const today = new Date();
@@ -28,14 +26,14 @@ export function TeacherFilterProvider({ children }: { children: ReactNode }) {
 
   const [startDate, setStartDate] = useState<DateFragment>({
     year: oneMonthAgo.getFullYear().toString(),
-    month: (oneMonthAgo.getMonth() + 1).toString().padStart(2, "0"),
-    day: oneMonthAgo.getDate().toString().padStart(2, "0"),
+    month: (oneMonthAgo.getMonth() + 1).toString().padStart(2, '0'),
+    day: oneMonthAgo.getDate().toString().padStart(2, '0'),
   });
 
   const [endDate, setEndDate] = useState<DateFragment>({
     year: today.getFullYear().toString(),
-    month: (today.getMonth() + 1).toString().padStart(2, "0"),
-    day: today.getDate().toString().padStart(2, "0"),
+    month: (today.getMonth() + 1).toString().padStart(2, '0'),
+    day: today.getDate().toString().padStart(2, '0'),
   });
 
   const getStartDateISO = () => {
@@ -46,11 +44,11 @@ export function TeacherFilterProvider({ children }: { children: ReactNode }) {
         parseInt(startDate.day),
         0,
         0,
-        0
+        0,
       );
       return date.toISOString();
     }
-    return "";
+    return '';
   };
 
   const getEndDateISO = () => {
@@ -61,11 +59,11 @@ export function TeacherFilterProvider({ children }: { children: ReactNode }) {
         parseInt(endDate.day),
         23,
         59,
-        59
+        59,
       );
       return date.toISOString();
     }
-    return "";
+    return '';
   };
 
   return (
@@ -87,9 +85,7 @@ export function TeacherFilterProvider({ children }: { children: ReactNode }) {
 export function useTeacherFilter() {
   const context = use(TeacherFilterContext);
   if (context === undefined) {
-    throw new Error(
-      "useTeacherFilter must be used within a TeacherFilterProvider"
-    );
+    throw new Error('useTeacherFilter must be used within a TeacherFilterProvider');
   }
   return context;
 }

@@ -1,19 +1,11 @@
-"use client";
+'use client';
 
-import {
-  Box,
-  Flex,
-  Text,
-  Popover,
-  Portal,
-  VStack,
-  Button,
-} from "@chakra-ui/react";
-import { ChevronDown, User } from "lucide-react";
+import { Box, Flex, Text, Popover, Portal, VStack, Button } from '@chakra-ui/react';
+import { ChevronDown, User } from 'lucide-react';
 import { ReactNode, useState } from 'react';
-import { ExtendedTeacher } from "../types";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { useTable } from "../providers/TableProvider";
+import { ExtendedTeacher } from '../types';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import { useTable } from '../providers/TableProvider';
 
 interface TableTeacherSelectorProps {
   displayAllLocations?: boolean;
@@ -31,24 +23,18 @@ export default function TableTeacherSelector({
     setIsOpen(false);
   };
 
-  const displayName = selectedTeacher ? selectedTeacher.name : "전체";
+  const displayName = selectedTeacher ? selectedTeacher.name : '전체';
   const locationTeachers = displayAllLocations
     ? teachers
     : teachers.filter((teacher) => teacher.location.id === selectedLocation.id);
 
   return (
-    <Box
-      bg="white"
-      borderRadius="lg"
-      border="1px"
-      borderColor="gray.200"
-      width="fit-content"
-    >
+    <Box bg="white" borderRadius="lg" border="1px" borderColor="gray.200" width="fit-content">
       <Flex position="relative">
         <Popover.Root
           open={isOpen}
           onOpenChange={({ open }) => setIsOpen(open)}
-          positioning={{ placement: "bottom" }}
+          positioning={{ placement: 'bottom' }}
         >
           <Popover.Trigger>
             <TeacherSelectorContainer>
@@ -69,9 +55,9 @@ export default function TableTeacherSelector({
                       size="sm"
                       justifyContent="flex-start"
                       onClick={() => handleTeacherSelect(null)}
-                      bg={!selectedTeacher ? "blue.50" : "transparent"}
-                      color={!selectedTeacher ? "blue.600" : "gray.700"}
-                      _hover={{ bg: "gray.100" }}
+                      bg={!selectedTeacher ? 'blue.50' : 'transparent'}
+                      color={!selectedTeacher ? 'blue.600' : 'gray.700'}
+                      _hover={{ bg: 'gray.100' }}
                     >
                       전체
                     </Button>
@@ -83,17 +69,9 @@ export default function TableTeacherSelector({
                           size="sm"
                           justifyContent="flex-start"
                           onClick={() => handleTeacherSelect(teacher)}
-                          bg={
-                            selectedTeacher?.id === teacher.id
-                              ? "brand.50"
-                              : "transparent"
-                          }
-                          color={
-                            selectedTeacher?.id === teacher.id
-                              ? "brand.600"
-                              : "gray.700"
-                          }
-                          _hover={{ bg: "gray.100" }}
+                          bg={selectedTeacher?.id === teacher.id ? 'brand.50' : 'transparent'}
+                          color={selectedTeacher?.id === teacher.id ? 'brand.600' : 'gray.700'}
+                          _hover={{ bg: 'gray.100' }}
                         >
                           {teacher.major.symbol}
                           {teacher.name}
@@ -123,7 +101,7 @@ function TeacherSelectorContainer({ children }: { children: ReactNode }) {
       py={2}
       rounded="sm"
       cursor="pointer"
-      _hover={{ bg: "gray.50" }}
+      _hover={{ bg: 'gray.50' }}
       minWidth="120px"
     >
       <Flex
@@ -132,8 +110,8 @@ function TeacherSelectorContainer({ children }: { children: ReactNode }) {
         gap={2}
         color="gray.900"
         fontSize={{
-          base: "xs",
-          lg: "sm",
+          base: 'xs',
+          lg: 'sm',
         }}
         fontWeight="medium"
         width="100%"

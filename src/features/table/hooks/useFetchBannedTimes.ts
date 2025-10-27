@@ -1,5 +1,5 @@
-import { GetBannedTimesResponse } from "@/app/(table)/api/bans/schema";
-import { useFetch } from "@/hooks/useFetch";
+import { GetBannedTimesResponse } from '@/app/(table)/api/bans/schema';
+import { useFetch } from '@/hooks/useFetch';
 
 export default function useFetchBannedTimes({
   startDate,
@@ -16,11 +16,10 @@ export default function useFetchBannedTimes({
   });
 
   if (teacherId !== undefined) {
-    searchParams.set("teacherId", teacherId.toString());
+    searchParams.set('teacherId', teacherId.toString());
   }
 
   const url = `/api/bans?${searchParams.toString()}`;
-  const { data, loading, error, refetch } =
-    useFetch<GetBannedTimesResponse>(url);
+  const { data, loading, error, refetch } = useFetch<GetBannedTimesResponse>(url);
   return { data: data?.data || [], loading, error, refetch };
 }

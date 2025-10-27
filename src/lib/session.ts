@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { getIronSession, SessionOptions } from "iron-session";
-import { cookies } from "next/headers";
+import { getIronSession, SessionOptions } from 'iron-session';
+import { cookies } from 'next/headers';
 
 export interface SessionData {
   isAdmin: boolean;
@@ -13,12 +13,12 @@ export interface SessionData {
 }
 
 const sessionOptions: SessionOptions = {
-  cookieName: "lmsession",
+  cookieName: 'lmsession',
   password: process.env.SESSION_SECRET!,
   ttl: 60 * 60 * 24 * 30, // 30 days
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
   },
 };
 
@@ -27,9 +27,7 @@ export async function getSession() {
   return getIronSession<SessionData>(cookieStore, sessionOptions);
 }
 
-export async function createSession(
-  sessionData: Omit<SessionData, "isLoggedIn">
-) {
+export async function createSession(sessionData: Omit<SessionData, 'isLoggedIn'>) {
   const session = await getSession();
 
   session.isLoggedIn = true;

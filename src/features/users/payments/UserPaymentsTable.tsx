@@ -1,9 +1,9 @@
-import { Text, VStack, HStack, Spinner, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import { Text, VStack, HStack, Spinner, Button } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import Pagination from "@/components/ui/pagination";
-import { useFetchUserPayments } from "./useFetchUserPayments";
-import UserPaymentsForm from "./UserPaymentsForm";
+import Pagination from '@/components/ui/pagination';
+import { useFetchUserPayments } from './useFetchUserPayments';
+import UserPaymentsForm from './UserPaymentsForm';
 
 interface UserPaymentsTableProps {
   userId: number;
@@ -13,12 +13,11 @@ export default function UserPaymentsTable({ userId }: UserPaymentsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const { payments, totalPages, totalItems, loading, error } =
-    useFetchUserPayments({
-      userId,
-      page: currentPage,
-      limit: itemsPerPage,
-    });
+  const { payments, totalPages, totalItems, loading, error } = useFetchUserPayments({
+    userId,
+    page: currentPage,
+    limit: itemsPerPage,
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

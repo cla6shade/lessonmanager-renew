@@ -1,4 +1,4 @@
-import { mockUsers, mockTeachers, mockPayments, mockLessons } from "./index";
+import { mockUsers, mockTeachers, mockPayments, mockLessons } from './index';
 
 /**
  * 특정 ID의 사용자 데이터를 반환합니다.

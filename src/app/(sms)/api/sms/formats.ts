@@ -1,12 +1,8 @@
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import brand from "@/brand/baseInfo";
-import { SendSMSRequest, SMSReceiverType } from "./schema";
-import { getTomorowLesson } from "@/app/(lessons)/service";
-import {
-  formatDate,
-  getBirthdayCouponDeadline,
-  getCurrentDatePeriod,
-} from "@/utils/date";
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
+import brand from '@/brand/baseInfo';
+import { SendSMSRequest, SMSReceiverType } from './schema';
+import { getTomorowLesson } from '@/app/(lessons)/service';
+import { formatDate, getBirthdayCouponDeadline, getCurrentDatePeriod } from '@/utils/date';
 
 export type SMSReplaceTarget = {
   TIME?: string;
@@ -29,7 +25,7 @@ export type UserFormatInfo = {
 
 export type FormatInfoBuilder = (
   userId: string,
-  user: UserSearchResult
+  user: UserSearchResult,
 ) => Promise<SMSReplaceTarget | undefined>;
 
 export const SMSFormats = {
@@ -48,7 +44,7 @@ ${BRAND_NAME}입니다.
 궁금한 점이 있으시면 아래번호로 연락주세요! 
 
 오늘 하루도 즐거운 일 가득하시기 바랍니다~!`,
-  DEFAULT: "",
+  DEFAULT: '',
   BIRTHDAY: `%NAME%님, 생일 정말 축하드려요 🎉
 
 ${BRAND_NAME}에서 작지만 마음을 담아
@@ -67,9 +63,7 @@ export async function getFormatInfo({
   targetUsers: UserSearchResult[];
   receiverType: SMSReceiverType;
 }): Promise<UserFormatInfo> {
-  const formatInfoBuilders: Partial<
-    Record<SMSReceiverType, FormatInfoBuilder>
-  > = {
+  const formatInfoBuilders: Partial<Record<SMSReceiverType, FormatInfoBuilder>> = {
     ONE_DAY_BEFORE_LESSON: async (userId, user) => {
       const userIdNum = parseInt(userId, 10);
       const lesson = await getTomorowLesson(userIdNum);
@@ -109,7 +103,7 @@ export async function getFormatInfo({
       if (formatInfos) {
         formatInfo[userId] = { user, replaceTargets: formatInfos };
       }
-    })
+    }),
   );
 
   return formatInfo;
@@ -118,8 +112,8 @@ export async function getFormatInfo({
 export function getMessageFormat({
   receiverType,
   message,
-}: Pick<SendSMSRequest, "receiverType" | "message">) {
-  if (receiverType === "ALL") return message;
+}: Pick<SendSMSRequest, 'receiverType' | 'message'>) {
+  if (receiverType === 'ALL') return message;
   return SMSFormats[receiverType];
 }
 export function buildMessageMap({

@@ -1,15 +1,7 @@
-import {
-  Text,
-  Box,
-  Popover,
-  Portal,
-  Flex,
-  Button,
-  VStack,
-} from "@chakra-ui/react";
-import { ChevronDown, GraduationCap } from "lucide-react";
-import { useState } from "react";
-import { Major } from "@/generated/prisma";
+import { Text, Box, Popover, Portal, Flex, Button, VStack } from '@chakra-ui/react';
+import { ChevronDown, GraduationCap } from 'lucide-react';
+import { useState } from 'react';
+import { Major } from '@/generated/prisma';
 
 interface MajorSelectorProps {
   majors: Major[];
@@ -23,7 +15,7 @@ export default function MajorSelector({
   majors,
   selectedMajorId,
   onMajorSelect,
-  placeholder = "전공을 선택하세요",
+  placeholder = '전공을 선택하세요',
   disabled = false,
 }: MajorSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,17 +31,11 @@ export default function MajorSelector({
   };
 
   return (
-    <Box
-      bg="white"
-      borderRadius="md"
-      border="1px"
-      borderColor="gray.200"
-      width="100%"
-    >
+    <Box bg="white" borderRadius="md" border="1px" borderColor="gray.200" width="100%">
       <Popover.Root
         open={isOpen}
         onOpenChange={({ open }) => setIsOpen(open)}
-        positioning={{ placement: "bottom" }}
+        positioning={{ placement: 'bottom' }}
       >
         <Popover.Trigger>
           <Box
@@ -58,8 +44,8 @@ export default function MajorSelector({
             px={3}
             py={2}
             rounded="md"
-            cursor={disabled ? "not-allowed" : "pointer"}
-            _hover={disabled ? {} : { bg: "gray.50" }}
+            cursor={disabled ? 'not-allowed' : 'pointer'}
+            _hover={disabled ? {} : { bg: 'gray.50' }}
             minWidth="200px"
             width="100%"
             opacity={disabled ? 0.6 : 1}
@@ -93,15 +79,9 @@ export default function MajorSelector({
                       size="sm"
                       justifyContent="flex-start"
                       onClick={() => handleMajorSelect(major.id)}
-                      bg={
-                        selectedMajorId === major.id
-                          ? "brand.50"
-                          : "transparent"
-                      }
-                      color={
-                        selectedMajorId === major.id ? "brand.600" : "gray.700"
-                      }
-                      _hover={{ bg: "brand.100" }}
+                      bg={selectedMajorId === major.id ? 'brand.50' : 'transparent'}
+                      color={selectedMajorId === major.id ? 'brand.600' : 'gray.700'}
+                      _hover={{ bg: 'brand.100' }}
                     >
                       {major.symbol} {major.name}
                     </Button>

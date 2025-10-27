@@ -1,6 +1,6 @@
-import { Text, Dialog, Portal, Button } from "@chakra-ui/react";
-import UserDetailContent from "./UserDetailContent";
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
+import { Text, Dialog, Portal, Button } from '@chakra-ui/react';
+import UserDetailContent from './UserDetailContent';
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
 
 interface UserDetailDialogProps {
   user: UserSearchResult;
@@ -22,10 +22,7 @@ export default function UserDetailDialog({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            maxW={{ base: "full", md: "lg" }}
-            mx={{ base: 4, md: "auto" }}
-          >
+          <Dialog.Content maxW={{ base: 'full', md: 'lg' }} mx={{ base: 4, md: 'auto' }}>
             <Dialog.Header>
               <Text fontSize="lg" fontWeight="bold">
                 수강생 상세 정보

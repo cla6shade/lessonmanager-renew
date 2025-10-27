@@ -1,12 +1,7 @@
-import {
-  LessonSchema,
-  LocationSchema,
-  MajorSchema,
-  TeacherSchema,
-} from "@/generated/zod";
-import { z } from "zod";
-import { DataResponseSchema } from "../../../schema";
-import { toKstDate } from "@/utils/date";
+import { LessonSchema, LocationSchema, MajorSchema, TeacherSchema } from '@/generated/zod';
+import { z } from 'zod';
+import { DataResponseSchema } from '../../../schema';
+import { toKstDate } from '@/utils/date';
 
 export const CreateLessonByAdminInputSchema = LessonSchema.pick({
   dueDate: true,
@@ -36,27 +31,17 @@ export const CreateLessonByUserInputSchema = LessonSchema.pick({
   })
   .strict();
 
-export type CreateLessonByAdminInput = z.infer<
-  typeof CreateLessonByAdminInputSchema
->;
+export type CreateLessonByAdminInput = z.infer<typeof CreateLessonByAdminInputSchema>;
 
-export type CreateLessonByUserInput = z.infer<
-  typeof CreateLessonByUserInputSchema
->;
+export type CreateLessonByUserInput = z.infer<typeof CreateLessonByUserInputSchema>;
 
-export const CreateLessonByAdminResponseSchema =
-  DataResponseSchema(LessonSchema);
+export const CreateLessonByAdminResponseSchema = DataResponseSchema(LessonSchema);
 
-export type CreateLessonByAdminResponse = z.infer<
-  typeof CreateLessonByAdminResponseSchema
->;
+export type CreateLessonByAdminResponse = z.infer<typeof CreateLessonByAdminResponseSchema>;
 
-export const CreateLessonByUserResponseSchema =
-  DataResponseSchema(LessonSchema);
+export const CreateLessonByUserResponseSchema = DataResponseSchema(LessonSchema);
 
-export type CreateLessonByUserResponse = z.infer<
-  typeof CreateLessonByUserResponseSchema
->;
+export type CreateLessonByUserResponse = z.infer<typeof CreateLessonByUserResponseSchema>;
 
 export const GetLessonsQuerySchema = z.object({
   startDate: z.iso.datetime().transform(toKstDate),
@@ -77,8 +62,8 @@ export const GetLessonsResponseSchema = DataResponseSchema(
     }).omit({
       contact: true,
       note: true,
-    })
-  )
+    }),
+  ),
 );
 
 export type GetLessonsResponse = z.infer<typeof GetLessonsResponseSchema>;
@@ -123,7 +108,7 @@ export const UpdateLessonsResponseSchema = DataResponseSchema(
       major: MajorSchema,
     }),
     location: LocationSchema,
-  }).array()
+  }).array(),
 );
 
 export type UpdateLessonsResponse = z.infer<typeof UpdateLessonsResponseSchema>;

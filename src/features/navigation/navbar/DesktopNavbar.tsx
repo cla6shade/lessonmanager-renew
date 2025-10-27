@@ -1,8 +1,8 @@
-import colors from "@/brand/colors";
-import { Box } from "@chakra-ui/react";
-import NavbarHeader from "./NavbarHeader";
-import NavbarBody from "./NavbarBody";
-import NavbarFooter from "./NavbarFooter";
+import colors from '@/brand/colors';
+import { Box } from '@chakra-ui/react';
+import NavbarHeader from './NavbarHeader';
+import NavbarBody from './NavbarBody';
+import NavbarFooter from './NavbarFooter';
 
 export default function DesktopNavbar() {
   return (
@@ -14,7 +14,7 @@ export default function DesktopNavbar() {
       bg={colors.brandPanel}
       color="white"
       zIndex={1000}
-      display={{ base: "none", lg: "flex" }}
+      display={{ base: 'none', lg: 'flex' }}
       flexDirection="column"
       p="24px"
     >

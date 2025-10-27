@@ -1,9 +1,9 @@
-import { Text, Dialog, Portal, Button } from "@chakra-ui/react";
-import { useState } from "react";
-import UserLessonsDialog from "@/features/users/lessons/UserLessonsDialog";
-import { useFetchLessonDetail } from "../hooks/useFetchLesson";
-import LessonDetailContent from "./LessonDetailContent";
-import { useLesson } from "../grid/providers/LessonProvider";
+import { Text, Dialog, Portal, Button } from '@chakra-ui/react';
+import { useState } from 'react';
+import UserLessonsDialog from '@/features/users/lessons/UserLessonsDialog';
+import { useFetchLessonDetail } from '../hooks/useFetchLesson';
+import LessonDetailContent from './LessonDetailContent';
+import { useLesson } from '../grid/providers/LessonProvider';
 
 interface LessonDetailDialogProps {
   lessonId: number;
@@ -11,11 +11,7 @@ interface LessonDetailDialogProps {
   onClose: () => void;
 }
 
-export default function LessonDetailDialog({
-  lessonId,
-  isOpen,
-  onClose,
-}: LessonDetailDialogProps) {
+export default function LessonDetailDialog({ lessonId, isOpen, onClose }: LessonDetailDialogProps) {
   const [isUserLessonsDialogOpen, setIsUserLessonsDialogOpen] = useState(false);
   const { lesson, loading, error } = useFetchLessonDetail(lessonId);
   const { refetchLessons } = useLesson();
@@ -26,10 +22,7 @@ export default function LessonDetailDialog({
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content
-              maxW={{ base: "full", md: "md" }}
-              mx={{ base: 4, md: "auto" }}
-            >
+            <Dialog.Content maxW={{ base: 'full', md: 'md' }} mx={{ base: 4, md: 'auto' }}>
               <Dialog.Header>
                 <Text fontSize="lg" fontWeight="bold">
                   레슨 상세 정보

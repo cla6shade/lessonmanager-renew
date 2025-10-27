@@ -1,5 +1,5 @@
-import { UserPaymentsResponse } from "@/app/(users)/api/users/[id]/payments/schema";
-import { useFetch } from "../../../hooks/useFetch";
+import { UserPaymentsResponse } from '@/app/(users)/api/users/[id]/payments/schema';
+import { useFetch } from '../../../hooks/useFetch';
 
 interface UseFetchUserPaymentsProps {
   userId: number;
@@ -7,11 +7,7 @@ interface UseFetchUserPaymentsProps {
   limit: number;
 }
 
-export function useFetchUserPayments({
-  userId,
-  page,
-  limit,
-}: UseFetchUserPaymentsProps) {
+export function useFetchUserPayments({ userId, page, limit }: UseFetchUserPaymentsProps) {
   const url = `/api/users/${userId}/payments?page=${page}&limit=${limit}`;
 
   const { data, loading, error, refetch } = useFetch<UserPaymentsResponse>(url);

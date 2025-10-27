@@ -1,21 +1,16 @@
-"use client";
+'use client';
 
-import { Box, Text } from "@chakra-ui/react";
-import {
-  GetWorkingTimesResponse,
-  WorkingTimeData,
-} from "@/app/(table)/api/working-times/schema";
-import { useState, useEffect } from "react";
+import { Box, Text } from '@chakra-ui/react';
+import { GetWorkingTimesResponse, WorkingTimeData } from '@/app/(table)/api/working-times/schema';
+import { useState, useEffect } from 'react';
 
-const DAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
-const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+const DAYS = ['월', '화', '수', '목', '금', '토', '일'] as const;
+const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
 
 interface WorkingTimeTableProps {
-  workingTimes: GetWorkingTimesResponse["data"]["times"];
-  selectedTeacher:
-    | GetWorkingTimesResponse["data"]["times"][number]["teacher"]
-    | null;
-  openHours: GetWorkingTimesResponse["data"]["openHours"];
+  workingTimes: GetWorkingTimesResponse['data']['times'];
+  selectedTeacher: GetWorkingTimesResponse['data']['times'][number]['teacher'] | null;
+  openHours: GetWorkingTimesResponse['data']['openHours'];
   onWorkingTimeChange?: (workingTime: WorkingTimeData) => void;
 }
 
@@ -29,8 +24,7 @@ export default function WorkingTimeTable({
     ? workingTimes.find((wt) => wt.teacherId === selectedTeacher.id)
     : null;
 
-  const [editableWorkingTime, setEditableWorkingTime] =
-    useState<WorkingTimeData | null>(null);
+  const [editableWorkingTime, setEditableWorkingTime] = useState<WorkingTimeData | null>(null);
 
   useEffect(() => {
     if (selectedWorkingTime) {
@@ -42,7 +36,7 @@ export default function WorkingTimeTable({
 
   const allHours = Array.from(
     { length: openHours.endHour - openHours.startHour + 1 },
-    (_, i) => i + openHours.startHour
+    (_, i) => i + openHours.startHour,
   );
 
   // 셀 클릭 핸들러
@@ -132,24 +126,13 @@ export default function WorkingTimeTable({
                   borderColor="gray.200"
                   textAlign="center"
                   fontSize="sm"
-                  bg={isWorkingHour ? "blue.100" : "white"}
-                  cursor={selectedTeacher ? "pointer" : "default"}
-                  _hover={
-                    selectedTeacher
-                      ? { bg: isWorkingHour ? "blue.200" : "gray.50" }
-                      : {}
-                  }
-                  onClick={() =>
-                    selectedTeacher && handleCellClick(dayKey, hour)
-                  }
+                  bg={isWorkingHour ? 'blue.100' : 'white'}
+                  cursor={selectedTeacher ? 'pointer' : 'default'}
+                  _hover={selectedTeacher ? { bg: isWorkingHour ? 'blue.200' : 'gray.50' } : {}}
+                  onClick={() => selectedTeacher && handleCellClick(dayKey, hour)}
                 >
                   {isWorkingHour ? (
-                    <Box
-                      width="100%"
-                      height="20px"
-                      bg="brand.500"
-                      borderRadius="sm"
-                    />
+                    <Box width="100%" height="20px" bg="brand.500" borderRadius="sm" />
                   ) : null}
                 </Box>
               );

@@ -1,24 +1,15 @@
-import {
-  Text,
-  VStack,
-  HStack,
-  Separator,
-  Button,
-  Input,
-  Box,
-  RadioGroup,
-} from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
-import z from "zod";
-import { UpdateTeacherRequestSchema } from "@/app/(teachers)/api/teachers/schema";
-import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
-import LocationSelector from "@/features/selectors/LocationSelector";
-import MajorSelector from "@/features/selectors/MajorSelector";
-import { useUpdateTeacher } from "./useUpdateTeacher";
-import { Major, Location } from "@prisma/client";
-import DateInput from "@/features/inputs/DateInput";
+import { Text, VStack, HStack, Separator, Button, Input, Box, RadioGroup } from '@chakra-ui/react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
+import z from 'zod';
+import { UpdateTeacherRequestSchema } from '@/app/(teachers)/api/teachers/schema';
+import { TeacherSearchResult } from '@/app/(teachers)/api/teachers/schema';
+import LocationSelector from '@/features/selectors/LocationSelector';
+import MajorSelector from '@/features/selectors/MajorSelector';
+import { useUpdateTeacher } from './useUpdateTeacher';
+import { Major, Location } from '@prisma/client';
+import DateInput from '@/features/inputs/DateInput';
 
 const UpdateTeacherFormSchema = UpdateTeacherRequestSchema.omit({
   isManager: true,
@@ -49,11 +40,11 @@ export default function TeacherEditForm({
   const form = useForm<z.input<typeof UpdateTeacherFormSchema>>({
     resolver: zodResolver(UpdateTeacherFormSchema),
     defaultValues: {
-      name: teacher?.name || "",
-      contact: teacher?.contact || "",
-      birth: teacher?.birth ? new Date(teacher.birth).toISOString() : "",
-      address: teacher?.address || "",
-      email: teacher?.email || "",
+      name: teacher?.name || '',
+      contact: teacher?.contact || '',
+      birth: teacher?.birth ? new Date(teacher.birth).toISOString() : '',
+      address: teacher?.address || '',
+      email: teacher?.email || '',
       locationId: teacher?.locationId === undefined ? 0 : teacher.locationId,
       majorId: teacher?.majorId === undefined ? 0 : teacher.majorId,
       gender: teacher?.gender || false,
@@ -65,13 +56,9 @@ export default function TeacherEditForm({
     async (updateData: z.output<typeof UpdateTeacherFormSchema>) => {
       if (!teacher) return;
 
-      const { success, data: updatedTeacher } = await updateTeacher(
-        teacher.id,
-        updateData,
-        {
-          successMessage: "선생님 정보가 수정되었습니다.",
-        }
-      );
+      const { success, data: updatedTeacher } = await updateTeacher(teacher.id, updateData, {
+        successMessage: '선생님 정보가 수정되었습니다.',
+      });
 
       if (success && updatedTeacher) {
         onTeacherUpdate({
@@ -83,15 +70,15 @@ export default function TeacherEditForm({
         onCancel();
       }
     },
-    [teacher, updateTeacher, onTeacherUpdate, refetchTeachers, onCancel]
+    [teacher, updateTeacher, onTeacherUpdate, refetchTeachers, onCancel],
   );
 
   const handleLocationSelect = (locationId: number) => {
-    form.setValue("locationId", locationId);
+    form.setValue('locationId', locationId);
   };
 
   const handleMajorSelect = (majorId: number) => {
-    form.setValue("majorId", majorId);
+    form.setValue('majorId', majorId);
   };
 
   return (
@@ -99,15 +86,15 @@ export default function TeacherEditForm({
       <VStack gap={4} align="stretch">
         <Box>
           <Text fontWeight="bold" mb={2}>
-            이름{" "}
+            이름{' '}
             <Text as="span" color="red.500">
               *
             </Text>
           </Text>
           <Input
-            {...form.register("name")}
+            {...form.register('name')}
             placeholder="이름을 입력하세요"
-            borderColor={form.formState.errors.name ? "red.500" : undefined}
+            borderColor={form.formState.errors.name ? 'red.500' : undefined}
           />
           {form.formState.errors.name && (
             <Text color="red.500" fontSize="sm" mt={1}>
@@ -125,9 +112,7 @@ export default function TeacherEditForm({
             name="birth"
             render={({ field }) => (
               <DateInput
-                borderColor={
-                  form.formState.errors.birth ? "red.500" : undefined
-                }
+                borderColor={form.formState.errors.birth ? 'red.500' : undefined}
                 {...field}
               />
             )}
@@ -144,8 +129,8 @@ export default function TeacherEditForm({
             성별
           </Text>
           <RadioGroup.Root
-            value={form.watch("gender") ? "female" : "male"}
-            onValueChange={(e) => form.setValue("gender", e.value === "female")}
+            value={form.watch('gender') ? 'female' : 'male'}
+            onValueChange={(e) => form.setValue('gender', e.value === 'female')}
           >
             <HStack gap={4}>
               <RadioGroup.Item value="male">
@@ -167,9 +152,9 @@ export default function TeacherEditForm({
             연락처
           </Text>
           <Input
-            {...form.register("contact")}
+            {...form.register('contact')}
             placeholder="연락처를 입력하세요"
-            borderColor={form.formState.errors.contact ? "red.500" : undefined}
+            borderColor={form.formState.errors.contact ? 'red.500' : undefined}
           />
           {form.formState.errors.contact && (
             <Text color="red.500" fontSize="sm" mt={1}>
@@ -183,9 +168,9 @@ export default function TeacherEditForm({
             주소
           </Text>
           <Input
-            {...form.register("address")}
+            {...form.register('address')}
             placeholder="주소를 입력하세요"
-            borderColor={form.formState.errors.address ? "red.500" : undefined}
+            borderColor={form.formState.errors.address ? 'red.500' : undefined}
           />
           {form.formState.errors.address && (
             <Text color="red.500" fontSize="sm" mt={1}>
@@ -200,9 +185,9 @@ export default function TeacherEditForm({
           </Text>
           <Input
             type="email"
-            {...form.register("email")}
+            {...form.register('email')}
             placeholder="이메일을 입력하세요"
-            borderColor={form.formState.errors.email ? "red.500" : undefined}
+            borderColor={form.formState.errors.email ? 'red.500' : undefined}
           />
           {form.formState.errors.email && (
             <Text color="red.500" fontSize="sm" mt={1}>
@@ -213,14 +198,14 @@ export default function TeacherEditForm({
 
         <Box>
           <Text fontWeight="bold" mb={2}>
-            전공{" "}
+            전공{' '}
             <Text as="span" color="red.500">
               *
             </Text>
           </Text>
           <MajorSelector
             majors={majors}
-            selectedMajorId={form.watch("majorId") || 0}
+            selectedMajorId={form.watch('majorId') || 0}
             onMajorSelect={handleMajorSelect}
             placeholder="전공을 선택하세요"
           />
@@ -233,14 +218,14 @@ export default function TeacherEditForm({
 
         <Box>
           <Text fontWeight="bold" mb={2}>
-            지점{" "}
+            지점{' '}
             <Text as="span" color="red.500">
               *
             </Text>
           </Text>
           <LocationSelector
             locations={locations}
-            selectedLocationId={form.watch("locationId") || 0}
+            selectedLocationId={form.watch('locationId') || 0}
             onLocationSelect={handleLocationSelect}
             placeholder="지점을 선택하세요"
           />
@@ -256,11 +241,9 @@ export default function TeacherEditForm({
             근무일수
           </Text>
           <Input
-            {...form.register("workingDays", { valueAsNumber: true })}
+            {...form.register('workingDays', { valueAsNumber: true })}
             placeholder="근무일수를 입력하세요"
-            borderColor={
-              form.formState.errors.workingDays ? "red.500" : undefined
-            }
+            borderColor={form.formState.errors.workingDays ? 'red.500' : undefined}
           />
           {form.formState.errors.workingDays && (
             <Text color="red.500" fontSize="sm" mt={1}>

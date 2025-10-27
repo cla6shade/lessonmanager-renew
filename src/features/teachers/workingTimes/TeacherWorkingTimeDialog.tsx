@@ -1,33 +1,22 @@
-import { Text, Dialog, Portal, Button, Badge, Box } from "@chakra-ui/react";
-import { useFetchWorkingTimes } from "./useFetchWorkingTimes";
-import { useUpdateWorkingTime } from "./useUpdateWorkingTime";
-import { useState, useEffect } from "react";
-import TeacherSelector from "@/features/selectors/TeacherSelector";
-import WorkingTimeTable from "./WorkingTimeTable";
-import { WorkingTimeData } from "@/app/(table)/api/working-times/schema";
+import { Text, Dialog, Portal, Button, Badge, Box } from '@chakra-ui/react';
+import { useFetchWorkingTimes } from './useFetchWorkingTimes';
+import { useUpdateWorkingTime } from './useUpdateWorkingTime';
+import { useState, useEffect } from 'react';
+import TeacherSelector from '@/features/selectors/TeacherSelector';
+import WorkingTimeTable from './WorkingTimeTable';
+import { WorkingTimeData } from '@/app/(table)/api/working-times/schema';
 
 interface TeacherTableDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function TeacherTableDialog({
-  isOpen,
-  onClose,
-}: TeacherTableDialogProps) {
-  const { workingTimes, openHours, loading, error, refetch } =
-    useFetchWorkingTimes();
-  const {
-    updateWorkingTime,
-    isSaving,
-    error: updateError,
-  } = useUpdateWorkingTime();
+export default function TeacherTableDialog({ isOpen, onClose }: TeacherTableDialogProps) {
+  const { workingTimes, openHours, loading, error, refetch } = useFetchWorkingTimes();
+  const { updateWorkingTime, isSaving, error: updateError } = useUpdateWorkingTime();
   const teachers = workingTimes.map((workingTime) => workingTime.teacher);
-  const [selectedTeacher, setSelectedTeacher] = useState<
-    (typeof teachers)[number] | null
-  >(null);
-  const [editedWorkingTime, setEditedWorkingTime] =
-    useState<WorkingTimeData | null>(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<(typeof teachers)[number] | null>(null);
+  const [editedWorkingTime, setEditedWorkingTime] = useState<WorkingTimeData | null>(null);
 
   useEffect(() => {
     if (teachers.length > 0 && !selectedTeacher) {
@@ -58,10 +47,7 @@ export default function TeacherTableDialog({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            maxW={{ base: "full", md: "4xl" }}
-            mx={{ base: 4, md: "auto" }}
-          >
+          <Dialog.Content maxW={{ base: 'full', md: '4xl' }} mx={{ base: 4, md: 'auto' }}>
             <Dialog.Header>
               <Text fontSize="lg" fontWeight="bold">
                 선생님 근무시간 관리

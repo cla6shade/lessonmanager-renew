@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Table, Skeleton } from "@chakra-ui/react";
+import { Table, Skeleton } from '@chakra-ui/react';
 
 interface SkeletonTableProps {
   rows?: number;
@@ -9,8 +9,8 @@ interface SkeletonTableProps {
 
 export function SkeletonTable({ rows = 10, columns = 7 }: SkeletonTableProps) {
   const getColumnWidth = (index: number) => {
-    if (index === 0) return "50px";
-    if (index === columns - 1) return "80px";
+    if (index === 0) return '50px';
+    if (index === columns - 1) return '80px';
     return undefined;
   };
 
@@ -18,19 +18,19 @@ export function SkeletonTable({ rows = 10, columns = 7 }: SkeletonTableProps) {
     const isLastColumn = index === columns - 1;
     return {
       width: getColumnWidth(index),
-      display: isLastColumn ? ("flex" as const) : undefined,
-      justifyContent: isLastColumn ? ("center" as const) : undefined,
+      display: isLastColumn ? ('flex' as const) : undefined,
+      justifyContent: isLastColumn ? ('center' as const) : undefined,
     };
   };
 
   const getSkeletonProps = (colIndex: number) => {
     if (colIndex === columns - 1) {
-      return { height: "32px", width: "100%", borderRadius: "md" };
+      return { height: '32px', width: '100%', borderRadius: 'md' };
     }
     if (colIndex === 0) {
-      return { height: "16px", width: "16px", borderRadius: "sm" };
+      return { height: '16px', width: '16px', borderRadius: 'sm' };
     }
-    return { height: "20px", width: "100%" };
+    return { height: '20px', width: '100%' };
   };
 
   return (

@@ -1,13 +1,13 @@
-import { z } from "zod";
-import { DataResponseSchema, PaginatedDataResponseSchema } from "@/app/schema";
+import { z } from 'zod';
+import { DataResponseSchema, PaginatedDataResponseSchema } from '@/app/schema';
 
-import { LocationSchema, TeacherSchema, MajorSchema } from "@/generated/zod";
-import { Prisma } from "@/generated/prisma";
-import { toKstDate } from "@/utils/date";
+import { LocationSchema, TeacherSchema, MajorSchema } from '@/generated/zod';
+import { Prisma } from '@/generated/prisma';
+import { toKstDate } from '@/utils/date';
 
 export const PublicTeacherSchema = TeacherSchema.omit({
   password: true,
-})
+});
 
 export const SingleTeacherResponseSchema = DataResponseSchema(PublicTeacherSchema);
 
@@ -36,11 +36,10 @@ export type TeacherSearchSelectInput = {
   skip: number;
   take: number;
   omit: { password: true };
-  orderBy: Prisma.TeacherFindManyArgs["orderBy"];
+  orderBy: Prisma.TeacherFindManyArgs['orderBy'];
 };
 
-export type RawTeacherSearchResult =
-  Prisma.TeacherGetPayload<TeacherSearchSelectInput>;
+export type RawTeacherSearchResult = Prisma.TeacherGetPayload<TeacherSearchSelectInput>;
 
 export const RawSearchTeacherResultSchema = TeacherSchema.omit({
   password: true,
@@ -61,7 +60,7 @@ export const TeacherSearchResultSchema = TeacherSchema.omit({
 export type TeacherSearchResult = z.infer<typeof TeacherSearchResultSchema>;
 
 export const TeacherSearchResponseSchema = PaginatedDataResponseSchema(
-  z.array(TeacherSearchResultSchema)
+  z.array(TeacherSearchResultSchema),
 );
 
 export type TeacherSearchResponse = z.infer<typeof TeacherSearchResponseSchema>;
@@ -70,9 +69,7 @@ export const CreateTeacherRequestSchema = z
   .object({
     locationId: z.number().min(1),
     majorId: z.number().min(1),
-    birth: z.iso
-      .datetime()
-      .transform((val) => (val ? toKstDate(val) : undefined)),
+    birth: z.iso.datetime().transform((val) => (val ? toKstDate(val) : undefined)),
     name: z.string().min(1).min(2),
     gender: z.boolean(),
     contact: z.string().min(1),
@@ -91,7 +88,7 @@ export type CreateTeacherRequest = z.infer<typeof CreateTeacherRequestSchema>;
 export const CreateTeacherResponseSchema = DataResponseSchema(
   TeacherSchema.pick({
     id: true,
-  })
+  }),
 );
 
 export type CreateTeacherResponse = z.infer<typeof CreateTeacherResponseSchema>;
@@ -120,9 +117,7 @@ export const UpdateTeacherRequestSchema = TeacherSchema.pick({
 
 export type UpdateTeacherRequest = z.infer<typeof UpdateTeacherRequestSchema>;
 
-export const UpdateTeacherResponseSchema = DataResponseSchema(
-  RawSearchTeacherResultSchema
-);
+export const UpdateTeacherResponseSchema = DataResponseSchema(RawSearchTeacherResultSchema);
 
 export type UpdateTeacherResponse = z.infer<typeof UpdateTeacherResponseSchema>;
 
@@ -130,7 +125,7 @@ export const RemoveTeacherResponseSchema = DataResponseSchema(
   RawSearchTeacherResultSchema.omit({
     location: true,
     major: true,
-  })
+  }),
 );
 
 export type RemoveTeacherResponse = z.infer<typeof RemoveTeacherResponseSchema>;

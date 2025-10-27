@@ -1,6 +1,6 @@
-import { Flex } from "@chakra-ui/react";
-import TooltipSection from "./TooltipSection";
-import LessonGridBody from "./grid/LessonGridBody";
+import { Flex } from '@chakra-ui/react';
+import TooltipSection from './TooltipSection';
+import LessonGridBody from './grid/LessonGridBody';
 
 export default function LessonTable() {
   return (

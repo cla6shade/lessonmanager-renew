@@ -32,40 +32,36 @@ export function getCurrentDatePeriod(date: Date): DatePeriod {
 
 export function getNextDatePeriod(period: DatePeriod): DatePeriod {
   return {
-    startDate: new Date(
-      period.startDate.setDate(period.startDate.getDate() + 7)
-    ),
+    startDate: new Date(period.startDate.setDate(period.startDate.getDate() + 7)),
     endDate: new Date(period.endDate.setDate(period.endDate.getDate() + 7)),
   };
 }
 
 export function getPreviousDatePeriod(period: DatePeriod): DatePeriod {
   return {
-    startDate: new Date(
-      period.startDate.setDate(period.startDate.getDate() - 7)
-    ),
+    startDate: new Date(period.startDate.setDate(period.startDate.getDate() - 7)),
     endDate: new Date(period.endDate.setDate(period.endDate.getDate() - 7)),
   };
 }
 
 export function formatHour(hour: number | null) {
-  if (!hour) return "(없음)";
+  if (!hour) return '(없음)';
   return `${hour}시`;
 }
 
 export function formatDate(
   date: Date,
   showYear: boolean = true,
-  showDayOfWeek: boolean = false
+  showDayOfWeek: boolean = false,
 ): string {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
-  const dayOfWeekNames = ["일", "월", "화", "수", "목", "금", "토"];
+  const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
   const dayOfWeek = dayOfWeekNames[date.getDay()];
 
-  let formattedDate = "";
+  let formattedDate = '';
 
   if (showYear) {
     formattedDate += `${year}-`;
@@ -92,11 +88,11 @@ export function getWeekLabel(startDate: Date): string {
   const diffWeeks = Math.floor(diffDays / 7);
 
   if (diffWeeks === 0) {
-    return "이번 주";
+    return '이번 주';
   } else if (diffWeeks === 1) {
-    return "지난 주";
+    return '지난 주';
   } else if (diffWeeks === -1) {
-    return "다음 주";
+    return '다음 주';
   } else if (diffWeeks > 1) {
     return `${diffWeeks}주 전`;
   } else {
@@ -120,18 +116,14 @@ export function getDatesInPeriod(period: DatePeriod): Date[] {
   const startDate = new Date(period.startDate);
   const endDate = new Date(period.endDate);
 
-  for (
-    let date = startDate;
-    date <= endDate;
-    date.setDate(date.getDate() + 1)
-  ) {
+  for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
     dates.push(new Date(date));
   }
   return dates;
 }
 
 export function getWorkingDayOfWeek(date: Date): string {
-  return date.toLocaleDateString("en-US", { weekday: "short" }).toLowerCase();
+  return date.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
 }
 
 export function isSameDate(date1: Date, date2: Date) {
@@ -139,10 +131,7 @@ export function isSameDate(date1: Date, date2: Date) {
 }
 
 export function isDateInPeriod(date: Date, period: DatePeriod) {
-  return (
-    date.getTime() >= period.startDate.getTime() &&
-    date.getTime() <= period.endDate.getTime()
-  );
+  return date.getTime() >= period.startDate.getTime() && date.getTime() <= period.endDate.getTime();
 }
 
 export function toKstDate(val: string | Date): Date {
@@ -154,12 +143,12 @@ export function toKstDate(val: string | Date): Date {
 export function buildDate(
   year: string | number,
   month: string | number,
-  day: string | number
+  day: string | number,
 ): Date {
   return new Date(
     parseInt(year.toString()),
     parseInt(month.toString()) - 1,
-    parseInt(day.toString())
+    parseInt(day.toString()),
   );
 }
 

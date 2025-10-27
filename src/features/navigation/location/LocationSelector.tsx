@@ -1,11 +1,10 @@
-import { Button, Separator, Stack } from "@chakra-ui/react";
-import { useNavigation } from "../provider/NavigationContext";
-import colors from "@/brand/colors";
-import { Location } from "@prisma/client";
+import { Button, Separator, Stack } from '@chakra-ui/react';
+import { useNavigation } from '../provider/NavigationContext';
+import colors from '@/brand/colors';
+import { Location } from '@prisma/client';
 
 export default function LocationSelector() {
-  const { isAdmin, setSelectedLocation, locations, selectedLocation } =
-    useNavigation();
+  const { isAdmin, setSelectedLocation, locations, selectedLocation } = useNavigation();
   const handleLocationChange = (location: Location) => {
     if (isAdmin) {
       setSelectedLocation(location);
@@ -23,12 +22,8 @@ export default function LocationSelector() {
               justifyContent="flex-start"
               onClick={() => handleLocationChange(location)}
               size="sm"
-              fontWeight={
-                selectedLocation?.id === location.id ? "bold" : "normal"
-              }
-              color={
-                selectedLocation?.id === location.id ? colors.brand : "gray.300"
-              }
+              fontWeight={selectedLocation?.id === location.id ? 'bold' : 'normal'}
+              color={selectedLocation?.id === location.id ? colors.brand : 'gray.300'}
               _hover={{ bg: colors.brandPanelDark }}
             >
               {location.name}

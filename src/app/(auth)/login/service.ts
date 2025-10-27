@@ -1,13 +1,13 @@
-import { Teacher, User } from "@/generated/zod";
-import prisma from "@/lib/prisma";
-import { toKstDate } from "@/utils/date";
-import crypto from "crypto";
+import { Teacher, User } from '@/generated/zod';
+import prisma from '@/lib/prisma';
+import { toKstDate } from '@/utils/date';
+import crypto from 'crypto';
 
 export function encryptPassword(password: string) {
   password = password + process.env.PASSWORD_SALT;
-  const algo = crypto.createHash("sha512");
+  const algo = crypto.createHash('sha512');
   const hash = algo.update(password);
-  return hash.digest("base64");
+  return hash.digest('base64');
 }
 
 export async function canLogin(account: Teacher | User, isAdmin: boolean) {
@@ -16,23 +16,16 @@ export async function canLogin(account: Teacher | User, isAdmin: boolean) {
     where: {
       userId: account.id,
       refunded: false,
-      OR: [
-        { isStartDateNonSet: true },
-        { endDate: { gte: toKstDate(new Date()) } },
-      ],
+      OR: [{ isStartDateNonSet: true }, { endDate: { gte: toKstDate(new Date()) } }],
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
   return !!latestPayment;
 }
 
-export async function getAccount(
-  loginId: string,
-  password: string,
-  isAdmin: boolean
-) {
+export async function getAccount(loginId: string, password: string, isAdmin: boolean) {
   password = encryptPassword(password);
   const account = isAdmin
     ? await prisma.teacher.findFirst({

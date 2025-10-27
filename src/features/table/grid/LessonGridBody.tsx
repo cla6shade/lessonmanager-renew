@@ -1,10 +1,10 @@
-import { Flex, Grid, Text, Box } from "@chakra-ui/react";
-import TimeColumn from "./TimeColumn";
-import LessonGridDateHeader from "./LessonGridDateHeader";
-import LessonColumn from "./LessonColumn";
-import { getDatesInPeriod } from "@/utils/date";
-import { useTable } from "../providers/TableProvider";
-import { useLesson } from "./providers/LessonProvider";
+import { Flex, Grid, Text, Box } from '@chakra-ui/react';
+import TimeColumn from './TimeColumn';
+import LessonGridDateHeader from './LessonGridDateHeader';
+import LessonColumn from './LessonColumn';
+import { getDatesInPeriod } from '@/utils/date';
+import { useTable } from '../providers/TableProvider';
+import { useLesson } from './providers/LessonProvider';
 
 export default function LessonGridBody() {
   const { datePeriod } = useTable();
@@ -33,12 +33,7 @@ export default function LessonGridBody() {
         <TimeColumn />
         <Grid templateColumns="repeat(7, 1fr)" w="full" h="full" gap={0}>
           {dates.map((date) => {
-            return (
-              <LessonColumn
-                key={`lesson-column-${date.toISOString()}`}
-                date={date}
-              />
-            );
+            return <LessonColumn key={`lesson-column-${date.toISOString()}`} date={date} />;
           })}
         </Grid>
       </Flex>

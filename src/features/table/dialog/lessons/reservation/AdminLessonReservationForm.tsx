@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { Box, Button, VStack, Text, HStack, Input } from "@chakra-ui/react";
-import { Checkbox } from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateLessonByAdminInputSchema } from "@/app/(lessons)/api/lessons/schema";
-import { useLessonReservation } from "@/features/table/grid/providers/LessonReservationProvider";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import { CreateLessonByAdminFormSchema, useCreateLesson } from "./useCreateLesson";
-import { formatDate, formatHour } from "@/utils/date";
-import { useState } from "react";
-import { UserLookupResponse } from "@/app/(users)/api/users/lookup/schema";
-import UserLookupSelector from "@/features/selectors/UserLookupSelector";
-import z from "zod";
+import { Box, Button, VStack, Text, HStack, Input } from '@chakra-ui/react';
+import { Checkbox } from '@chakra-ui/react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateLessonByAdminInputSchema } from '@/app/(lessons)/api/lessons/schema';
+import { useLessonReservation } from '@/features/table/grid/providers/LessonReservationProvider';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import { CreateLessonByAdminFormSchema, useCreateLesson } from './useCreateLesson';
+import { formatDate, formatHour } from '@/utils/date';
+import { useState } from 'react';
+import { UserLookupResponse } from '@/app/(users)/api/users/lookup/schema';
+import UserLookupSelector from '@/features/selectors/UserLookupSelector';
+import z from 'zod';
 
 interface AdminLessonReservationFormProps {
   onSuccess: () => void;
@@ -27,9 +27,7 @@ export default function AdminLessonReservationForm({
   const { selectedLocation } = useNavigation();
   const { createLesson, isSaving } = useCreateLesson();
 
-  const [selectedUser, setSelectedUser] = useState<
-    UserLookupResponse["data"][number] | null
-  >(null);
+  const [selectedUser, setSelectedUser] = useState<UserLookupResponse['data'][number] | null>(null);
 
   const {
     control,
@@ -51,24 +49,20 @@ export default function AdminLessonReservationForm({
     },
   });
 
-  const onSubmit = async (
-    data: z.output<typeof CreateLessonByAdminFormSchema>
-  ) => {
+  const onSubmit = async (data: z.output<typeof CreateLessonByAdminFormSchema>) => {
     const result = await createLesson(data);
     if (result.success) onSuccess();
   };
 
-  const handleUserSelect = (
-    user: UserLookupResponse["data"][number] | null
-  ) => {
+  const handleUserSelect = (user: UserLookupResponse['data'][number] | null) => {
     if (user) {
       setSelectedUser(user);
-      setValue("userId", user.id);
-      setValue("username", undefined);
-      setValue("contact", undefined);
+      setValue('userId', user.id);
+      setValue('username', undefined);
+      setValue('contact', undefined);
     } else {
       setSelectedUser(null);
-      setValue("userId", undefined);
+      setValue('userId', undefined);
     }
   };
 
@@ -115,19 +109,13 @@ export default function AdminLessonReservationForm({
           </VStack>
         </Box>
 
-        <input type="hidden" {...register("dueDate")} />
-        <input type="hidden" {...register("dueHour", { valueAsNumber: true })} />
+        <input type="hidden" {...register('dueDate')} />
+        <input type="hidden" {...register('dueHour', { valueAsNumber: true })} />
+        <input type="hidden" {...register('teacherId', { valueAsNumber: true })} />
+        <input type="hidden" {...register('locationId', { valueAsNumber: true })} />
         <input
           type="hidden"
-          {...register("teacherId", { valueAsNumber: true })}
-        />
-        <input
-          type="hidden"
-          {...register("locationId", { valueAsNumber: true })}
-        />
-        <input
-          type="hidden"
-          {...register("userId", {
+          {...register('userId', {
             setValueAs: (v) => {
               const num = Number(v);
               return isNaN(num) ? undefined : num;
@@ -184,11 +172,9 @@ export default function AdminLessonReservationForm({
                     render={({ field }) => (
                       <Input
                         {...field}
-                        value={field.value ?? ""}
+                        value={field.value ?? ''}
                         onChange={(e) =>
-                          field.onChange(
-                            e.target.value === "" ? undefined : e.target.value
-                          )
+                          field.onChange(e.target.value === '' ? undefined : e.target.value)
                         }
                         placeholder="사용자 이름"
                         size="sm"
@@ -208,11 +194,9 @@ export default function AdminLessonReservationForm({
                     render={({ field }) => (
                       <Input
                         {...field}
-                        value={field.value ?? ""}
+                        value={field.value ?? ''}
                         onChange={(e) =>
-                          field.onChange(
-                            e.target.value === "" ? undefined : e.target.value
-                          )
+                          field.onChange(e.target.value === '' ? undefined : e.target.value)
                         }
                         placeholder="연락처"
                         size="sm"
@@ -234,10 +218,7 @@ export default function AdminLessonReservationForm({
             control={control}
             name="isGrand"
             render={({ field: { onChange, value } }) => (
-              <Checkbox.Root
-                checked={value}
-                onCheckedChange={(d) => onChange(!!d.checked)}
-              >
+              <Checkbox.Root checked={value} onCheckedChange={(d) => onChange(!!d.checked)}>
                 <Checkbox.HiddenInput />
                 <Checkbox.Control>
                   <Checkbox.Indicator />
@@ -250,18 +231,13 @@ export default function AdminLessonReservationForm({
           />
           {errors.isGrand && (
             <Text fontSize="sm" color="red.500" mt={1}>
-              {String(errors.isGrand.message || "유효하지 않은 값입니다")}
+              {String(errors.isGrand.message || '유효하지 않은 값입니다')}
             </Text>
           )}
         </Box>
 
         <HStack gap={2} justify="flex-end" pt={2}>
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            disabled={isSaving}
-            size="sm"
-          >
+          <Button variant="outline" onClick={onCancel} disabled={isSaving} size="sm">
             취소
           </Button>
           <Button

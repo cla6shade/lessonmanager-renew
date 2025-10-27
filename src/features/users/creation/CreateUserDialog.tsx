@@ -8,16 +8,16 @@ import {
   VStack,
   Box,
   RadioGroup,
-} from "@chakra-ui/react";
-import z from "zod";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateUserRequestSchema } from "@/app/(users)/api/users/schema";
-import { useCreateUser } from "@/features/users/creation/useCreateUser";
-import { useUserTable } from "@/features/users/table/UserTableProvider";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import LocationSelector from "@/features/selectors/LocationSelector";
-import DateInput from "@/features/inputs/DateInput";
+} from '@chakra-ui/react';
+import z from 'zod';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateUserRequestSchema } from '@/app/(users)/api/users/schema';
+import { useCreateUser } from '@/features/users/creation/useCreateUser';
+import { useUserTable } from '@/features/users/table/UserTableProvider';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import LocationSelector from '@/features/selectors/LocationSelector';
+import DateInput from '@/features/inputs/DateInput';
 
 interface CreateUserDialogProps {
   isOpen: boolean;
@@ -25,35 +25,30 @@ interface CreateUserDialogProps {
 }
 export const CreateUserFormSchema = z
   .object({
-    locationId: z.number().min(1, "지점을 선택해주세요"),
-    name: z.string().min(1, "이름을 입력해주세요"),
-    birth: z.string().min(1, "생년월일을 입력하세요"),
+    locationId: z.number().min(1, '지점을 선택해주세요'),
+    name: z.string().min(1, '이름을 입력해주세요'),
+    birth: z.string().min(1, '생년월일을 입력하세요'),
     gender: z.boolean(),
-    contact: z.string().min(1, "연락처를 입력해주세요"),
-    loginId: z.string().min(1, "로그인 ID를 입력해주세요"),
+    contact: z.string().min(1, '연락처를 입력해주세요'),
+    loginId: z.string().min(1, '로그인 ID를 입력해주세요'),
     password: z
       .string()
-      .min(1, "비밀번호를 입력해주세요")
-      .min(8, "비밀번호는 최소 8자 이상이어야 합니다"),
-    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요"),
-    email: z
-      .email("올바른 이메일 형식이 아닙니다")
-      .min(1, "이메일을 입력해주세요"),
+      .min(1, '비밀번호를 입력해주세요')
+      .min(8, '비밀번호는 최소 8자 이상이어야 합니다'),
+    passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요'),
+    email: z.email('올바른 이메일 형식이 아닙니다').min(1, '이메일을 입력해주세요'),
     ability: z.string().optional(),
     genre: z.string().optional(),
     howto: z.number(),
-    address: z.string().min(1, "주소를 입력해주세요"),
+    address: z.string().min(1, '주소를 입력해주세요'),
   })
   .refine((data) => data.password === data.passwordConfirm, {
-    message: "비밀번호가 일치하지 않습니다",
-    path: ["passwordConfirm"],
+    message: '비밀번호가 일치하지 않습니다',
+    path: ['passwordConfirm'],
   })
   .strict();
 
-export default function CreateUserDialog({
-  isOpen,
-  onClose,
-}: CreateUserDialogProps) {
+export default function CreateUserDialog({ isOpen, onClose }: CreateUserDialogProps) {
   const { refetchUsers } = useUserTable();
   const { locations } = useNavigation();
 
@@ -69,26 +64,24 @@ export default function CreateUserDialog({
     resolver: zodResolver(CreateUserFormSchema),
     defaultValues: {
       locationId: 0,
-      name: "",
+      name: '',
       gender: false, // false = 남성, true = 여성
-      contact: "",
-      loginId: "",
-      password: "",
-      passwordConfirm: "",
-      email: "",
-      ability: "",
-      genre: "",
+      contact: '',
+      loginId: '',
+      password: '',
+      passwordConfirm: '',
+      email: '',
+      ability: '',
+      genre: '',
       howto: 1,
-      address: "",
-      birth: "",
+      address: '',
+      birth: '',
     },
   });
 
   const { createUser, isSaving } = useCreateUser();
 
-  const onSubmit = async (
-    createData: z.output<typeof CreateUserFormSchema>
-  ) => {
+  const onSubmit = async (createData: z.output<typeof CreateUserFormSchema>) => {
     const result = await createUser(createData);
 
     if (result.success) {
@@ -99,7 +92,7 @@ export default function CreateUserDialog({
   };
 
   const handleLocationSelect = (locationId: number) => {
-    setValue("locationId", locationId);
+    setValue('locationId', locationId);
   };
 
   const handleClose = () => {
@@ -108,11 +101,7 @@ export default function CreateUserDialog({
   };
 
   return (
-    <Dialog.Root
-      open={isOpen}
-      onOpenChange={(e) => !e.open && handleClose()}
-      size="lg"
-    >
+    <Dialog.Root open={isOpen} onOpenChange={(e) => !e.open && handleClose()} size="lg">
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -132,14 +121,14 @@ export default function CreateUserDialog({
                 <VStack gap={4} align="stretch">
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      지점{" "}
+                      지점{' '}
                       <Text as="span" color="red.500">
                         *
                       </Text>
                     </Text>
                     <LocationSelector
                       locations={locations}
-                      selectedLocationId={watch("locationId")}
+                      selectedLocationId={watch('locationId')}
                       onLocationSelect={handleLocationSelect}
                       placeholder="지점을 선택하세요"
                     />
@@ -152,15 +141,15 @@ export default function CreateUserDialog({
 
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      이름{" "}
+                      이름{' '}
                       <Text as="span" color="red.500">
                         *
                       </Text>
                     </Text>
                     <Input
-                      {...register("name")}
+                      {...register('name')}
                       placeholder="이름을 입력하세요"
-                      borderColor={errors.name ? "red.500" : undefined}
+                      borderColor={errors.name ? 'red.500' : undefined}
                     />
                     {errors.name && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -174,9 +163,9 @@ export default function CreateUserDialog({
                       성별
                     </Text>
                     <RadioGroup.Root
-                      value={watch("gender") ? "female" : "male"}
+                      value={watch('gender') ? 'female' : 'male'}
                       onValueChange={(e) => {
-                        setValue("gender", e.value === "female");
+                        setValue('gender', e.value === 'female');
                       }}
                     >
                       <HStack gap={4}>
@@ -202,10 +191,7 @@ export default function CreateUserDialog({
                       control={control}
                       name="birth"
                       render={({ field }) => (
-                        <DateInput
-                          borderColor={errors.birth ? "red.500" : undefined}
-                          {...field}
-                        />
+                        <DateInput borderColor={errors.birth ? 'red.500' : undefined} {...field} />
                       )}
                     />
                     {errors.birth && (
@@ -220,9 +206,9 @@ export default function CreateUserDialog({
                       연락처
                     </Text>
                     <Input
-                      {...register("contact")}
+                      {...register('contact')}
                       placeholder="연락처를 입력하세요"
-                      borderColor={errors.contact ? "red.500" : undefined}
+                      borderColor={errors.contact ? 'red.500' : undefined}
                     />
                     {errors.contact && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -236,9 +222,9 @@ export default function CreateUserDialog({
                       주소
                     </Text>
                     <Input
-                      {...register("address")}
+                      {...register('address')}
                       placeholder="주소를 입력하세요"
-                      borderColor={errors.address ? "red.500" : undefined}
+                      borderColor={errors.address ? 'red.500' : undefined}
                     />
                     {errors.address && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -249,15 +235,15 @@ export default function CreateUserDialog({
 
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      로그인 ID{" "}
+                      로그인 ID{' '}
                       <Text as="span" color="red.500">
                         *
                       </Text>
                     </Text>
                     <Input
-                      {...register("loginId")}
+                      {...register('loginId')}
                       placeholder="로그인 ID를 입력하세요"
-                      borderColor={errors.loginId ? "red.500" : undefined}
+                      borderColor={errors.loginId ? 'red.500' : undefined}
                     />
                     {errors.loginId && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -268,16 +254,16 @@ export default function CreateUserDialog({
 
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      비밀번호{" "}
+                      비밀번호{' '}
                       <Text as="span" color="red.500">
                         *
                       </Text>
                     </Text>
                     <Input
-                      {...register("password")}
+                      {...register('password')}
                       type="password"
                       placeholder="비밀번호를 입력하세요"
-                      borderColor={errors.password ? "red.500" : undefined}
+                      borderColor={errors.password ? 'red.500' : undefined}
                     />
                     {errors.password && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -288,18 +274,16 @@ export default function CreateUserDialog({
 
                   <Box>
                     <Text fontWeight="bold" mb={2}>
-                      비밀번호 확인{" "}
+                      비밀번호 확인{' '}
                       <Text as="span" color="red.500">
                         *
                       </Text>
                     </Text>
                     <Input
-                      {...register("passwordConfirm")}
+                      {...register('passwordConfirm')}
                       type="password"
                       placeholder="비밀번호를 다시 입력하세요"
-                      borderColor={
-                        errors.passwordConfirm ? "red.500" : undefined
-                      }
+                      borderColor={errors.passwordConfirm ? 'red.500' : undefined}
                     />
                     {errors.passwordConfirm && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -313,10 +297,10 @@ export default function CreateUserDialog({
                       이메일
                     </Text>
                     <Input
-                      {...register("email")}
+                      {...register('email')}
                       type="email"
                       placeholder="이메일을 입력하세요"
-                      borderColor={errors.email ? "red.500" : undefined}
+                      borderColor={errors.email ? 'red.500' : undefined}
                     />
                     {errors.email && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -330,9 +314,9 @@ export default function CreateUserDialog({
                       경력
                     </Text>
                     <Input
-                      {...register("ability")}
+                      {...register('ability')}
                       placeholder="경력을 입력하세요"
-                      borderColor={errors.ability ? "red.500" : undefined}
+                      borderColor={errors.ability ? 'red.500' : undefined}
                     />
                     {errors.ability && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -346,9 +330,9 @@ export default function CreateUserDialog({
                       장르
                     </Text>
                     <Input
-                      {...register("genre")}
+                      {...register('genre')}
                       placeholder="선호 장르를 입력하세요"
-                      borderColor={errors.genre ? "red.500" : undefined}
+                      borderColor={errors.genre ? 'red.500' : undefined}
                     />
                     {errors.genre && (
                       <Text color="red.500" fontSize="sm" mt={1}>
@@ -358,20 +342,10 @@ export default function CreateUserDialog({
                   </Box>
 
                   <HStack gap={2} pt={4}>
-                    <Button
-                      variant="outline"
-                      onClick={handleClose}
-                      flex={1}
-                      disabled={isSaving}
-                    >
+                    <Button variant="outline" onClick={handleClose} flex={1} disabled={isSaving}>
                       취소
                     </Button>
-                    <Button
-                      type="submit"
-                      flex={1}
-                      loading={isSaving}
-                      disabled={isSaving}
-                    >
+                    <Button type="submit" flex={1} loading={isSaving} disabled={isSaving}>
                       생성
                     </Button>
                   </HStack>

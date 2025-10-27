@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import { createContext, ReactNode, use, useState } from 'react';
-import { UserSearchFilter } from "@/app/(users)/api/users/schema";
+import { UserSearchFilter } from '@/app/(users)/api/users/schema';
 
 interface FilterContextType {
   currentFilter: UserSearchFilter;
@@ -19,7 +19,7 @@ const FilterContext = createContext<FilterContextType | undefined>(undefined);
 export function useFilter() {
   const context = use(FilterContext);
   if (!context) {
-    throw new Error("useFilter must be used within FilterProvider");
+    throw new Error('useFilter must be used within FilterProvider');
   }
   return context;
 }
@@ -29,10 +29,10 @@ interface FilterProviderProps {
 }
 
 export function FilterProvider({ children }: FilterProviderProps) {
-  const [currentFilter, setCurrentFilter] = useState<UserSearchFilter>("ALL");
-  const [searchName, setSearchName] = useState("");
-  const [searchContact, setSearchContact] = useState("");
-  const [searchBirthDate, setSearchBirthDate] = useState("");
+  const [currentFilter, setCurrentFilter] = useState<UserSearchFilter>('ALL');
+  const [searchName, setSearchName] = useState('');
+  const [searchContact, setSearchContact] = useState('');
+  const [searchBirthDate, setSearchBirthDate] = useState('');
 
   const contextValue: FilterContextType = {
     currentFilter,
@@ -45,9 +45,5 @@ export function FilterProvider({ children }: FilterProviderProps) {
     setSearchBirthDate,
   };
 
-  return (
-    <FilterContext.Provider value={contextValue}>
-      {children}
-    </FilterContext.Provider>
-  );
+  return <FilterContext.Provider value={contextValue}>{children}</FilterContext.Provider>;
 }

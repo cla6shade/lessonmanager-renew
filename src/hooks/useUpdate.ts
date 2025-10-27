@@ -1,11 +1,11 @@
-import { useState, useCallback } from "react";
-import { toaster } from "@/components/ui/toaster";
-import { DataResponse } from "@/app/schema";
-import z from "zod";
+import { useState, useCallback } from 'react';
+import { toaster } from '@/components/ui/toaster';
+import { DataResponse } from '@/app/schema';
+import z from 'zod';
 
 export interface UpdateOptions {
   endpoint: string;
-  method?: "PUT" | "POST" | "PATCH" | "DELETE";
+  method?: 'PUT' | 'POST' | 'PATCH' | 'DELETE';
   successMessage?: string;
   errorMessage?: string;
 }
@@ -16,28 +16,22 @@ export interface UpdateResult<T> {
   error?: string;
 }
 
-export function useUpdate<
-  TRequest,
-  TResponse extends DataResponse<z.ZodType> = {}
->() {
+export function useUpdate<TRequest, TResponse extends DataResponse<z.ZodType> = {}>() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const update = useCallback(
-    async (
-      data: TRequest,
-      options: UpdateOptions
-    ): Promise<UpdateResult<TResponse>> => {
+    async (data: TRequest, options: UpdateOptions): Promise<UpdateResult<TResponse>> => {
       setIsSaving(true);
       setError(null);
 
       try {
         const response = await fetch(options.endpoint, {
-          method: options.method || "PUT",
+          method: options.method || 'PUT',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-          body: options.method === "DELETE" ? undefined : JSON.stringify(data),
+          body: options.method === 'DELETE' ? undefined : JSON.stringify(data),
         });
 
         if (!response.ok) {
@@ -45,9 +39,9 @@ export function useUpdate<
 
           try {
             const errorData = await response.json();
-            console.error("API 오류:", errorData);
+            console.error('API 오류:', errorData);
 
-            if (errorData.error && typeof errorData.error === "string") {
+            if (errorData.error && typeof errorData.error === 'string') {
               serverErrorMessage = errorData.error;
             }
           } catch {
@@ -60,13 +54,12 @@ export function useUpdate<
           // errorMessage가 지정되거나 서버에서 의미있는 에러 메시지가 온 경우 토스트 표시
           if (
             options.errorMessage ||
-            serverErrorMessage !==
-              `서버 오류가 발생했습니다. (${response.status})`
+            serverErrorMessage !== `서버 오류가 발생했습니다. (${response.status})`
           ) {
             toaster.create({
-              title: "오류",
+              title: '오류',
               description: errorMessage,
-              type: "error",
+              type: 'error',
             });
           }
 
@@ -74,31 +67,30 @@ export function useUpdate<
         }
 
         let result: TResponse | undefined;
-        const contentType = response.headers.get("content-type");
-        if (contentType?.includes("application/json")) {
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('application/json')) {
           result = await response.json();
         }
 
         if (options.successMessage) {
           toaster.create({
-            title: "성공",
+            title: '성공',
             description: options.successMessage,
-            type: "success",
+            type: 'success',
           });
         }
 
         return { success: true, data: result as TResponse };
       } catch (error) {
-        console.error("업데이트 중 오류:", error);
-        const errorMessage =
-          options.errorMessage || "서버 오류가 발생했습니다.";
+        console.error('업데이트 중 오류:', error);
+        const errorMessage = options.errorMessage || '서버 오류가 발생했습니다.';
         setError(errorMessage);
 
         // errorMessage가 지정되거나 네트워크 오류인 경우 토스트 표시
         toaster.create({
-          title: "오류",
+          title: '오류',
           description: errorMessage,
-          type: "error",
+          type: 'error',
         });
 
         return { success: false, error: errorMessage };
@@ -106,7 +98,7 @@ export function useUpdate<
         setIsSaving(false);
       }
     },
-    []
+    [],
   );
 
   return {

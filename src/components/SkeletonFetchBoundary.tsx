@@ -1,6 +1,6 @@
-import { Box } from "@chakra-ui/react";
-import { SkeletonTable } from "./ui/skeleton";
-import FetchBoundary from "./FetchBoundary";
+import { Box } from '@chakra-ui/react';
+import { SkeletonTable } from './ui/skeleton';
+import FetchBoundary from './FetchBoundary';
 import { ReactNode } from 'react';
 
 interface SkeletonFetchBoundaryProps {
@@ -29,7 +29,7 @@ export default function SkeletonFetchBoundary({
   const skeletonFallback = (
     <Box
       width="100%"
-      height={useFlexHeight ? "0" : "400px"}
+      height={useFlexHeight ? '0' : '400px'}
       flexGrow={useFlexHeight ? 1 : undefined}
       overflow="auto"
       border="1px solid"

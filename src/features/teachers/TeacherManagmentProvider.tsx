@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import { createContext, useState, useEffect, ReactNode, use } from 'react';
-import { useTeacherFilter } from "./search/TeacherFilterProvider";
-import useFetchTeachers from "./hooks/useFetchTeachers";
-import { toaster } from "@/components/ui/toaster";
-import { TeacherSearchResult } from "@/app/(teachers)/api/teachers/schema";
+import { useTeacherFilter } from './search/TeacherFilterProvider';
+import useFetchTeachers from './hooks/useFetchTeachers';
+import { toaster } from '@/components/ui/toaster';
+import { TeacherSearchResult } from '@/app/(teachers)/api/teachers/schema';
 
 interface TeacherManagmentContextType {
   page: number;
@@ -18,16 +18,12 @@ interface TeacherManagmentContextType {
   refetchTeachers: () => void;
 }
 
-const TeacherManagmentContext = createContext<
-  TeacherManagmentContextType | undefined
->(undefined);
+const TeacherManagmentContext = createContext<TeacherManagmentContextType | undefined>(undefined);
 
 export function useTeacherManagement() {
   const context = use(TeacherManagmentContext);
   if (!context) {
-    throw new Error(
-      "useTeacherManagement must be used within TeacherManagmentProvider"
-    );
+    throw new Error('useTeacherManagement must be used within TeacherManagmentProvider');
   }
   return context;
 }
@@ -36,9 +32,7 @@ interface TeacherManagmentProviderProps {
   children: ReactNode;
 }
 
-export function TeacherManagmentProvider({
-  children,
-}: TeacherManagmentProviderProps) {
+export function TeacherManagmentProvider({ children }: TeacherManagmentProviderProps) {
   const { getStartDateISO, getEndDateISO } = useTeacherFilter();
 
   const [page, setPage] = useState(1);
@@ -59,9 +53,9 @@ export function TeacherManagmentProvider({
   useEffect(() => {
     if (teacherFetchError) {
       toaster.create({
-        title: "선생님 목록 조회 실패",
+        title: '선생님 목록 조회 실패',
         description: teacherFetchError,
-        type: "error",
+        type: 'error',
       });
     }
   }, [teacherFetchError]);

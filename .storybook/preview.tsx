@@ -1,7 +1,7 @@
-import type { Preview } from "@storybook/nextjs";
-import { ChakraProvider } from "@chakra-ui/react";
-import { system } from "../src/brand/colors";
-import React from "react";
+import type { Preview } from '@storybook/nextjs';
+import { ChakraProvider } from '@chakra-ui/react';
+import { system } from '../src/brand/colors';
+import React from 'react';
 
 const preview: Preview = {
   parameters: {

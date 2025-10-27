@@ -1,19 +1,12 @@
-import prisma from "@/lib/prisma";
+import prisma from '@/lib/prisma';
 import {
   GetBannedTimesQuery,
   CreateBannedTimeRequest,
   UpdateBannedTimesRequest,
-} from "./api/bans/schema";
-import {
-  UpdateWorkingTimeRequest,
-  WorkingTimeData,
-} from "./api/working-times/schema";
+} from './api/bans/schema';
+import { UpdateWorkingTimeRequest, WorkingTimeData } from './api/working-times/schema';
 
-export async function getBannedTimes({
-  startDate,
-  endDate,
-  teacherId,
-}: GetBannedTimesQuery) {
+export async function getBannedTimes({ startDate, endDate, teacherId }: GetBannedTimesQuery) {
   return prisma.lessonBannedTimes.findMany({
     where: {
       date: {
@@ -33,11 +26,7 @@ export async function getBannedTimes({
   });
 }
 
-export async function createBannedTime({
-  teacherId,
-  date,
-  hour,
-}: CreateBannedTimeRequest) {
+export async function createBannedTime({ teacherId, date, hour }: CreateBannedTimeRequest) {
   return prisma.lessonBannedTimes.create({
     data: {
       teacherId,
@@ -55,10 +44,7 @@ export async function createBannedTime({
   });
 }
 
-export async function updateBannedTimes({
-  deleteIds,
-  bannedTimes,
-}: UpdateBannedTimesRequest) {
+export async function updateBannedTimes({ deleteIds, bannedTimes }: UpdateBannedTimesRequest) {
   return prisma.$transaction(async (tx) => {
     if (deleteIds.length > 0) {
       await tx.lessonBannedTimes.deleteMany({
@@ -83,7 +69,7 @@ export async function updateBannedTimes({
 }
 
 export async function updateWorkingTime(
-  requestData: UpdateWorkingTimeRequest
+  requestData: UpdateWorkingTimeRequest,
 ): Promise<WorkingTimeData> {
   const { teacherId, times } = requestData;
   const teacher = await prisma.teacher.findUnique({
@@ -91,7 +77,7 @@ export async function updateWorkingTime(
   });
 
   if (!teacher) {
-    throw new Error("존재하지 않는 선생님입니다.");
+    throw new Error('존재하지 않는 선생님입니다.');
   }
 
   await prisma.workingTime.update({

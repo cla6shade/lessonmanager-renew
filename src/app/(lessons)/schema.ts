@@ -1,6 +1,6 @@
-import { LessonSchema, LocationSchema, MajorSchema } from "@/generated/zod";
-import { toKstDate } from "@/utils/date";
-import { z } from "zod";
+import { LessonSchema, LocationSchema, MajorSchema } from '@/generated/zod';
+import { toKstDate } from '@/utils/date';
+import { z } from 'zod';
 
 export const LessonSearchParamsSchema = z.object({
   startDate: z.iso
@@ -28,7 +28,7 @@ export const LessonSearchResultSchema = z.array(
   }).omit({
     contact: true,
     note: true,
-  })
+  }),
 );
 
 export type LessonSearchResult = z.infer<typeof LessonSearchResultSchema>;

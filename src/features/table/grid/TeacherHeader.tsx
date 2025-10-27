@@ -1,5 +1,5 @@
-import { ExtendedTeacher } from "../types";
-import { Grid, Flex, Box, Text } from "@chakra-ui/react";
+import { ExtendedTeacher } from '../types';
+import { Grid, Flex, Box, Text } from '@chakra-ui/react';
 
 interface TeacherHeaderProps {
   workingTeachers: ExtendedTeacher[];
@@ -15,10 +15,7 @@ export default function TeacherHeader({ workingTeachers }: TeacherHeaderProps) {
   }
 
   return (
-    <Grid
-      templateColumns={`repeat(${workingTeachers.length}, 1fr)`}
-      height="36px"
-    >
+    <Grid templateColumns={`repeat(${workingTeachers.length}, 1fr)`} height="36px">
       {workingTeachers.map((teacher) => (
         <Flex
           key={`teacher-header-${teacher.id}`}

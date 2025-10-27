@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Box } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { CellType, getCellColor } from "./utils";
-import { getCellBorderColor } from "./utils";
+import { Box } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import { CellType, getCellColor } from './utils';
+import { getCellBorderColor } from './utils';
 
 interface BannedTimeCellProps {
   onClick?: () => void;
@@ -11,11 +11,7 @@ interface BannedTimeCellProps {
   cellType: CellType;
 }
 
-export default function BannedTimeCell({
-  onClick,
-  children,
-  cellType,
-}: BannedTimeCellProps) {
+export default function BannedTimeCell({ onClick, children, cellType }: BannedTimeCellProps) {
   return (
     <Box
       as="td"
@@ -24,9 +20,9 @@ export default function BannedTimeCell({
       bg={getCellColor(cellType)}
       border="1px solid"
       borderColor={getCellBorderColor(cellType)}
-      cursor={cellType === "not-working-hour" ? "not-allowed" : "pointer"}
-      onClick={cellType === "not-working-hour" ? undefined : onClick}
-      _hover={cellType === "available" ? { opacity: 0.8 } : {}}
+      cursor={cellType === 'not-working-hour' ? 'not-allowed' : 'pointer'}
+      onClick={cellType === 'not-working-hour' ? undefined : onClick}
+      _hover={cellType === 'available' ? { opacity: 0.8 } : {}}
       transition="all 0.2s"
       w="80px"
     >

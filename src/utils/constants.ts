@@ -9,8 +9,8 @@ export enum LessonModifierType {
 }
 
 export function getModifyTypeText(type: LessonModifyType) {
-  return ["취소", "예약"][type];
+  return ['취소', '예약'][type];
 }
 export function getModifierTypeText(type: LessonModifierType) {
-  return ["회원", "선생님"][type];
+  return ['회원', '선생님'][type];
 }

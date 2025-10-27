@@ -1,9 +1,6 @@
-import { useCallback } from "react";
-import {
-  UpdateBannedTimesRequest,
-  UpdateBannedTimesResponse,
-} from "@/app/(table)/api/bans/schema";
-import { useUpdate, UpdateResult } from "@/hooks/useUpdate";
+import { useCallback } from 'react';
+import { UpdateBannedTimesRequest, UpdateBannedTimesResponse } from '@/app/(table)/api/bans/schema';
+import { useUpdate, UpdateResult } from '@/hooks/useUpdate';
 
 export function useUpdateBannedTimes() {
   const { update, isSaving, error } = useUpdate<
@@ -12,15 +9,13 @@ export function useUpdateBannedTimes() {
   >();
 
   const updateBannedTimes = useCallback(
-    async (
-      data: UpdateBannedTimesRequest
-    ): Promise<UpdateResult<UpdateBannedTimesResponse>> => {
+    async (data: UpdateBannedTimesRequest): Promise<UpdateResult<UpdateBannedTimesResponse>> => {
       return await update(data, {
-        endpoint: "/api/bans",
-        method: "PUT",
+        endpoint: '/api/bans',
+        method: 'PUT',
       });
     },
-    [update]
+    [update],
   );
 
   return {

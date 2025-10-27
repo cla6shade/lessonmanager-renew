@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -11,17 +11,17 @@ import {
   Portal,
   Checkbox,
   Text,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { formatDate } from "@/utils/date";
-import SkeletonFetchBoundary from "@/components/SkeletonFetchBoundary";
-import Pagination from "@/components/ui/pagination";
-import { useUserTable } from "./UserTableProvider";
-import UserDetailDialog from "../details/UserDetailDialog";
-import UserLessonsDialog from "@/features/users/lessons/UserLessonsDialog";
-import UserPaymentsDialog from "@/features/users/payments/UserPaymentsDialog";
-import { UserSearchResult } from "@/app/(users)/api/users/schema";
-import { Location } from "@prisma/client";
+} from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { formatDate } from '@/utils/date';
+import SkeletonFetchBoundary from '@/components/SkeletonFetchBoundary';
+import Pagination from '@/components/ui/pagination';
+import { useUserTable } from './UserTableProvider';
+import UserDetailDialog from '../details/UserDetailDialog';
+import UserLessonsDialog from '@/features/users/lessons/UserLessonsDialog';
+import UserPaymentsDialog from '@/features/users/payments/UserPaymentsDialog';
+import { UserSearchResult } from '@/app/(users)/api/users/schema';
+import { Location } from '@prisma/client';
 
 export default function UserTable() {
   const {
@@ -37,22 +37,15 @@ export default function UserTable() {
     refetchUsers,
   } = useUserTable();
 
-  const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(
-    null
-  );
-  const [selectedUsers, setSelectedUsers] = useState<Set<UserSearchResult>>(
-    new Set()
-  );
+  const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<Set<UserSearchResult>>(new Set());
   const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
   const [isTotalSelected, setIsTotalSelected] = useState<boolean>(false);
-  const [openDialogType, setOpenDialogType] = useState<
-    "detail" | "lessons" | "payments" | null
-  >(null);
+  const [openDialogType, setOpenDialogType] = useState<'detail' | 'lessons' | 'payments' | null>(
+    null,
+  );
 
-  const openDialog = (
-    user: UserSearchResult,
-    dialogType: "detail" | "lessons" | "payments"
-  ) => {
+  const openDialog = (user: UserSearchResult, dialogType: 'detail' | 'lessons' | 'payments') => {
     setSelectedUser(user);
     setOpenDialogType(dialogType);
   };
@@ -137,9 +130,7 @@ export default function UserTable() {
                     value={[selectedLocation.id.toString()]}
                     onValueChange={(details) => {
                       const locationId = parseInt(details.value[0]);
-                      const location = locations.find(
-                        (loc: Location) => loc.id === locationId
-                      );
+                      const location = locations.find((loc: Location) => loc.id === locationId);
                       if (location) {
                         setSelectedLocation(location);
                       }
@@ -165,7 +156,7 @@ export default function UserTable() {
                               <Select.Item key={item.value} item={item}>
                                 {item.label}
                               </Select.Item>
-                            )
+                            ),
                           )}
                         </Select.Content>
                       </Select.Positioner>
@@ -175,11 +166,7 @@ export default function UserTable() {
                 <Table.ColumnHeader>이름</Table.ColumnHeader>
                 <Table.ColumnHeader>생년월일</Table.ColumnHeader>
                 <Table.ColumnHeader>휴대폰 번호</Table.ColumnHeader>
-                <Table.ColumnHeader
-                  width="100px"
-                  display="flex"
-                  justifyContent="center"
-                >
+                <Table.ColumnHeader width="100px" display="flex" justifyContent="center">
                   비고
                 </Table.ColumnHeader>
               </Table.Row>
@@ -190,9 +177,7 @@ export default function UserTable() {
                   <Table.Cell pt={4}>
                     <Checkbox.Root
                       checked={selectedUsers.has(user)}
-                      onCheckedChange={(e) =>
-                        handleSelectUser(user, !!e.checked)
-                      }
+                      onCheckedChange={(e) => handleSelectUser(user, !!e.checked)}
                       size="sm"
                     >
                       <Checkbox.HiddenInput />
@@ -202,34 +187,28 @@ export default function UserTable() {
                   <Table.Cell>{user.id}</Table.Cell>
                   <Table.Cell>{user.location.name}</Table.Cell>
                   <Table.Cell>{user.name}</Table.Cell>
-                  <Table.Cell>
-                    {user.birth ? formatDate(new Date(user.birth)) : "-"}
-                  </Table.Cell>
+                  <Table.Cell>{user.birth ? formatDate(new Date(user.birth)) : '-'}</Table.Cell>
                   <Table.Cell>{user.contact}</Table.Cell>
-                  <Table.Cell
-                    width="100px"
-                    display="flex"
-                    justifyContent="center"
-                  >
+                  <Table.Cell width="100px" display="flex" justifyContent="center">
                     <HStack gap={2}>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => openDialog(user, "detail")}
+                        onClick={() => openDialog(user, 'detail')}
                       >
                         상세 보기
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => openDialog(user, "lessons")}
+                        onClick={() => openDialog(user, 'lessons')}
                       >
                         레슨 내역
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => openDialog(user, "payments")}
+                        onClick={() => openDialog(user, 'payments')}
                       >
                         결제 내역
                       </Button>
@@ -280,20 +259,20 @@ export default function UserTable() {
             onUserUpdate={(user: UserSearchResult) => {
               setSelectedUser(user);
             }}
-            isOpen={openDialogType === "detail"}
+            isOpen={openDialogType === 'detail'}
             onClose={closeDialog}
             refetchUsers={refetchUsers}
           />
           <UserLessonsDialog
             userId={selectedUser.id}
             userName={selectedUser.name}
-            isOpen={openDialogType === "lessons"}
+            isOpen={openDialogType === 'lessons'}
             onClose={closeDialog}
           />
           <UserPaymentsDialog
             userId={selectedUser.id}
             userName={selectedUser.name}
-            isOpen={openDialogType === "payments"}
+            isOpen={openDialogType === 'payments'}
             onClose={closeDialog}
           />
         </>

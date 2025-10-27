@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Box } from "@chakra-ui/react";
-import { BannedTimeGrid as BannedTimeGridType } from "./utils";
-import { ExtendedTeacher } from "../../types";
-import BannedTimeCell from "./BannedTimeCell";
-import TimeHeaderCell from "./TimeHeaderCell";
-import TeacherHeaderCell from "./TeacherHeaderCell";
-import { getTimesInPeriod } from "@/utils/date";
-import { useTable } from "../../providers/TableProvider";
+import { Box } from '@chakra-ui/react';
+import { BannedTimeGrid as BannedTimeGridType } from './utils';
+import { ExtendedTeacher } from '../../types';
+import BannedTimeCell from './BannedTimeCell';
+import TimeHeaderCell from './TimeHeaderCell';
+import TeacherHeaderCell from './TeacherHeaderCell';
+import { getTimesInPeriod } from '@/utils/date';
+import { useTable } from '../../providers/TableProvider';
 
 interface BannedTimeGridProps {
   timeGrid: BannedTimeGridType;
@@ -28,9 +28,7 @@ export default function BannedTimeGrid({
         <Box as="tr">
           <TimeHeaderCell>시간</TimeHeaderCell>
           {Object.keys(timeGrid).map((teacherId) => {
-            const teacher = workingTeachers.find(
-              (t) => t.id === Number(teacherId)
-            );
+            const teacher = workingTeachers.find((t) => t.id === Number(teacherId));
             if (!teacher) return null;
             return (
               <TeacherHeaderCell key={`header-${teacherId}`}>

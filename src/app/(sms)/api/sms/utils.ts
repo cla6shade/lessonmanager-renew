@@ -1,19 +1,19 @@
 export function phoneNumberWithHyphen(value: string) {
   if (!value) {
-    return "";
+    return '';
   }
 
-  value = value.replace(/[^0-9]/g, "");
+  value = value.replace(/[^0-9]/g, '');
 
   let result = [];
-  let restNumber = "";
+  let restNumber = '';
 
   // 지역번호와 나머지 번호로 나누기
-  if (value.startsWith("02")) {
+  if (value.startsWith('02')) {
     // 서울 02 지역번호
     result.push(value.substring(0, 2));
     restNumber = value.substring(2);
-  } else if (value.startsWith("1")) {
+  } else if (value.startsWith('1')) {
     // 지역 번호가 없는 경우
     // 1xxx-yyyy
     restNumber = value;
@@ -33,11 +33,11 @@ export function phoneNumberWithHyphen(value: string) {
     result.push(restNumber.substring(4));
   }
 
-  return result.filter((val) => val).join("-");
+  return result.filter((val) => val).join('-');
 }
 
 export function phoneNumberToSplitted(phone: string) {
-  const [sphone1, sphone2, sphone3] = phone.split("-");
+  const [sphone1, sphone2, sphone3] = phone.split('-');
   return {
     sphone1,
     sphone2,
@@ -46,5 +46,5 @@ export function phoneNumberToSplitted(phone: string) {
 }
 
 export function getSMSLengthType(message: string) {
-  return message.length > 90 ? "L" : "S";
+  return message.length > 90 ? 'L' : 'S';
 }

@@ -4,8 +4,8 @@ import {
   IconButton,
   Pagination as ChakraPagination,
   ButtonGroup,
-} from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+} from '@chakra-ui/react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
 interface PaginationProps {
   currentPage: number;
@@ -57,7 +57,7 @@ export default function Pagination({
           <ChakraPagination.Items
             render={(page) => (
               <IconButton
-                variant={{ base: "ghost", _selected: "outline" }}
+                variant={{ base: 'ghost', _selected: 'outline' }}
                 aria-label={`페이지 ${page.value}`}
               >
                 {page.value}

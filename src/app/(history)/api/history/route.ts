@@ -1,15 +1,15 @@
-import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { getPaginationQuery, buildErrorResponse } from "@/app/utils";
-import { GetHistoryQuerySchema, GetHistoryResponse } from "./schema";
-import { getSession } from "@/lib/session";
-import { Prisma } from "@/generated/prisma";
+import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { getPaginationQuery, buildErrorResponse } from '@/app/utils';
+import { GetHistoryQuerySchema, GetHistoryResponse } from './schema';
+import { getSession } from '@/lib/session';
+import { Prisma } from '@/generated/prisma';
 
 export async function GET(request: NextRequest) {
   try {
     const { isAdmin } = await getSession();
     if (!isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -17,12 +17,7 @@ export async function GET(request: NextRequest) {
     const { page, limit, userId, teacherId, type, createdByType } =
       GetHistoryQuerySchema.parse(rawQuery);
 
-    const whereConditions = getWhereConditions(
-      userId,
-      teacherId,
-      type,
-      createdByType
-    );
+    const whereConditions = getWhereConditions(userId, teacherId, type, createdByType);
 
     const [histories, total] = await Promise.all([
       prisma.lessonModifyHistory.findMany({
@@ -42,7 +37,7 @@ export async function GET(request: NextRequest) {
           },
         },
         orderBy: {
-          modifiedAt: "desc",
+          modifiedAt: 'desc',
         },
         ...getPaginationQuery(page, limit),
       }),
@@ -67,7 +62,7 @@ function getWhereConditions(
   userId?: number,
   teacherId?: number,
   type?: number,
-  createdByType?: number
+  createdByType?: number,
 ): Prisma.LessonModifyHistoryWhereInput {
   const conditions: Prisma.LessonModifyHistoryWhereInput = {};
 

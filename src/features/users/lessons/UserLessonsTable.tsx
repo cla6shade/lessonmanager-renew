@@ -1,9 +1,9 @@
-import { Text, VStack, HStack, Spinner, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import { Text, VStack, HStack, Spinner, Button } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import Pagination from "@/components/ui/pagination";
-import { useFetchUserLessons } from "@/features/users/lessons/useFetchUserLessons";
-import UserLessonsForm from "./UserLessonsForm";
+import Pagination from '@/components/ui/pagination';
+import { useFetchUserLessons } from '@/features/users/lessons/useFetchUserLessons';
+import UserLessonsForm from './UserLessonsForm';
 
 interface UserLessonsTableProps {
   userId: number;
@@ -13,12 +13,11 @@ export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const { lessons, totalPages, totalItems, loading, error } =
-    useFetchUserLessons({
-      userId,
-      page: currentPage,
-      limit: itemsPerPage,
-    });
+  const { lessons, totalPages, totalItems, loading, error } = useFetchUserLessons({
+    userId,
+    page: currentPage,
+    limit: itemsPerPage,
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -82,12 +81,7 @@ export default function UserLessonsTable({ userId }: UserLessonsTableProps) {
       />
 
       <HStack justify="flex-end">
-        <Button
-          type="submit"
-          form="lessons-form"
-          colorScheme="blue"
-          loadingText="저장 중..."
-        >
+        <Button type="submit" form="lessons-form" colorScheme="blue" loadingText="저장 중...">
           저장
         </Button>
       </HStack>

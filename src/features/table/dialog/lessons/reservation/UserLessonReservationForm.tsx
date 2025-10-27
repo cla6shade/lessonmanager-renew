@@ -1,17 +1,14 @@
-"use client";
+'use client';
 
-import { Box, Button, VStack, Text, HStack } from "@chakra-ui/react";
-import { Checkbox } from "@chakra-ui/react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLessonReservation } from "@/features/table/grid/providers/LessonReservationProvider";
-import { useNavigation } from "@/features/navigation/provider/NavigationContext";
-import {
-  CreateLessonByUserFormSchema,
-  useCreateLesson,
-} from "./useCreateLesson";
-import { formatDate, formatHour } from "@/utils/date";
-import z from "zod";
+import { Box, Button, VStack, Text, HStack } from '@chakra-ui/react';
+import { Checkbox } from '@chakra-ui/react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useLessonReservation } from '@/features/table/grid/providers/LessonReservationProvider';
+import { useNavigation } from '@/features/navigation/provider/NavigationContext';
+import { CreateLessonByUserFormSchema, useCreateLesson } from './useCreateLesson';
+import { formatDate, formatHour } from '@/utils/date';
+import z from 'zod';
 
 interface UserLessonReservationFormProps {
   onSuccess: () => void;
@@ -42,9 +39,7 @@ export default function UserLessonReservationForm({
     },
   });
 
-  const onSubmit = async (
-    data: z.output<typeof CreateLessonByUserFormSchema>
-  ) => {
+  const onSubmit = async (data: z.output<typeof CreateLessonByUserFormSchema>) => {
     const result = await createLesson(data);
     if (result.success) onSuccess();
   };
@@ -92,19 +87,10 @@ export default function UserLessonReservationForm({
           </VStack>
         </Box>
 
-        <input type="hidden" {...register("dueDate")} />
-        <input
-          type="hidden"
-          {...register("dueHour", { valueAsNumber: true })}
-        />
-        <input
-          type="hidden"
-          {...register("teacherId", { valueAsNumber: true })}
-        />
-        <input
-          type="hidden"
-          {...register("locationId", { valueAsNumber: true })}
-        />
+        <input type="hidden" {...register('dueDate')} />
+        <input type="hidden" {...register('dueHour', { valueAsNumber: true })} />
+        <input type="hidden" {...register('teacherId', { valueAsNumber: true })} />
+        <input type="hidden" {...register('locationId', { valueAsNumber: true })} />
 
         <Box>
           <Text fontSize="sm" fontWeight="semibold" mb={2}>
@@ -114,10 +100,7 @@ export default function UserLessonReservationForm({
             control={control}
             name="isGrand"
             render={({ field: { onChange, value } }) => (
-              <Checkbox.Root
-                checked={value}
-                onCheckedChange={(d) => onChange(!!d.checked)}
-              >
+              <Checkbox.Root checked={value} onCheckedChange={(d) => onChange(!!d.checked)}>
                 <Checkbox.HiddenInput />
                 <Checkbox.Control>
                   <Checkbox.Indicator />
@@ -130,18 +113,13 @@ export default function UserLessonReservationForm({
           />
           {errors.isGrand && (
             <Text fontSize="sm" color="red.500" mt={1}>
-              {String(errors.isGrand.message || "유효하지 않은 값입니다")}
+              {String(errors.isGrand.message || '유효하지 않은 값입니다')}
             </Text>
           )}
         </Box>
 
         <HStack gap={2} justify="flex-end" pt={2}>
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            disabled={isSaving}
-            size="sm"
-          >
+          <Button variant="outline" onClick={onCancel} disabled={isSaving} size="sm">
             취소
           </Button>
           <Button

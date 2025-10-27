@@ -1,25 +1,20 @@
-import { Flex, Text, Box, Spinner } from "@chakra-ui/react";
-import TimeColumn from "./TimeColumn";
-import LessonColumn from "./LessonColumn";
-import { useTable } from "../providers/TableProvider";
+import { Flex, Text, Box, Spinner } from '@chakra-ui/react';
+import TimeColumn from './TimeColumn';
+import LessonColumn from './LessonColumn';
+import { useTable } from '../providers/TableProvider';
 
 export default function MobileGridBody() {
   const { selectedDate } = useTable();
 
   return (
     <>
-      <Box
-        borderBottom="1px solid"
-        borderBottomColor="gray.200"
-        p={2}
-        bg="gray.50"
-      >
+      <Box borderBottom="1px solid" borderBottomColor="gray.200" p={2} bg="gray.50">
         <Text fontSize="lg" fontWeight="medium" textAlign="center">
-          {selectedDate.toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            weekday: "long",
+          {selectedDate.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long',
           })}
         </Text>
       </Box>

@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Select, createListCollection, Portal } from "@chakra-ui/react";
-import { UserSearchFilter } from "@/app/(users)/api/users/schema";
-import { useFilter } from "./FilterProvider";
+import { Select, createListCollection, Portal } from '@chakra-ui/react';
+import { UserSearchFilter } from '@/app/(users)/api/users/schema';
+import { useFilter } from './FilterProvider';
 
 const filterOptions = [
-  { label: "전체", value: "ALL" as UserSearchFilter },
-  { label: "활성 사용자", value: "ACTIVE" as UserSearchFilter },
-  { label: "수업 1일 전", value: "ONE_DAY_BEFORE_LESSON" as UserSearchFilter },
+  { label: '전체', value: 'ALL' as UserSearchFilter },
+  { label: '활성 사용자', value: 'ACTIVE' as UserSearchFilter },
+  { label: '수업 1일 전', value: 'ONE_DAY_BEFORE_LESSON' as UserSearchFilter },
   {
-    label: "재등록 1주일 전",
-    value: "ONE_WEEK_BEFORE_REREGISTER" as UserSearchFilter,
+    label: '재등록 1주일 전',
+    value: 'ONE_WEEK_BEFORE_REREGISTER' as UserSearchFilter,
   },
-  { label: "생일", value: "BIRTHDAY" as UserSearchFilter },
-  { label: "시작일 미설정", value: "STARTDATE_NON_SET" as UserSearchFilter },
-  { label: "6개월 이상", value: "MORE_THAN_6_MONTHS" as UserSearchFilter },
+  { label: '생일', value: 'BIRTHDAY' as UserSearchFilter },
+  { label: '시작일 미설정', value: 'STARTDATE_NON_SET' as UserSearchFilter },
+  { label: '6개월 이상', value: 'MORE_THAN_6_MONTHS' as UserSearchFilter },
 ];
 
 export default function FilterSelector() {
@@ -26,9 +26,7 @@ export default function FilterSelector() {
     })),
   });
 
-  const selectedOption = filterOptions.find(
-    (option) => option.value === currentFilter
-  );
+  const selectedOption = filterOptions.find((option) => option.value === currentFilter);
 
   return (
     <Select.Root
@@ -42,9 +40,7 @@ export default function FilterSelector() {
       width="200px"
     >
       <Select.Trigger>
-        <Select.ValueText placeholder="필터 선택">
-          {selectedOption?.label}
-        </Select.ValueText>
+        <Select.ValueText placeholder="필터 선택">{selectedOption?.label}</Select.ValueText>
       </Select.Trigger>
       <Portal>
         <Select.Positioner>

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import brand from "@/brand/baseInfo";
-import colors from "@/brand/colors";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import BrandLinkSection from "./BrandLinkSection";
-import { useLogin } from "./LoginProvider";
+import brand from '@/brand/baseInfo';
+import colors from '@/brand/colors';
+import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import BrandLinkSection from './BrandLinkSection';
+import { useLogin } from './LoginProvider';
 
 export default function LoginBanner() {
   const { loginState } = useLogin();
@@ -15,14 +15,14 @@ export default function LoginBanner() {
       py={10}
       backgroundColor={colors.brandPanel}
       borderLeftRadius="xl"
-      display={{ base: "none", lg: "flex" }}
+      display={{ base: 'none', lg: 'flex' }}
       flexDirection="column"
     >
       <Flex
         grow={1}
         flexDirection="column"
         justifyContent="center"
-        display={{ base: "none", lg: "flex" }}
+        display={{ base: 'none', lg: 'flex' }}
         color="white"
         alignItems="center"
         gap={16}
@@ -35,7 +35,7 @@ export default function LoginBanner() {
           <Text color={colors.brandDark}>{brand.description}</Text>
         </Flex>
         <Text color="gray.300" fontSize="sm">
-          {loginState.errorMessage ?? "계속하려면 로그인해주세요"}
+          {loginState.errorMessage ?? '계속하려면 로그인해주세요'}
         </Text>
       </Flex>
       <BrandLinkSection />

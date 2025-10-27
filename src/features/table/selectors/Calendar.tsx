@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Flex, Text, IconButton, Grid, Button } from "@chakra-ui/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Flex, Text, IconButton, Grid, Button } from '@chakra-ui/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 interface CalendarProps {
   selectedPeriod: {
@@ -12,13 +12,8 @@ interface CalendarProps {
   onDateSelect: (date: Date) => void;
 }
 
-export default function Calendar({
-  selectedPeriod,
-  onDateSelect,
-}: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(
-    new Date(selectedPeriod.startDate)
-  );
+export default function Calendar({ selectedPeriod, onDateSelect }: CalendarProps) {
+  const [currentMonth, setCurrentMonth] = useState(new Date(selectedPeriod.startDate));
 
   const generateCalendarDays = () => {
     const year = currentMonth.getFullYear();
@@ -45,26 +40,17 @@ export default function Calendar({
   const calendarDays = generateCalendarDays();
 
   const handlePreviousMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    );
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
-    );
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
   };
 
   return (
     <div>
       <Flex justify="space-between" align="center" mb={4}>
-        <IconButton
-          onClick={handlePreviousMonth}
-          variant="ghost"
-          size="sm"
-          aria-label="이전 월"
-        >
+        <IconButton onClick={handlePreviousMonth} variant="ghost" size="sm" aria-label="이전 월">
           <ChevronLeft size={16} />
         </IconButton>
 
@@ -72,18 +58,13 @@ export default function Calendar({
           {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
         </Text>
 
-        <IconButton
-          onClick={handleNextMonth}
-          variant="ghost"
-          size="sm"
-          aria-label="다음 월"
-        >
+        <IconButton onClick={handleNextMonth} variant="ghost" size="sm" aria-label="다음 월">
           <ChevronRight size={16} />
         </IconButton>
       </Flex>
 
       <Grid templateColumns="repeat(7, 1fr)" gap={1}>
-        {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
+        {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
           <Text
             key={day}
             textAlign="center"
@@ -98,8 +79,7 @@ export default function Calendar({
 
         {calendarDays.map((day, index) => {
           const isCurrentMonth = day.getMonth() === currentMonth.getMonth();
-          const isInSelectedWeek =
-            day >= selectedPeriod.startDate && day <= selectedPeriod.endDate;
+          const isInSelectedWeek = day >= selectedPeriod.startDate && day <= selectedPeriod.endDate;
 
           return (
             <Button
@@ -110,10 +90,10 @@ export default function Calendar({
               width="8"
               fontSize="xs"
               onClick={() => onDateSelect(day)}
-              bg={isInSelectedWeek ? "brand.100" : "transparent"}
-              color={isCurrentMonth ? "black" : "gray.400"}
+              bg={isInSelectedWeek ? 'brand.100' : 'transparent'}
+              color={isCurrentMonth ? 'black' : 'gray.400'}
               _hover={{
-                bg: isInSelectedWeek ? "bra d.200" : "gray.100",
+                bg: isInSelectedWeek ? 'bra d.200' : 'gray.100',
               }}
             >
               {day.getDate()}

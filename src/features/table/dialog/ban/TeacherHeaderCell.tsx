@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { Box } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Box } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 interface TeacherHeaderCellProps {
   children: ReactNode;
 }
 
-export default function TeacherHeaderCell({
-  children,
-}: TeacherHeaderCellProps) {
+export default function TeacherHeaderCell({ children }: TeacherHeaderCellProps) {
   return (
     <Box
       as="th"

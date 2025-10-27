@@ -1,6 +1,6 @@
-import { Stack } from "@chakra-ui/react";
-import LocationSelector from "../location/LocationSelector";
-import MenuSelector from "../menu/MenuSelector";
+import { Stack } from '@chakra-ui/react';
+import LocationSelector from '../location/LocationSelector';
+import MenuSelector from '../menu/MenuSelector';
 
 export default function NavbarBody() {
   return (

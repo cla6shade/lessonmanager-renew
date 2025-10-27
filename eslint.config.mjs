@@ -1,6 +1,6 @@
-import storybook from "eslint-plugin-storybook";
-import { defineConfig, globalIgnores } from 'eslint/config'
-import nextVitals from 'eslint-config-next/core-web-vitals'
+import storybook from 'eslint-plugin-storybook';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -15,10 +15,10 @@ const eslintConfig = defineConfig([
 
   {
     rules: {
-      "@typescript-eslint/no-explicit-any": "warn",
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
-  ...storybook.configs["flat/recommended"],
-])
+  ...storybook.configs['flat/recommended'],
+]);
 
-export default eslintConfig
+export default eslintConfig;

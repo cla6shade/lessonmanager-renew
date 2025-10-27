@@ -1,14 +1,10 @@
 import { useEffect, useState, createContext, use, ReactNode } from 'react';
-import type { StoreApi } from "zustand";
-import { useStore } from "zustand";
-import { useFetchWeeklyLesson } from "../../hooks/useFetchLesson";
-import {
-  createLessonStore,
-  LessonState,
-  LessonStore,
-} from "../../stores/lessonStore";
-import { useTable } from "../../providers/TableProvider";
-import useFetchBannedTimes from "../../hooks/useFetchBannedTimes";
+import type { StoreApi } from 'zustand';
+import { useStore } from 'zustand';
+import { useFetchWeeklyLesson } from '../../hooks/useFetchLesson';
+import { createLessonStore, LessonState, LessonStore } from '../../stores/lessonStore';
+import { useTable } from '../../providers/TableProvider';
+import useFetchBannedTimes from '../../hooks/useFetchBannedTimes';
 
 const LessonStoreContext = createContext<LessonStore | null>(null);
 
@@ -22,15 +18,14 @@ export default function LessonProvider({ children }: LessonProviderProps) {
   const { lessons, loading, error, refetch } = useFetchWeeklyLesson(
     datePeriod.startDate,
     datePeriod.endDate,
-    selectedTeacher?.id
+    selectedTeacher?.id,
   );
 
-  const { data: bannedTimes, refetch: refetchBannedTimes } =
-    useFetchBannedTimes({
-      startDate: datePeriod.startDate,
-      endDate: datePeriod.endDate,
-      teacherId: selectedTeacher?.id,
-    });
+  const { data: bannedTimes, refetch: refetchBannedTimes } = useFetchBannedTimes({
+    startDate: datePeriod.startDate,
+    endDate: datePeriod.endDate,
+    teacherId: selectedTeacher?.id,
+  });
 
   const initialState: LessonState = {
     lessons,
@@ -41,9 +36,7 @@ export default function LessonProvider({ children }: LessonProviderProps) {
     refetchLessons: refetch,
   };
 
-  const [store] = useState<StoreApi<LessonState>>(() =>
-    createLessonStore(initialState)
-  );
+  const [store] = useState<StoreApi<LessonState>>(() => createLessonStore(initialState));
 
   useEffect(() => {
     store.setState({
@@ -62,16 +55,12 @@ export default function LessonProvider({ children }: LessonProviderProps) {
     });
   }, [bannedTimes, store]);
 
-  return (
-    <LessonStoreContext.Provider value={store}>
-      {children}
-    </LessonStoreContext.Provider>
-  );
+  return <LessonStoreContext.Provider value={store}>{children}</LessonStoreContext.Provider>;
 }
 
 function useLessonStoreSelector<U>(selector: (s: LessonState) => U) {
   const store = use(LessonStoreContext);
-  if (!store) throw new Error("useLesson must be used within a LessonProvider");
+  if (!store) throw new Error('useLesson must be used within a LessonProvider');
   return useStore(store, selector);
 }
 
@@ -81,9 +70,7 @@ export function useLesson() {
   const isLessonLoading = useLessonStoreSelector((s) => s.isLessonLoading);
   const lessonFetchError = useLessonStoreSelector((s) => s.lessonFetchError);
   const bannedTimes = useLessonStoreSelector((s) => s.bannedTimes);
-  const refetchBannedTimes = useLessonStoreSelector(
-    (s) => s.refetchBannedTimes
-  );
+  const refetchBannedTimes = useLessonStoreSelector((s) => s.refetchBannedTimes);
   return {
     lessons,
     refetchLessons,

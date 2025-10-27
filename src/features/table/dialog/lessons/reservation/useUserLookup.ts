@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { UserLookupResponse } from "@/app/(users)/api/users/lookup/schema";
-import { useFetch } from "@/hooks/useFetch";
+import { useMemo } from 'react';
+import { UserLookupResponse } from '@/app/(users)/api/users/lookup/schema';
+import { useFetch } from '@/hooks/useFetch';
 
 export function useUserLookup(query: string) {
   const url = useMemo(() => {

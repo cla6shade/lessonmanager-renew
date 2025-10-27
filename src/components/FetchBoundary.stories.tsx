@@ -1,27 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import React, { useState, useEffect } from "react";
-import FetchBoundary, { DefaultFetchBoundary } from "./FetchBoundary";
-import { Box, Text } from "@chakra-ui/react";
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import React, { useState, useEffect } from 'react';
+import FetchBoundary, { DefaultFetchBoundary } from './FetchBoundary';
+import { Box, Text } from '@chakra-ui/react';
 
 const meta: Meta<typeof FetchBoundary> = {
-  title: "Components/FetchBoundary",
+  title: 'Components/FetchBoundary',
   component: FetchBoundary,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     isLoading: {
-      control: "boolean",
-      description: "로딩 상태",
+      control: 'boolean',
+      description: '로딩 상태',
     },
     error: {
-      control: "text",
-      description: "에러 메시지",
+      control: 'text',
+      description: '에러 메시지',
     },
     isEmpty: {
-      control: "boolean",
-      description: "빈 데이터 상태",
+      control: 'boolean',
+      description: '빈 데이터 상태',
     },
   },
 };
@@ -59,7 +59,7 @@ export const Loading: Story = {
 export const Error: Story = {
   args: {
     isLoading: false,
-    error: "서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    error: '서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.',
     isEmpty: false,
     children: <Box>이 내용은 에러 발생 시 보이지 않습니다.</Box>,
   },
@@ -82,13 +82,7 @@ export const CustomLoadingFallback: Story = {
     error: null,
     isEmpty: false,
     loadingFallback: (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        p={8}
-        gap={4}
-      >
+      <Box display="flex" flexDirection="column" alignItems="center" p={8} gap={4}>
         <Text fontSize="lg" fontWeight="bold" color="gray.600">
           커스텀 로딩...
         </Text>
@@ -105,7 +99,7 @@ export const CustomLoadingFallback: Story = {
 export const CustomErrorFallback: Story = {
   args: {
     isLoading: false,
-    error: "네트워크 오류가 발생했습니다.",
+    error: '네트워크 오류가 발생했습니다.',
     errorFallback: (
       <Box
         p={6}
@@ -118,9 +112,7 @@ export const CustomErrorFallback: Story = {
         <Text fontSize="xl" fontWeight="bold" color="red.600" mb={2}>
           ⚠️ 오류 발생
         </Text>
-        <Text color="red.500">
-          페이지를 새로고침하거나 잠시 후 다시 시도해주세요.
-        </Text>
+        <Text color="red.500">페이지를 새로고침하거나 잠시 후 다시 시도해주세요.</Text>
       </Box>
     ),
     children: <Box>이 내용은 에러 발생 시 보이지 않습니다.</Box>,
@@ -134,13 +126,7 @@ export const CustomEmptyFallback: Story = {
     error: null,
     isEmpty: true,
     emptyFallback: (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        p={8}
-        gap={4}
-      >
+      <Box display="flex" flexDirection="column" alignItems="center" p={8} gap={4}>
         <Text fontSize="2xl">📭</Text>
         <Text fontSize="lg" fontWeight="bold" color="gray.600">
           아직 등록된 데이터가 없습니다
@@ -189,7 +175,7 @@ export const ApiCallSimulation: Story = {
         setState({
           isLoading: false,
           error: null,
-          data: ["데이터 1", "데이터 2", "데이터 3"],
+          data: ['데이터 1', '데이터 2', '데이터 3'],
         });
       }, 3000);
 

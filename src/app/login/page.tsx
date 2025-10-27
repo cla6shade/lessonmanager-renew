@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import LoginBanner from "@/features/login/LoginBanner";
-import LoginForm from "@/features/login/LoginForm";
-import LoginFormCard from "@/features/login/LoginFormCard";
-import { LoginProvider } from "@/features/login/LoginProvider";
-import { Box } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import LoginBanner from '@/features/login/LoginBanner';
+import LoginForm from '@/features/login/LoginForm';
+import LoginFormCard from '@/features/login/LoginFormCard';
+import { LoginProvider } from '@/features/login/LoginProvider';
+import { Box } from '@chakra-ui/react';
+import styled from '@emotion/styled';
 
 export default function LoginPage() {
   return (

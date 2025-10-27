@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Location, Major } from "@/generated/prisma";
-import { createContext, useState, ReactNode, use } from "react";
+import { Location, Major } from '@/generated/prisma';
+import { createContext, useState, ReactNode, use } from 'react';
 
 interface NavigationContextType {
   locations: Location[];
@@ -13,9 +13,7 @@ interface NavigationContextType {
   majors: Major[];
 }
 
-const NavigationContext = createContext<NavigationContextType | undefined>(
-  undefined
-);
+const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
 interface NavigationProviderProps {
   children: ReactNode;
@@ -36,12 +34,11 @@ export function NavigationProvider({
   userId,
   teacherId,
 }: NavigationProviderProps) {
-  const [selectedLocation, setSelectedLocation] =
-    useState<Location>(initialLocation);
+  const [selectedLocation, setSelectedLocation] = useState<Location>(initialLocation);
 
   const handleLocationSelection = (location: Location) => {
     if (!isAdmin) {
-      console.warn("Location selection is only available for admin users");
+      console.warn('Location selection is only available for admin users');
       return;
     }
     setSelectedLocation(location);
@@ -57,33 +54,20 @@ export function NavigationProvider({
     majors,
   };
 
-  return (
-    <NavigationContext.Provider value={value}>
-      {children}
-    </NavigationContext.Provider>
-  );
+  return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;
 }
 
 export function useNavigationContext() {
   const context = use(NavigationContext);
   if (context === undefined) {
-    throw new Error(
-      "useNavigationContext must be used within a NavigationProvider"
-    );
+    throw new Error('useNavigationContext must be used within a NavigationProvider');
   }
   return context;
 }
 
 export function useNavigation() {
-  const {
-    locations,
-    selectedLocation,
-    setSelectedLocation,
-    isAdmin,
-    userId,
-    teacherId,
-    majors,
-  } = useNavigationContext();
+  const { locations, selectedLocation, setSelectedLocation, isAdmin, userId, teacherId, majors } =
+    useNavigationContext();
   return {
     locations,
     selectedLocation,

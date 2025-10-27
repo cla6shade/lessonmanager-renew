@@ -1,7 +1,7 @@
-import { buildDate } from "@/utils/date";
-import { Flex, Input } from "@chakra-ui/react";
-import { useState, ChangeEvent } from "react";
-import z from "zod";
+import { buildDate } from '@/utils/date';
+import { Flex, Input } from '@chakra-ui/react';
+import { useState, ChangeEvent } from 'react';
+import z from 'zod';
 
 interface DateInputProps {
   name: string;
@@ -11,30 +11,16 @@ interface DateInputProps {
 }
 type DateData = { year: string; month: string; day: string };
 const dateDataSchema = z.object({
-  year: z.preprocess(
-    (val) => parseInt(val as string),
-    z.number().min(1900).max(2100)
-  ),
-  month: z.preprocess(
-    (val) => parseInt(val as string),
-    z.number().min(1).max(12)
-  ),
-  day: z.preprocess(
-    (val) => parseInt(val as string),
-    z.number().min(1).max(31)
-  ),
+  year: z.preprocess((val) => parseInt(val as string), z.number().min(1900).max(2100)),
+  month: z.preprocess((val) => parseInt(val as string), z.number().min(1).max(12)),
+  day: z.preprocess((val) => parseInt(val as string), z.number().min(1).max(31)),
 });
-export default function DateInput({
-  name,
-  value,
-  onChange,
-  borderColor,
-}: DateInputProps) {
+export default function DateInput({ name, value, onChange, borderColor }: DateInputProps) {
   const date = value ? new Date(value) : undefined;
   const [dateData, setDateData] = useState<DateData>({
-    year: date?.getFullYear().toString() ?? "",
-    month: date ? (date.getMonth() + 1).toString() : "",
-    day: date?.getDate().toString() ?? "",
+    year: date?.getFullYear().toString() ?? '',
+    month: date ? (date.getMonth() + 1).toString() : '',
+    day: date?.getDate().toString() ?? '',
   });
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name: inputName } = e.target;
@@ -43,7 +29,7 @@ export default function DateInput({
 
     const { success, data } = dateDataSchema.safeParse(modifiedDateData);
     if (!success) {
-      onChange("");
+      onChange('');
       return;
     }
     const date = buildDate(data.year, data.month, data.day);
@@ -52,10 +38,10 @@ export default function DateInput({
       date.getMonth() + 1 !== data.month ||
       date.getDate() !== data.day
     ) {
-      onChange("");
+      onChange('');
       return;
     }
-    console.log("date", date.toISOString());
+    console.log('date', date.toISOString());
     onChange(date.toISOString());
   };
   return (

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Flex, Input, Button, HStack, VStack } from "@chakra-ui/react";
-import FilterSelector from "./FilterSelector";
-import { useUserTable } from "../table/UserTableProvider";
-import { useFilter } from "./FilterProvider";
-import { Filter } from "lucide-react";
-import { useRef, KeyboardEvent } from "react";
+import { Flex, Input, Button, HStack, VStack } from '@chakra-ui/react';
+import FilterSelector from './FilterSelector';
+import { useUserTable } from '../table/UserTableProvider';
+import { useFilter } from './FilterProvider';
+import { Filter } from 'lucide-react';
+import { useRef, KeyboardEvent } from 'react';
 
 export default function FilterSection() {
   const { setSearchName, setSearchContact, setSearchBirthDate } = useFilter();
@@ -19,20 +19,20 @@ export default function FilterSection() {
   const birthDayInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = () => {
-    const nameValue = nameInputRef.current?.value || "";
-    const contactValue = contactInputRef.current?.value || "";
-    const birthYearValue = birthYearInputRef.current?.value || "";
-    const birthMonthValue = birthMonthInputRef.current?.value || "";
-    const birthDayValue = birthDayInputRef.current?.value || "";
+    const nameValue = nameInputRef.current?.value || '';
+    const contactValue = contactInputRef.current?.value || '';
+    const birthYearValue = birthYearInputRef.current?.value || '';
+    const birthMonthValue = birthMonthInputRef.current?.value || '';
+    const birthDayValue = birthDayInputRef.current?.value || '';
 
     const birthDateValue =
       birthYearValue && birthMonthValue && birthDayValue
         ? new Date(
             parseInt(birthYearValue, 10),
             parseInt(birthMonthValue, 10) - 1,
-            parseInt(birthDayValue, 10)
+            parseInt(birthDayValue, 10),
           ).toISOString()
-        : "";
+        : '';
 
     setSearchName(nameValue);
     setSearchContact(contactValue);
@@ -41,7 +41,7 @@ export default function FilterSection() {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSearch();
     }
   };
@@ -103,12 +103,7 @@ export default function FilterSection() {
           />
         </HStack>
 
-        <Button
-          onClick={handleSearch}
-          size="sm"
-          colorScheme="brand"
-          variant="solid"
-        >
+        <Button onClick={handleSearch} size="sm" colorScheme="brand" variant="solid">
           검색
         </Button>
       </Flex>

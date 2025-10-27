@@ -1,19 +1,12 @@
-import prisma from "@/lib/prisma";
-import { UserSearchRequest, UserSearchResult } from "./api/users/schema";
-import { Prisma } from "@/generated/prisma";
-import { getPaginationQuery } from "../utils";
-import {
-  getOneWeekAfterStart,
-  getTomorrowStart,
-  getYesterdayEnd,
-  toKstDate,
-} from "@/utils/date";
+import prisma from '@/lib/prisma';
+import { UserSearchRequest, UserSearchResult } from './api/users/schema';
+import { Prisma } from '@/generated/prisma';
+import { getPaginationQuery } from '../utils';
+import { getOneWeekAfterStart, getTomorrowStart, getYesterdayEnd, toKstDate } from '@/utils/date';
 
 export type UserSearchArgs = UserSearchRequest;
 
-export async function searchUsers(
-  req: UserSearchArgs
-): Promise<[UserSearchResult[], number]> {
+export async function searchUsers(req: UserSearchArgs): Promise<[UserSearchResult[], number]> {
   const strategy = userFilterStrategies[req.filter] ?? userFilterStrategies.ALL;
   const where = await strategy(req);
   const select = getUserSelectInput();
@@ -22,7 +15,7 @@ export async function searchUsers(
 }
 
 const userFilterStrategies: Record<
-  NonNullable<UserSearchArgs["filter"]>,
+  NonNullable<UserSearchArgs['filter']>,
   (req: UserSearchArgs) => Promise<Prisma.UserWhereInput>
 > = {
   ALL: async (req) => getUserWhereInput(req),
@@ -71,7 +64,7 @@ const userFilterStrategies: Record<
 async function findUsers(
   where: Prisma.UserWhereInput,
   selectInput: ReturnType<typeof getUserSelectInput>,
-  pagination?: { skip: number; take: number }
+  pagination?: { skip: number; take: number },
 ): Promise<[UserSearchResult[], number]> {
   return Promise.all([
     prisma.user.findMany({ where, ...selectInput, ...(pagination ?? {}) }),
@@ -92,7 +85,7 @@ export async function getBirthdayUserIds(): Promise<number[]> {
 
 export async function getUserIdsByTotalMonths(minMonths: number) {
   const payments = await prisma.payment.groupBy({
-    by: ["userId"],
+    by: ['userId'],
     _sum: { months: true },
     having: { months: { _sum: { gte: minMonths } } },
   });
@@ -109,7 +102,7 @@ export function getUserSelectInput() {
       },
       latestLesson: true,
       payments: {
-        orderBy: { endDate: "desc" as const },
+        orderBy: { endDate: 'desc' as const },
         where: {
           OR: [
             { isStartDateNonSet: true },
@@ -125,14 +118,14 @@ export function getUserSelectInput() {
       },
     },
     omit: { password: true },
-    orderBy: { registeredAt: "desc" as const },
+    orderBy: { registeredAt: 'desc' as const },
   };
 }
 
 export function getPaginationInput({
   page,
   limit,
-}: Partial<Pick<UserSearchRequest, "page" | "limit">> = {}) {
+}: Partial<Pick<UserSearchRequest, 'page' | 'limit'>> = {}) {
   return page && limit ? getPaginationQuery(page, limit) : undefined;
 }
 
@@ -149,7 +142,6 @@ export function getUserWhereInput({
   if (birthDate) where.birth = birthDate;
   return where;
 }
-
 
 export function setUserLatestLesson(userId: number, lessonId: number) {
   return prisma.user.update({
@@ -215,11 +207,7 @@ export function consumeLessonCount(userId: number, count: number) {
   });
 }
 
-export function getUserPaymentsInRange(
-  startDate: Date,
-  endDate: Date,
-  userIds?: number[]
-) {
+export function getUserPaymentsInRange(startDate: Date, endDate: Date, userIds?: number[]) {
   return prisma.user.findMany({
     where: {
       id: {
@@ -233,7 +221,7 @@ export function getUserPaymentsInRange(
       payments: {
         where: getRangedPaymentWhereInput(startDate, endDate),
         orderBy: {
-          endDate: "desc",
+          endDate: 'desc',
         },
         take: 1,
       },
@@ -245,10 +233,7 @@ function getRangedPaymentWhereInput(startDate: Date, endDate: Date) {
     refunded: false,
     OR: [
       {
-        AND: [
-          { startDate: { gte: startDate } },
-          { startDate: { lte: endDate } },
-        ],
+        AND: [{ startDate: { gte: startDate } }, { startDate: { lte: endDate } }],
       },
       {
         AND: [{ endDate: { gte: startDate } }, { endDate: { lte: endDate } }],

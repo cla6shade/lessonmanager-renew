@@ -1,21 +1,13 @@
-import {
-  VStack,
-  Table,
-  Checkbox,
-  Textarea,
-  Input,
-  HStack,
-  Box,
-} from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { VStack, Table, Checkbox, Textarea, Input, HStack, Box } from '@chakra-ui/react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { useUpdatePayments } from "./useUpdatePayments";
-import { formatDate } from "@/utils/date";
-import DateInput from "@/features/inputs/DateInput";
-import { UpdatePaymentsRequestSchema } from "@/app/(payments)/api/payments/schema";
-import { UserPaymentsResponse } from "@/app/(users)/api/users/[id]/payments/schema";
-import { useEffect } from "react";
+import { useUpdatePayments } from './useUpdatePayments';
+import { formatDate } from '@/utils/date';
+import DateInput from '@/features/inputs/DateInput';
+import { UpdatePaymentsRequestSchema } from '@/app/(payments)/api/payments/schema';
+import { UserPaymentsResponse } from '@/app/(users)/api/users/[id]/payments/schema';
+import { useEffect } from 'react';
 
 type PaymentFormData = {
   id: string;
@@ -31,29 +23,26 @@ type UpdatePaymentsFormData = {
 };
 
 interface UserPaymentsFormProps {
-  payments: UserPaymentsResponse["data"];
+  payments: UserPaymentsResponse['data'];
 }
 
 export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
   const { updatePayments } = useUpdatePayments();
 
-  const defaultPayments: UpdatePaymentsFormData["payments"] = payments.map(
-    (payment) => {
-      return {
-        id: payment.id.toString(),
-        refunded: payment.refunded,
-        refundedAmount: payment.refundedAmount.toString(),
-        memo: payment.memo ?? "",
-        startDate: payment.startDate?.toISOString() || "",
-        endDate: payment.endDate?.toISOString() || "",
-      };
-    }
-  );
+  const defaultPayments: UpdatePaymentsFormData['payments'] = payments.map((payment) => {
+    return {
+      id: payment.id.toString(),
+      refunded: payment.refunded,
+      refundedAmount: payment.refundedAmount.toString(),
+      memo: payment.memo ?? '',
+      startDate: payment.startDate?.toISOString() || '',
+      endDate: payment.endDate?.toISOString() || '',
+    };
+  });
 
-  const { control, handleSubmit, register, reset } =
-    useForm<UpdatePaymentsFormData>({
-      defaultValues: { payments: defaultPayments },
-    });
+  const { control, handleSubmit, register, reset } = useForm<UpdatePaymentsFormData>({
+    defaultValues: { payments: defaultPayments },
+  });
 
   useEffect(() => {
     reset({ payments: defaultPayments });
@@ -77,7 +66,7 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("ko-KR").format(amount);
+    return new Intl.NumberFormat('ko-KR').format(amount);
   };
 
   return (
@@ -100,12 +89,8 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
           <Table.Body>
             {payments.map((payment, index) => (
               <Table.Row key={payment.id}>
-                <Table.Cell>
-                  {formatDate(new Date(payment.createdAt))}
-                </Table.Cell>
-                <Table.Cell>
-                  {formatCurrency(payment.paymentAmount)}원
-                </Table.Cell>
+                <Table.Cell>{formatDate(new Date(payment.createdAt))}</Table.Cell>
+                <Table.Cell>{formatCurrency(payment.paymentAmount)}원</Table.Cell>
                 <Table.Cell>{payment.months}개월</Table.Cell>
                 <Table.Cell>{payment.lessonCount}회</Table.Cell>
                 <Table.Cell>
@@ -129,9 +114,7 @@ export default function UserPaymentsForm({ payments }: UserPaymentsFormProps) {
                     render={({ field: { onChange, value } }) => (
                       <Checkbox.Root
                         checked={value}
-                        onCheckedChange={(details) =>
-                          onChange(!!details.checked)
-                        }
+                        onCheckedChange={(details) => onChange(!!details.checked)}
                       >
                         <Checkbox.HiddenInput />
                         <Checkbox.Control>
