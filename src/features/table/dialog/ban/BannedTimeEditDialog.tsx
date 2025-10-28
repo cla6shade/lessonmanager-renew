@@ -36,13 +36,12 @@ export default function BannedTimeEditDialog({
   const dayOfWeek = getWorkingDayOfWeek(selectedDate);
   const workingTeachers = getWorkingTeachersOnDate(selectedLocation, teachers, dayOfWeek);
 
-  const [defaultTimeGrid, setDefaultTimeGrid] = useState<BannedTimeGridType>({});
-  const [timeGrid, setTimeGrid] = useState<BannedTimeGridType>({});
-
-  useEffect(() => {
-    setTimeGrid(getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers));
-    setDefaultTimeGrid(getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers));
-  }, [selectedDate]);
+  const [defaultTimeGrid, setDefaultTimeGrid] = useState<BannedTimeGridType>(
+    getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers),
+  );
+  const [timeGrid, setTimeGrid] = useState<BannedTimeGridType>(
+    getBannedTimeGrid(selectedDate, openHours, bannedTimes, workingTeachers),
+  );
 
   const handleSubmit = async () => {
     const updateRequest = createUpdateBannedTimesRequest(
