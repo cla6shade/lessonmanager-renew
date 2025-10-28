@@ -1,6 +1,6 @@
 import { LessonSchema, LocationSchema, MajorSchema, TeacherSchema } from '@/generated/zod';
 import { z } from 'zod';
-import { DataResponseSchema } from '../../../schema';
+import { DataResponseSchema } from '@/app/schema';
 import { toKstDate } from '@/utils/date';
 
 export const CreateLessonByAdminInputSchema = LessonSchema.pick({
