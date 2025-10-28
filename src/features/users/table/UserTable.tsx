@@ -61,9 +61,10 @@ export default function UserTable() {
     })),
   });
 
-  useEffect(() => {
+  const handlePageChange = (page: number) => {
+    setPage(page);
     setIsAllSelected(false);
-  }, [page, users, selectedLocation]);
+  };
 
   const handleSelectUser = (user: UserSearchResult, isChecked: boolean) => {
     setSelectedUsers((prevState) => {
@@ -233,7 +234,7 @@ export default function UserTable() {
           totalPages={totalPages}
           totalItems={total}
           itemsPerPage={20}
-          onPageChange={setPage}
+          onPageChange={handlePageChange}
         />
         <Flex gap={2}>
           <Checkbox.Root

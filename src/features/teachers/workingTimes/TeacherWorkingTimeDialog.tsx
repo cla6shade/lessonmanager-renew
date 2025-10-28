@@ -15,14 +15,10 @@ export default function TeacherTableDialog({ isOpen, onClose }: TeacherTableDial
   const { workingTimes, openHours, loading, error, refetch } = useFetchWorkingTimes();
   const { updateWorkingTime, isSaving, error: updateError } = useUpdateWorkingTime();
   const teachers = workingTimes.map((workingTime) => workingTime.teacher);
-  const [selectedTeacher, setSelectedTeacher] = useState<(typeof teachers)[number] | null>(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<(typeof teachers)[number] | null>(
+    teachers.length > 0 ? teachers[0] : null,
+  );
   const [editedWorkingTime, setEditedWorkingTime] = useState<WorkingTimeData | null>(null);
-
-  useEffect(() => {
-    if (teachers.length > 0 && !selectedTeacher) {
-      setSelectedTeacher(teachers[0]);
-    }
-  }, [teachers, selectedTeacher]);
 
   const handleWorkingTimeChange = (workingTime: WorkingTimeData) => {
     setEditedWorkingTime(workingTime);
@@ -37,7 +33,7 @@ export default function TeacherTableDialog({ isOpen, onClose }: TeacherTableDial
     });
 
     if (result.success) {
-      await refetch();
+      refetch();
       setEditedWorkingTime(null);
     }
   };
