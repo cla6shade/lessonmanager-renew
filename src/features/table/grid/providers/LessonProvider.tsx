@@ -47,7 +47,7 @@ export default function LessonProvider({ children }: LessonProviderProps) {
       lessonFetchError: error,
       refetchLessons: refetch,
     });
-  }, [lessons, loading, error, refetch, store]);
+  }, [lessons, loading, error, refetch, store, bannedTimes, refetchBannedTimes]);
 
   useEffect(() => {
     store.setState({

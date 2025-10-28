@@ -26,7 +26,7 @@ export default function UserLessonsForm({ lessons }: UserLessonsFormProps) {
 
   useEffect(() => {
     reset({ lessons: defaultLessons });
-  }, [lessons, reset]);
+  }, [defaultLessons, lessons, reset]);
 
   const onSubmit = async (data: UpdateLessonsRequest) => {
     await updateLessons(data);

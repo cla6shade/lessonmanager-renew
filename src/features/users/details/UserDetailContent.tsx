@@ -71,7 +71,7 @@ export default function UserDetailContent({
         setIsEditMode(false);
       }
     },
-    [user, update, onUserUpdate],
+    [user, update, onUserUpdate, refetchUsers],
   );
 
   const handleCancel = () => {
