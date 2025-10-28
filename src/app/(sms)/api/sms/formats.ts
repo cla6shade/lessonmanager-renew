@@ -1,32 +1,11 @@
 import { UserSearchResult } from '@/app/(users)/api/users/schema';
 import brand from '@/brand/baseInfo';
-import { SendSMSRequest, SMSReceiverType } from './schema';
+import { SendSMSRequest, SMSReceiverType, SMSTarget } from './schema';
 import { getTomorowLesson } from '@/app/(lessons)/service';
 import { formatDate, getBirthdayCouponDeadline, getCurrentDatePeriod } from '@/utils/date';
-
-export type SMSReplaceTarget = {
-  TIME?: string;
-  STARTDATE?: string;
-  NAME?: string;
-  REREGISTER_START?: string;
-  REREGISTER_END?: string;
-  DEADLINE_MONTH?: string;
-  DEADLINE_DAY?: string;
-};
+import { getLatestUserPayment } from '@/app/(payments)/service';
 
 const BRAND_NAME = brand.name;
-
-export type UserFormatInfo = {
-  [userId: string]: {
-    user: UserSearchResult;
-    replaceTargets: SMSReplaceTarget;
-  };
-};
-
-export type FormatInfoBuilder = (
-  userId: string,
-  user: UserSearchResult,
-) => Promise<SMSReplaceTarget | undefined>;
 
 export const SMSFormats = {
   ONE_DAY_BEFORE_LESSON: `안녕하세요~
@@ -56,17 +35,38 @@ ${BRAND_NAME}에서 작지만 마음을 담아
 (기한: %DEADLINE_MONTH%월 %DEADLINE_DAY%일까지)`,
 };
 
+export type SMSReplaceTarget = {
+  TIME?: string;
+  STARTDATE?: string;
+  NAME?: string;
+  REREGISTER_START?: string;
+  REREGISTER_END?: string;
+  DEADLINE_MONTH?: string;
+  DEADLINE_DAY?: string;
+};
+
+export type UserFormatInfo = {
+  [userId: string]: {
+    user: SMSTarget;
+    replaceTargets: SMSReplaceTarget;
+  };
+};
+
+export type FormatInfoBuilder = (
+  userId: string,
+  user: SMSTarget,
+) => Promise<SMSReplaceTarget | undefined>;
+
 export async function getFormatInfo({
-  targetUsers,
+  targetInfos,
   receiverType,
 }: {
-  targetUsers: UserSearchResult[];
+  targetInfos: SMSTarget[];
   receiverType: SMSReceiverType;
 }): Promise<UserFormatInfo> {
   const formatInfoBuilders: Partial<Record<SMSReceiverType, FormatInfoBuilder>> = {
     ONE_DAY_BEFORE_LESSON: async (userId, user) => {
-      const userIdNum = parseInt(userId, 10);
-      const lesson = await getTomorowLesson(userIdNum);
+      const lesson = await getTomorowLesson(user.id!);
       return {
         TIME: lesson!.dueHour.toString(),
       };
@@ -80,7 +80,7 @@ export async function getFormatInfo({
       };
     },
     ONE_WEEK_BEFORE_REREGISTER: async (userId, user) => {
-      const payment = user.payments[0];
+      const payment = await getLatestUserPayment(user.id!);
       if (!payment || !payment.startDate || !payment.endDate) return undefined;
       const period = getCurrentDatePeriod(payment.endDate);
       return {
@@ -98,7 +98,7 @@ export async function getFormatInfo({
   const formatInfo: UserFormatInfo = {};
 
   await Promise.all(
-    Object.entries(targetUsers).map(async ([userId, user]) => {
+    Object.entries(targetInfos).map(async ([userId, user]) => {
       const formatInfos = await builder(userId, user);
       if (formatInfos) {
         formatInfo[userId] = { user, replaceTargets: formatInfos };
@@ -116,6 +116,7 @@ export function getMessageFormat({
   if (receiverType === 'ALL') return message;
   return SMSFormats[receiverType];
 }
+
 export function buildMessageMap({
   messageFormat,
   formatInfo,
