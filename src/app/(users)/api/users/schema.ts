@@ -42,10 +42,6 @@ export const UserSearchRequestSchema = z.object({
     .optional(),
   page: z.coerce.number().min(1).optional(),
   limit: z.coerce.number().min(1).max(100).optional(),
-  lookup: z
-    .transform((val) => val === 'true')
-    .pipe(z.boolean())
-    .optional(),
 });
 
 export type UserSearchRequest = z.infer<typeof UserSearchRequestSchema>;
