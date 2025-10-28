@@ -92,7 +92,7 @@ export default function LessonDetailContent({
     <VStack gap={4} align="stretch">
       <HStack justify="space-between">
         <Text fontWeight="bold">상태:</Text>
-        <StatusBadge isDone={!!lesson.isDone} />
+        <StatusBadge isDone={lesson.isDone} />
       </HStack>
 
       <Separator />
