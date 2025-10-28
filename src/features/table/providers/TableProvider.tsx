@@ -19,8 +19,15 @@ export default function TableProvider({
   openHours,
   teachers,
 }: TableProviderProps) {
-  const store = useRef(createTableStore({ openHours, teachers, workingTimes })).current;
-  return <TableStoreContext.Provider value={store}>{children}</TableStoreContext.Provider>;
+  const storeRef = useRef(createTableStore({ openHours, teachers, workingTimes }));
+  // eslint-disable-next-line react-hooks/refs
+  if (!storeRef.current) {
+    storeRef.current = createTableStore({ openHours, teachers, workingTimes });
+  }
+  return (
+    // eslint-disable-next-line react-hooks/refs
+    <TableStoreContext.Provider value={storeRef.current}>{children}</TableStoreContext.Provider>
+  );
 }
 
 function useTableStoreSelector<U>(selector: (s: TableState) => U) {
