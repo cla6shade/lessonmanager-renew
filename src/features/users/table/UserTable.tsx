@@ -11,7 +11,7 @@ import {
   Portal,
   Checkbox,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { formatDate } from '@/utils/date';
 import SkeletonFetchBoundary from '@/components/SkeletonFetchBoundary';
 import Pagination from '@/components/ui/pagination';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, Button, Box, Text, Portal } from '@chakra-ui/react';
 import { formatDate, getWorkingDayOfWeek } from '@/utils/date';
 import { useTable } from '../../providers/TableProvider';
@@ -10,7 +10,6 @@ import { useNavigation } from '../../../navigation/provider/NavigationContext';
 import BannedTimeLegend from './BannedTimeLegend';
 import BannedTimeGrid from './BannedTimeGrid';
 import {
-  CellType,
   BannedTimeGrid as BannedTimeGridType,
   getBannedTimeGrid,
   createUpdateBannedTimesRequest,

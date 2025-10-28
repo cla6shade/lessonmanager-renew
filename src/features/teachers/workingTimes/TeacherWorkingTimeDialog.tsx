@@ -1,7 +1,7 @@
 import { Text, Dialog, Portal, Button, Badge, Box } from '@chakra-ui/react';
 import { useFetchWorkingTimes } from './useFetchWorkingTimes';
 import { useUpdateWorkingTime } from './useUpdateWorkingTime';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TeacherSelector from '@/features/selectors/TeacherSelector';
 import WorkingTimeTable from './WorkingTimeTable';
 import { WorkingTimeData } from '@/app/(table)/api/working-times/schema';
