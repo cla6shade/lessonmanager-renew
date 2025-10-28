@@ -5,7 +5,7 @@ import {
   UserSearchRequestSchema,
   UserSearchResponse,
 } from './schema';
-import { searchUsers } from '../../service';
+import { searchUsers, checkDuplicateUser } from '../../service';
 import { buildErrorResponse } from '@/app/utils';
 import { getSession } from '@/lib/session';
 import prisma from '@/lib/prisma';
@@ -62,10 +62,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     let requestData = CreateUserRequestSchema.parse(await request.json());
-    const { password, passwordConfirm } = requestData;
+    const { password, passwordConfirm, loginId, email } = requestData;
     if (password !== passwordConfirm) {
       return NextResponse.json({ error: '패스워드가 일치하지 않습니다.' }, { status: 400 });
     }
+
+    // Check for duplicate loginId and email
+    const duplicateCheck = await checkDuplicateUser(loginId, email);
+
+    if (duplicateCheck.loginIdExists) {
+      return NextResponse.json({ error: '이미 사용 중인 아이디입니다.' }, { status: 400 });
+    }
+
+    if (duplicateCheck.emailExists) {
+      return NextResponse.json({ error: '이미 사용 중인 이메일입니다.' }, { status: 400 });
+    }
+
     const creationData = {
       ...requestData,
       teacherInChargeId: null,

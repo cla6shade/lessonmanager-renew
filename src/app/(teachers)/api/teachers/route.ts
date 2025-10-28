@@ -5,7 +5,7 @@ import {
   TeacherSearchRequestSchema,
   TeacherSearchResponse,
 } from './schema';
-import { searchTeachers, createTeacher } from '../../service';
+import { searchTeachers, createTeacher, checkDuplicateTeacher } from '../../service';
 import { buildErrorResponse } from '@/app/utils';
 import { getSession } from '@/lib/session';
 import { encryptPassword } from '@/app/(auth)/login/service';
@@ -57,10 +57,21 @@ export async function POST(request: NextRequest) {
     }
 
     let requestData = CreateTeacherRequestSchema.parse(await request.json());
-    const { password, passwordConfirm } = requestData;
+    const { password, passwordConfirm, loginId, email } = requestData;
 
     if (password !== passwordConfirm) {
       return NextResponse.json({ error: '비밀번호가 일치하지 않습니다.' }, { status: 400 });
+    }
+
+    // Check for duplicate loginId and email
+    const duplicateCheck = await checkDuplicateTeacher(loginId, email);
+
+    if (duplicateCheck.loginIdExists) {
+      return NextResponse.json({ error: '이미 사용 중인 아이디입니다.' }, { status: 400 });
+    }
+
+    if (duplicateCheck.emailExists) {
+      return NextResponse.json({ error: '이미 사용 중인 이메일입니다.' }, { status: 400 });
     }
 
     const { locationId, majorId, passwordConfirm: _, ...otherData } = requestData;

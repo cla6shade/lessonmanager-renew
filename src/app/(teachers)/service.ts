@@ -67,6 +67,24 @@ export function getPaginationInput({ page, limit }: Pick<TeacherSearchRequest, '
   return getPaginationQuery(page, limit);
 }
 
+export async function checkDuplicateTeacher(loginId: string, email: string) {
+  const [loginIdExists, emailExists] = await Promise.all([
+    prisma.teacher.findFirst({
+      where: { loginId },
+      select: { id: true },
+    }),
+    prisma.teacher.findFirst({
+      where: { email },
+      select: { id: true },
+    }),
+  ]);
+
+  return {
+    loginIdExists: !!loginIdExists,
+    emailExists: !!emailExists,
+  };
+}
+
 export async function createTeacher(data: Prisma.TeacherCreateInput) {
   return prisma.teacher.create({
     data,

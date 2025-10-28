@@ -15,6 +15,24 @@ export function findUser(userId: number) {
   });
 }
 
+export async function checkDuplicateUser(loginId: string, email: string) {
+  const [loginIdExists, emailExists] = await Promise.all([
+    prisma.user.findFirst({
+      where: { loginId },
+      select: { id: true },
+    }),
+    prisma.user.findFirst({
+      where: { email },
+      select: { id: true },
+    }),
+  ]);
+
+  return {
+    loginIdExists: !!loginIdExists,
+    emailExists: !!emailExists,
+  };
+}
+
 export type UserSearchArgs = UserSearchRequest;
 
 export async function searchUsers(req: UserSearchArgs): Promise<[UserSearchResult[], number]> {
