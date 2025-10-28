@@ -12,7 +12,6 @@ import {
 import z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateTeacherRequestSchema } from '@/app/(teachers)/api/teachers/schema';
 import { useCreateTeacher } from '@/features/teachers/creation/useCreateTeacher';
 import { useNavigation } from '@/features/navigation/provider/NavigationContext';
 import LocationSelector from '@/features/selectors/LocationSelector';
