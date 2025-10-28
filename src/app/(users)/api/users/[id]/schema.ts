@@ -1,5 +1,5 @@
 import { DataResponseSchema } from '@/app/schema';
-import { LocationSchema, LessonSchema, UserSchema } from '@/generated/zod';
+import { LocationSchema, LessonSchema } from '@/generated/zod';
 import { toKstDate } from '@/utils/date';
 import z from 'zod';
 import { PublicUserSchema, UserSearchResultSchema } from '../schema';
@@ -31,6 +31,6 @@ export const UpdateUserRequestSchema = z.object({
 
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequestSchema>;
 
-export const UpdateUserResponseSchema = DataResponseSchema(UserSearchResultSchema);
+export const UpdateUserResponseSchema = DataResponseSchema(UserSearchResultSchema.Base);
 
 export type UpdateUserResponse = z.infer<typeof UpdateUserResponseSchema>;
