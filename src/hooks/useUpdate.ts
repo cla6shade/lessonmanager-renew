@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { toaster } from '@/components/ui/toaster';
 import { DataResponse } from '@/app/schema';
 import z from 'zod';
+import { parseResponse } from '@/utils/network';
 
 export interface UpdateOptions {
   endpoint: string;
@@ -25,75 +26,48 @@ export function useUpdate<TRequest, TResponse extends DataResponse<z.ZodType> = 
       setIsSaving(true);
       setError(null);
 
+      const { endpoint, method = 'PUT', successMessage, errorMessage } = options;
+
+      const showToast = (type: 'success' | 'error', description: string) =>
+        toaster.create({
+          title: type === 'success' ? '성공' : '오류',
+          description,
+          type,
+        });
+
+      const handleError = (msg: string): UpdateResult<TResponse> => {
+        setError(msg);
+        showToast('error', msg);
+        return { success: false, error: msg };
+      };
+
       try {
-        const response = await fetch(options.endpoint, {
-          method: options.method || 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: options.method === 'DELETE' ? undefined : JSON.stringify(data),
+        const response = await fetch(endpoint, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: method === 'DELETE' ? undefined : JSON.stringify(data),
         });
 
         if (!response.ok) {
-          let serverErrorMessage = `서버 오류가 발생했습니다. (${response.status})`;
+          const defaultErrorMsg = `서버 오류가 발생했습니다. (${response.status})`;
+          const parsed = await parseResponse<{ error?: string }>(response);
+          const serverErrorMsg =
+            typeof parsed?.error === 'string' && parsed.error.trim()
+              ? parsed.error
+              : defaultErrorMsg;
 
-          try {
-            const errorData = await response.json();
-            console.error('API 오류:', errorData);
-
-            if (errorData.error && typeof errorData.error === 'string') {
-              serverErrorMessage = errorData.error;
-            }
-          } catch {
-            // JSON 파싱 실패 시 기본 메시지 사용
-          }
-
-          const errorMessage = options.errorMessage || serverErrorMessage;
-          setError(errorMessage);
-
-          // errorMessage가 지정되거나 서버에서 의미있는 에러 메시지가 온 경우 토스트 표시
-          if (
-            options.errorMessage ||
-            serverErrorMessage !== `서버 오류가 발생했습니다. (${response.status})`
-          ) {
-            toaster.create({
-              title: '오류',
-              description: errorMessage,
-              type: 'error',
-            });
-          }
-
-          return { success: false, error: errorMessage };
+          const finalMsg = errorMessage || serverErrorMsg;
+          if (errorMessage || serverErrorMsg !== defaultErrorMsg) showToast('error', finalMsg);
+          return handleError(finalMsg);
         }
 
-        let result: TResponse | undefined;
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('application/json')) {
-          result = await response.json();
-        }
-
-        if (options.successMessage) {
-          toaster.create({
-            title: '성공',
-            description: options.successMessage,
-            type: 'success',
-          });
-        }
-
-        return { success: true, data: result as TResponse };
+        const parsed = await parseResponse<TResponse>(response);
+        if (successMessage) showToast('success', successMessage);
+        return { success: true, data: parsed };
       } catch (error) {
         console.error('업데이트 중 오류:', error);
-        const errorMessage = options.errorMessage || '서버 오류가 발생했습니다.';
-        setError(errorMessage);
-
-        // errorMessage가 지정되거나 네트워크 오류인 경우 토스트 표시
-        toaster.create({
-          title: '오류',
-          description: errorMessage,
-          type: 'error',
-        });
-
-        return { success: false, error: errorMessage };
+        const msg = errorMessage || '서버 오류가 발생했습니다.';
+        return handleError(msg);
       } finally {
         setIsSaving(false);
       }
