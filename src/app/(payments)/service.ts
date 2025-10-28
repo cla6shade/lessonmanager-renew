@@ -39,6 +39,6 @@ export function createPayment(data: CreatePaymentRequest) {
 export function getLatestUserPayment(userId: number) {
   const yesterdayEnd = getYesterdayEnd();
   return prisma.payment.findFirst({
-    where: { endDate: { gte: toKstDate(yesterdayEnd) } },
+    where: { userId, endDate: { gte: toKstDate(yesterdayEnd) } },
   });
 }
