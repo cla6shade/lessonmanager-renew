@@ -9,8 +9,8 @@
     "start": "cross-env NODE_ENV=production next start",
     "lint": "eslint",
     "gen:prisma": "pnpm prima generate",
-    "test": "vitest",
-    "test:ci": "vitest --run",
+    "test": "cross-env NODE_ENV=test vitest",
+    "test:ci": "cross-env NODE_ENV=test vitest --run",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
