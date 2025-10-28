@@ -9,4 +9,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const bundleAnalyzerWrapper = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+export default bundleAnalyzerWrapper(nextConfig);
