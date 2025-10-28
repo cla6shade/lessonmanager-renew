@@ -28,12 +28,11 @@ export function useCreateLesson() {
 
   const createLesson = useCallback(
     async (data: CreateLessonInput) => {
-      const result = await update(data, {
+      return update(data, {
         endpoint: '/api/lessons',
         method: 'POST',
         successMessage: '레슨이 성공적으로 예약되었습니다.',
       });
-      return result;
     },
     [update],
   );

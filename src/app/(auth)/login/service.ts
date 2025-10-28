@@ -27,7 +27,7 @@ export async function canLogin(account: Teacher | User, isAdmin: boolean) {
 
 export async function getAccount(loginId: string, password: string, isAdmin: boolean) {
   password = encryptPassword(password);
-  const account = isAdmin
+  return isAdmin
     ? await prisma.teacher.findFirst({
         where: {
           loginId,
@@ -40,5 +40,4 @@ export async function getAccount(loginId: string, password: string, isAdmin: boo
           password,
         },
       });
-  return account;
 }

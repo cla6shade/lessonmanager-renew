@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
 
     const updatedPayments = await Promise.all(
       payments.map(async (paymentUpdate) => {
-        const updated = await prisma.payment.update({
+        return prisma.payment.update({
           where: { id: paymentUpdate.id },
           data: {
             refunded: paymentUpdate.refunded,
@@ -33,7 +33,6 @@ export async function PUT(request: NextRequest) {
             isStartDateNonSet: paymentUpdate.isStartDateNonSet,
           },
         });
-        return updated;
       }),
     );
 
