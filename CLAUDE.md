@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Lesson Manager is a Next.js lesson management system for managing music lessons, teachers, students, payments, and schedules. The application supports multi-location management with role-based access control (admin/teachers/users).
+Lesson Manager is a Next.js lesson management system for managing music lessons, teachers, students(users), payments, and schedules. The application supports multi-location management with role-based access control (teachers/users).
 
 ## Development Commands
 
@@ -34,10 +34,10 @@ pnpm build-storybook       # Build Storybook
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
-- **UI**: Chakra UI v3 + Emotion + Tailwind CSS (Only used for font optimization)
+- **UI**: Chakra UI v3 + Emotion + Tailwind CSS(Only used for font optimization)
 - **Database**: MySQL via Prisma ORM
 - **Session**: iron-session (cookie-based, 30-day TTL)
-- **State Management**: Zustand
+- **Global State Management**: Zustand
 - **Forms**: react-hook-form + zod validation
 - **Testing**: Vitest + React Testing Library + Prismock (Prisma mocking)
 
@@ -183,16 +183,17 @@ Schemas are typically in adjacent `schema.ts` files.
 
 - Primary: Chakra UI v3 components from `@chakra-ui/react`
 - Custom UI: `src/components/ui/` (wrapped Chakra components)
-- Styling: Emotion CSS-in-JS + Tailwind utility classes
+- Styling: Emotion CSS-in-JS + Tailwind(for font optimization only, SHOULD NOT BE USED FOR STYLING)
 - Theme: Custom brand colors in `src/brand/colors`
 - Toast notifications: `toaster` from `@/components/ui/toaster`
 
-### Important Naming Conventions
+### Important Code Conventions
 
 Based on recent commits:
 - Use descriptive function names without unnecessary aliasing
 - API responses should have consistent types (e.g., `UserSearchResult[]`)
 - Business logic function names should clearly indicate their action (e.g., `consumeLessonCount` not `useLessonCount`)
+- Import statements should be at the top level of the file
 
 ## Common Gotchas
 
