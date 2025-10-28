@@ -2,7 +2,7 @@ import { buildErrorResponse } from '@/app/utils';
 import { getSession } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 import { GetSMSTargetRequestSchema, SendSMSRequestSchema } from './schema';
-// import { sendMessage } from "./service";
+import { getTargetUsers, sendMessage } from './service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,16 +10,20 @@ export async function POST(request: NextRequest) {
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const { receiverType, message, targets, isTotalSelected, selectedLocationId } =
-      SendSMSRequestSchema.parse(request.body);
-    // const sendResult = await sendMessage({
-    //   receiverType,
-    //   message,
-    //   targets,
-    //   isTotalSelected,
-    //   selectedLocationId,
-    // });
-    // console.log(sendResult);
+
+    const body = await request.json();
+    const { receiverType, message, targetInfos, selectedLocationId } =
+      SendSMSRequestSchema.parse(body);
+
+    const sendResult = await sendMessage({
+      receiverType,
+      message,
+      targetInfos,
+      selectedLocationId,
+    });
+    console.log(sendResult);
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     return buildErrorResponse(error);
   }
@@ -31,7 +35,21 @@ export async function GET(request: NextRequest) {
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const { receiverType, selectedLocationId } = GetSMSTargetRequestSchema.parse(request.body);
+
+    const { searchParams } = new URL(request.url);
+    const { receiverType, selectedLocationId, isTotalSelected } = GetSMSTargetRequestSchema.parse({
+      receiverType: searchParams.get('receiverType'),
+      selectedLocationId: Number(searchParams.get('selectedLocationId')),
+      isTotalSelected: searchParams.get('isTotalSelected'),
+    });
+
+    const targetUsers = await getTargetUsers({
+      receiverType,
+      isTotalSelected,
+      selectedLocationId,
+    });
+
+    return NextResponse.json({ data: targetUsers });
   } catch (error) {
     console.error(error);
     return buildErrorResponse(error);
