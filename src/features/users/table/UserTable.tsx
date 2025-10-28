@@ -10,7 +10,6 @@ import {
   createListCollection,
   Portal,
   Checkbox,
-  Text,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { formatDate } from '@/utils/date';
@@ -21,7 +20,7 @@ import UserDetailDialog from '../details/UserDetailDialog';
 import UserLessonsDialog from '@/features/users/lessons/UserLessonsDialog';
 import UserPaymentsDialog from '@/features/users/payments/UserPaymentsDialog';
 import { UserSearchResult } from '@/app/(users)/api/users/schema';
-import { Location } from '@prisma/client';
+import { Location } from '@/generated/prisma';
 
 export default function UserTable() {
   const {

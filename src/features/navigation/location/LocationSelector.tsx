@@ -1,7 +1,7 @@
 import { Button, Separator, Stack } from '@chakra-ui/react';
 import { useNavigation } from '../provider/NavigationContext';
 import colors from '@/brand/colors';
-import { Location } from '@prisma/client';
+import { Location } from '@/generated/prisma';
 
 export default function LocationSelector() {
   const { isAdmin, setSelectedLocation, locations, selectedLocation } = useNavigation();

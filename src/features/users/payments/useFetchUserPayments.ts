@@ -1,5 +1,5 @@
 import { UserPaymentsResponse } from '@/app/(users)/api/users/[id]/payments/schema';
-import { useFetch } from '../../../hooks/useFetch';
+import { useFetch } from '@/hooks/useFetch';
 
 interface UseFetchUserPaymentsProps {
   userId: number;

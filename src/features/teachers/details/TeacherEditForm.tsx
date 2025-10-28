@@ -8,7 +8,7 @@ import { TeacherSearchResult } from '@/app/(teachers)/api/teachers/schema';
 import LocationSelector from '@/features/selectors/LocationSelector';
 import MajorSelector from '@/features/selectors/MajorSelector';
 import { useUpdateTeacher } from './useUpdateTeacher';
-import { Major, Location } from '@prisma/client';
+import { Major, Location } from '@/generated/prisma';
 import DateInput from '@/features/inputs/DateInput';
 
 const UpdateTeacherFormSchema = UpdateTeacherRequestSchema.omit({
