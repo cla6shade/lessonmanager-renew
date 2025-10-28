@@ -4,6 +4,17 @@ import { Prisma } from '@/generated/prisma';
 import { getPaginationQuery } from '../utils';
 import { getOneWeekAfterStart, getTomorrowStart, getYesterdayEnd, toKstDate } from '@/utils/date';
 
+export function findUser(userId: number) {
+  const { include, omit } = getUserSelectInput();
+  return prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    include,
+    omit,
+  });
+}
+
 export type UserSearchArgs = UserSearchRequest;
 
 export async function searchUsers(req: UserSearchArgs): Promise<[UserSearchResult[], number]> {
