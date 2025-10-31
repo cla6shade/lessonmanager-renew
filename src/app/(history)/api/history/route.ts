@@ -1,17 +1,12 @@
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { getPaginationQuery, buildErrorResponse } from '@/app/utils';
+import { getPaginationQuery } from '@/app/utils';
 import { GetHistoryQuerySchema, GetHistoryResponse } from './schema';
-import { getSession } from '@/lib/session';
 import { Prisma } from '@/generated/prisma';
+import { routeWrapper } from '@/lib/routeWrapper';
 
-export async function GET(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const GET = routeWrapper(
+  async (request) => {
     const { searchParams } = new URL(request.url);
     const rawQuery = Object.fromEntries(searchParams.entries());
     const { page, limit, userId, teacherId, type, createdByType } =
@@ -53,10 +48,9 @@ export async function GET(request: NextRequest) {
       total,
       totalPages,
     });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
 function getWhereConditions(
   userId?: number,

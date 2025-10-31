@@ -4,37 +4,26 @@ import {
   UpdateWorkingTimeRequestSchema,
   UpdateWorkingTimeResponse,
 } from './schema';
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
 import { getWorkingTimes, updateWorkingTime } from '../../service';
 import prisma from '@/lib/prisma';
+import { routeWrapper } from '@/lib/routeWrapper';
 
-export async function PUT(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const PUT = routeWrapper(
+  async (request) => {
     const requestData = UpdateWorkingTimeRequestSchema.parse(await request.json());
 
     const times = await updateWorkingTime(requestData);
 
     return NextResponse.json<UpdateWorkingTimeResponse>({ data: times });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function GET(request: NextRequest) {
-  try {
-    const times = await getWorkingTimes();
-    const openHours = await prisma.openHours.findFirst();
+export const GET = routeWrapper(async (request) => {
+  const times = await getWorkingTimes();
+  const openHours = await prisma.openHours.findFirst();
 
-    return NextResponse.json<GetWorkingTimesResponse>({
-      data: { times, openHours: openHours! },
-    });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  return NextResponse.json<GetWorkingTimesResponse>({
+    data: { times, openHours: openHours! },
+  });
+});

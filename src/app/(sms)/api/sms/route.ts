@@ -1,16 +1,10 @@
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 import { GetSMSTargetRequestSchema, SendSMSRequestSchema } from './schema';
 import { getTargetUsers, sendMessage } from './service';
+import { routeWrapper } from '@/lib/routeWrapper';
 
-export async function POST(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const POST = routeWrapper(
+  async (request) => {
     const body = await request.json();
     const { receiverType, message, targetInfos, selectedLocationId } =
       SendSMSRequestSchema.parse(body);
@@ -24,34 +18,33 @@ export async function POST(request: NextRequest) {
     console.log(sendResult);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function GET(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const GET = routeWrapper(
+  async (request) => {
     const { searchParams } = new URL(request.url);
-    const { receiverType, selectedLocationId, isTotalSelected } = GetSMSTargetRequestSchema.parse({
-      receiverType: searchParams.get('receiverType'),
-      selectedLocationId: Number(searchParams.get('selectedLocationId')),
-      isTotalSelected: searchParams.get('isTotalSelected'),
-    });
+    const { receiverType, selectedLocationId, isTotalSelected, name, birthDate, contact } =
+      GetSMSTargetRequestSchema.parse({
+        receiverType: searchParams.get('receiverType'),
+        selectedLocationId: Number(searchParams.get('selectedLocationId')),
+        isTotalSelected: searchParams.get('isTotalSelected'),
+        name: searchParams.get('name') || undefined,
+        birthDate: searchParams.get('birthDate') || undefined,
+        contact: searchParams.get('contact') || undefined,
+      });
 
     const targetUsers = await getTargetUsers({
       receiverType,
       isTotalSelected,
       selectedLocationId,
+      name,
+      birthDate,
+      contact,
     });
 
     return NextResponse.json({ data: targetUsers });
-  } catch (error) {
-    console.error(error);
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);

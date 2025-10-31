@@ -7,56 +7,39 @@ import {
   UpdateBannedTimesRequestSchema,
   UpdateBannedTimesResponse,
 } from './schema';
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
 import { getBannedTimes, createBannedTime, updateBannedTimes } from '../../service';
+import { routeWrapper } from '@/lib/routeWrapper';
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const rawQuery = Object.fromEntries(searchParams.entries());
-    const { startDate, endDate, teacherId } = GetBannedTimesQuerySchema.parse(rawQuery);
+export const GET = routeWrapper(async (request) => {
+  const { searchParams } = new URL(request.url);
+  const rawQuery = Object.fromEntries(searchParams.entries());
+  const { startDate, endDate, teacherId } = GetBannedTimesQuerySchema.parse(rawQuery);
 
-    const bannedTimes = await getBannedTimes({
-      startDate,
-      endDate,
-      teacherId,
-    });
+  const bannedTimes = await getBannedTimes({
+    startDate,
+    endDate,
+    teacherId,
+  });
 
-    return NextResponse.json<GetBannedTimesResponse>({ data: bannedTimes });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  return NextResponse.json<GetBannedTimesResponse>({ data: bannedTimes });
+});
 
-export async function POST(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const POST = routeWrapper(
+  async (request) => {
     const requestData = CreateBannedTimeRequestSchema.parse(await request.json());
     const bannedTime = await createBannedTime(requestData);
 
     return NextResponse.json<CreateBannedTimeResponse>({ data: bannedTime });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function PUT(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const PUT = routeWrapper(
+  async (request) => {
     const requestData = UpdateBannedTimesRequestSchema.parse(await request.json());
     const bannedTimes = await updateBannedTimes(requestData);
 
     return NextResponse.json<UpdateBannedTimesResponse>({ data: bannedTimes });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);

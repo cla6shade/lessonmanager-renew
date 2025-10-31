@@ -6,18 +6,13 @@ import {
   TeacherSearchResponse,
 } from './schema';
 import { searchTeachers, createTeacher, checkDuplicateTeacher } from '../../service';
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
 import { encryptPassword } from '@/app/(auth)/login/service';
 import { initWorkingTime } from '@/app/(table)/service';
+import { routeWrapper } from '@/lib/routeWrapper';
+import { BadRequestError, ConflictError } from '@/lib/errors';
 
-export async function GET(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const GET = routeWrapper(
+  async (request) => {
     const { searchParams } = new URL(request.url);
     const queryParams = {
       startDate: searchParams.get('startDate') || undefined,
@@ -43,35 +38,29 @@ export async function GET(request: NextRequest) {
       total,
       totalPages,
     });
-  } catch (error) {
-    console.error(error);
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function POST(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const POST = routeWrapper(
+  async (request) => {
     let requestData = CreateTeacherRequestSchema.parse(await request.json());
     const { password, passwordConfirm, loginId, email } = requestData;
 
+    // Validate password confirmation
     if (password !== passwordConfirm) {
-      return NextResponse.json({ error: '비밀번호가 일치하지 않습니다.' }, { status: 400 });
+      throw new BadRequestError('비밀번호가 일치하지 않습니다.');
     }
 
     // Check for duplicate loginId and email
     const duplicateCheck = await checkDuplicateTeacher(loginId, email);
 
     if (duplicateCheck.loginIdExists) {
-      return NextResponse.json({ error: '이미 사용 중인 아이디입니다.' }, { status: 400 });
+      throw new ConflictError('이미 사용 중인 아이디입니다.');
     }
 
     if (duplicateCheck.emailExists) {
-      return NextResponse.json({ error: '이미 사용 중인 이메일입니다.' }, { status: 400 });
+      throw new ConflictError('이미 사용 중인 이메일입니다.');
     }
 
     const { locationId, majorId, passwordConfirm: _, ...otherData } = requestData;
@@ -98,7 +87,6 @@ export async function POST(request: NextRequest) {
         id,
       },
     });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);

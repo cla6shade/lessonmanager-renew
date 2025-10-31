@@ -1,4 +1,3 @@
-import { buildErrorResponse } from '@/app/utils';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import {
@@ -7,7 +6,6 @@ import {
   UpdateLessonRequestSchema,
   UpdateLessonResponse,
 } from './schema';
-import { getSession } from '@/lib/session';
 import {
   cancelLesson,
   isBeforeCancelDeadline,
@@ -18,11 +16,13 @@ import { Lesson, PrismaPromise, User } from '@/generated/prisma';
 import { restoreLessonCount } from '@/app/(users)/service';
 import { LessonModifyType } from '@/utils/constants';
 import { createModifyHistory } from '@/app/(history)/service';
+import { routeWrapper } from '@/lib/routeWrapper';
+import { NotFoundError, AuthorizationError, BadRequestError } from '@/lib/errors';
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
+export const GET = routeWrapper<{ id: string }>(
+  async (request, session, { params }) => {
     const { id } = await params;
-    const { isAdmin, userId } = await getSession();
+    const { isAdmin, userId } = session;
     const lesson = await prisma.lesson.findUnique({
       where: { id: Number(id) },
       include: {
@@ -37,55 +37,42 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
     if (!lesson) {
-      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
+      throw new NotFoundError('Lesson not found');
     }
     if (!isAdmin && lesson.userId !== userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      throw new AuthorizationError();
     }
     return NextResponse.json<GetLessonDetailResponse>({
       data: lesson,
     });
-  } catch (error) {
-    console.error(error);
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireSession: true },
+);
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
+export const PUT = routeWrapper<{ id: string }>(
+  async (request, session, { params }) => {
     const { id } = await params;
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
     const { note, isDone } = UpdateLessonRequestSchema.parse(await request.json());
     const lesson = await updateLesson(Number(id), { note, isDone });
     if (!lesson) {
-      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
+      throw new NotFoundError('Lesson not found');
     }
     return NextResponse.json<UpdateLessonResponse>({
       data: lesson,
     });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
+export const DELETE = routeWrapper<{ id: string }>(
+  async (request, session, { params }) => {
     const { id } = await params;
-    let { isAdmin, userId, teacherId } = await getSession();
+    let { isAdmin, userId, teacherId } = session;
     const lesson = await prisma.lesson.findUnique({
       where: { id: Number(id) },
     });
     if (!lesson) {
-      return NextResponse.json(
-        { error: '레슨을 찾을 수 없습니다. 이미 취소된 레슨인지 확인하세요' },
-        { status: 404 },
-      );
+      throw new NotFoundError('레슨을 찾을 수 없습니다. 이미 취소된 레슨인지 확인하세요');
     }
     if (isAdmin) {
       const tx: PrismaPromise<any>[] = [cancelLesson(Number(id)) as PrismaPromise<Lesson>];
@@ -112,10 +99,7 @@ export async function DELETE(
           userId,
         })
       ) {
-        return NextResponse.json(
-          { error: '다른 회원의 예약은 취소할 수 없습니다.' },
-          { status: 401 },
-        );
+        throw new AuthorizationError('다른 회원의 예약은 취소할 수 없습니다.');
       }
       if (
         !isBeforeCancelDeadline({
@@ -123,10 +107,7 @@ export async function DELETE(
           requestedAt: new Date(),
         })
       ) {
-        return NextResponse.json(
-          { error: '레슨 취소가 가능한 기한이 지났습니다 (전일 21시)' },
-          { status: 400 },
-        );
+        throw new BadRequestError('레슨 취소가 가능한 기한이 지났습니다 (전일 21시)');
       }
       const tx: PrismaPromise<any>[] = [
         cancelLesson(Number(id)) as PrismaPromise<Lesson>,
@@ -145,7 +126,6 @@ export async function DELETE(
         data: lessonCancellation,
       });
     }
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireSession: true },
+);

@@ -1,15 +1,10 @@
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { UserLookupRequestSchema, UserLookupResponse } from './schema';
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
+import { routeWrapper } from '@/lib/routeWrapper';
 
-export async function GET(request: NextRequest) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+export const GET = routeWrapper(
+  async (request) => {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('query');
     const { query: q } = UserLookupRequestSchema.parse({ query });
@@ -27,7 +22,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json<UserLookupResponse>({
       data: users,
     });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);

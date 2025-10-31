@@ -1,19 +1,15 @@
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { PublicUserDetailResponse, UpdateUserRequestSchema, UpdateUserResponse } from './schema';
-import { buildErrorResponse } from '@/app/utils';
-import { getSession } from '@/lib/session';
 import { findUser } from '@/app/(users)/service';
+import { routeWrapper } from '@/lib/routeWrapper';
+import { BadRequestError, NotFoundError } from '@/lib/errors';
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+export const GET = routeWrapper<{ id: string }>(
+  async (request, session, { params }) => {
     const { id } = await params;
     if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+      throw new BadRequestError('Invalid user ID');
     }
 
     const user = await prisma.user.findUnique({
@@ -31,27 +27,21 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      throw new NotFoundError('User not found');
     }
 
     return NextResponse.json<PublicUserDetailResponse>({
       data: user,
     });
-  } catch (error) {
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { isAdmin } = await getSession();
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+export const PUT = routeWrapper<{ id: string }>(
+  async (request, session, { params }) => {
     const { id } = await params;
     if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+      throw new BadRequestError('Invalid user ID');
     }
     const rawData = await request.json();
     console.log(rawData);
@@ -76,8 +66,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json<UpdateUserResponse>({
       data: updatedUser,
     });
-  } catch (error) {
-    console.error(error);
-    return buildErrorResponse(error);
-  }
-}
+  },
+  { requireAdmin: true },
+);
