@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getMessageFormat, buildMessageMap, getFormatInfo, SMSFormats } from './formats';
+import { getMessageFormat, buildMessageMap, getFormatInfo } from './formatter';
+import { SMSFormats } from './formats';
 import { SMSTarget } from './schema';
 import * as dateUtils from '@/utils/date';
 import * as lessonService from '@/app/(lessons)/service';
