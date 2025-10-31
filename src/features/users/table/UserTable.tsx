@@ -16,6 +16,7 @@ import { formatDate } from '@/utils/date';
 import SkeletonFetchBoundary from '@/components/SkeletonFetchBoundary';
 import Pagination from '@/components/ui/pagination';
 import { useUserTable } from './UserTableProvider';
+import { useUserSelection } from '../UserSelectionProvider';
 import UserDetailDialog from '../details/UserDetailDialog';
 import UserLessonsDialog from '@/features/users/lessons/UserLessonsDialog';
 import UserPaymentsDialog from '@/features/users/payments/UserPaymentsDialog';
@@ -36,10 +37,17 @@ export default function UserTable() {
     refetchUsers,
   } = useUserTable();
 
+  const {
+    selectedUsers,
+    isAllSelected,
+    isTotalSelected,
+    handleSelectUser,
+    handleSelectAll,
+    handlePageChange,
+    setIsTotalSelected,
+  } = useUserSelection();
+
   const [selectedUser, setSelectedUser] = useState<UserSearchResult | null>(null);
-  const [selectedUsers, setSelectedUsers] = useState<Set<UserSearchResult>>(new Set());
-  const [isAllSelected, setIsAllSelected] = useState<boolean>(false);
-  const [isTotalSelected, setIsTotalSelected] = useState<boolean>(false);
   const [openDialogType, setOpenDialogType] = useState<'detail' | 'lessons' | 'payments' | null>(
     null,
   );
@@ -61,32 +69,9 @@ export default function UserTable() {
     })),
   });
 
-  const handlePageChange = (page: number) => {
+  const onPageChange = (page: number) => {
     setPage(page);
-    setIsAllSelected(false);
-  };
-
-  const handleSelectUser = (user: UserSearchResult, isChecked: boolean) => {
-    setSelectedUsers((prevState) => {
-      const next = new Set(prevState);
-      if (isChecked) {
-        next.add(user);
-      } else {
-        next.delete(user);
-        setIsAllSelected(false);
-      }
-      return next;
-    });
-  };
-
-  const handleSelectAll = (isChecked: boolean) => {
-    if (isChecked) {
-      setIsAllSelected(true);
-      setSelectedUsers(new Set(users));
-    } else {
-      setIsAllSelected(false);
-      setSelectedUsers(new Set());
-    }
+    handlePageChange();
   };
 
   return (
@@ -114,7 +99,7 @@ export default function UserTable() {
                 <Table.ColumnHeader width="30px">
                   <Checkbox.Root
                     checked={isAllSelected}
-                    onCheckedChange={(e) => handleSelectAll(!!e.checked)}
+                    onCheckedChange={(e) => handleSelectAll(!!e.checked, users)}
                     size="sm"
                     pt={1}
                   >
@@ -234,14 +219,14 @@ export default function UserTable() {
           totalPages={totalPages}
           totalItems={total}
           itemsPerPage={20}
-          onPageChange={handlePageChange}
+          onPageChange={onPageChange}
         />
         <Flex gap={2}>
           <Checkbox.Root
             checked={isTotalSelected}
             onCheckedChange={(e) => {
               setIsTotalSelected(!!e.checked);
-              handleSelectAll(!!e.checked);
+              handleSelectAll(!!e.checked, users);
             }}
             size="sm"
           >
