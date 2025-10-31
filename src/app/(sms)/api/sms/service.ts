@@ -1,9 +1,9 @@
 import brand from '@/brand/baseInfo';
 import { getSMSLengthType, phoneNumberToSplitted } from './utils';
-import { SendSMSRequest, SMSTargetSchema } from './schema';
+import { SendSMSRequest } from './schema';
 import { searchUsers } from '@/app/(users)/service';
 import { UserSearchFilter } from '@/app/(users)/api/users/schema';
-import { getFormatInfo, getMessageFormat, buildMessageMap } from './formats';
+import { getFormatInfo, getMessageFormat, buildMessageMap } from './formatter';
 import prisma from '@/lib/prisma';
 
 type SourcePhoneNumber = {
@@ -16,16 +16,25 @@ export async function getTargetUsers({
   receiverType,
   isTotalSelected,
   selectedLocationId,
+  contact,
+  birthDate,
+  name,
 }: {
   receiverType: SendSMSRequest['receiverType'];
   isTotalSelected: boolean;
   selectedLocationId: number;
+  contact?: string;
+  birthDate?: Date;
+  name?: string;
 }) {
   if (isTotalSelected) {
     return (
       await searchUsers({
         filter: receiverType as UserSearchFilter,
         locationId: selectedLocationId,
+        contact,
+        birthDate,
+        name,
       })
     )[0];
   }
@@ -116,5 +125,6 @@ export function requestMessageSend(
   });
   return fetch(SMS_URL!, {
     body: formData,
+    method: 'POST',
   });
 }
