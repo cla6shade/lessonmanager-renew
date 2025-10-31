@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getTargetUsers, sendMessage, sendAll, requestMessageSend } from './service';
 import { SendSMSRequest, SMSTarget } from './schema';
 import * as userService from '@/app/(users)/service';
-import * as formatService from './formats';
+import * as formatService from './formatter';
 import prisma from '@/lib/prisma';
 
 vi.mock('@/app/(users)/service');
@@ -55,7 +55,7 @@ describe('getTargetUsers', () => {
     expect(userService.searchUsers).toHaveBeenCalledWith({
       filter: 'ONE_DAY_BEFORE_LESSON',
     });
-    expect(result).toEqual(mockUsers);
+    expect(result).toEqual([mockUsers, 1]);
   });
 
   it('should handle empty user list', async () => {
