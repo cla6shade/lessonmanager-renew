@@ -5,6 +5,7 @@ import Logo from '@/assets/images/logo.png';
 
 const brand = {
   name: 'Pianotogether',
+  nameKo: '피아노투게더',
   description: '성인전문 피아노학원',
   logo: Logo,
   sites: {
